@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试CORS跨域请求</title>
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body><input type="button" value="测试跨域请求" onclick="corsTest()">
+<script>
+    function corsTest() {
+        //返回文本格式
+        /*$.ajax({            //
+        10.1.1.187为IP地址，8080为端口号
+        url:"http://172.20.10.4:8080/user/test",
+        success:function (data) {
+        alert(data);            }
+        })*/
+        //测试返回JSON格式
+        $.ajax({
+            //10.1.1.187为IP地址，8080为端口号
+            url: "http://172.20.10.4:8080/CorsJson",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+            }
+        })
+    } </script>
+</body>
+</html>

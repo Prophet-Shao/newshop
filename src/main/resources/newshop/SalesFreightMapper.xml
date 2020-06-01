@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.SalesFreightMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.SalesFreight" >
+    <id column="sales_freight_id" property="salesFreightId" jdbcType="BIGINT" />
+    <result column="contact_id" property="contactId" jdbcType="BIGINT" />
+    <result column="sales_order_code" property="salesOrderCode" jdbcType="VARCHAR" />
+    <result column="freight_id" property="freightId" jdbcType="BIGINT" />
+    <result column="freight_name" property="freightName" jdbcType="VARCHAR" />
+    <result column="freight_number" property="freightNumber" jdbcType="BIGINT" />
+    <result column="freight_state" property="freightState" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+    <result column="order_address" property="orderAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sales_freight_id, contact_id, sales_order_code, freight_id, freight_name,  freight_number,
+    freight_state, account_set_id, order_address
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sales_freight
+    where sales_freight_id = #{salesFreightId,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="selectByInvoiceCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sales_freight
+    where sales_order_code = #{salesOrderCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByFreightName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sales_freight_company
+    where freight_name = #{freightName}
+  </select>
+
+  <select id="querySalesFreight" resultMap="BaseResultMap"  >
+    select * from sales_freight where freight_state != "5"
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sales_freight
+    where sales_freight_id = #{salesFreightId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.SalesFreight" >
+    insert into sales_freight (sales_freight_id, contact_id, sales_order_code, 
+      freight_id, freight_name, freight_number, 
+      freight_state, account_set_id, order_address)
+    values (#{salesFreightId,jdbcType=BIGINT}, #{contactId,jdbcType=BIGINT}, #{salesOrderCode,jdbcType=VARCHAR}, 
+      #{freightId,jdbcType=BIGINT}, #{freightName,jdbcType=VARCHAR}, #{freightNumber,jdbcType=BIGINT}, 
+      #{freightState,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}, #{orderAddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.SalesFreight" >
+    insert into sales_freight
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="salesFreightId != null" >
+        sales_freight_id,
+      </if>
+      <if test="contactId != null" >
+        contact_id,
+      </if>
+      <if test="salesOrderCode != null" >
+        sales_order_code,
+      </if>
+      <if test="freightId != null" >
+        freight_id,
+      </if>
+      <if test="freightName != null" >
+        freight_name,
+      </if>
+      <if test="freightNumber != null" >
+        freight_number,
+      </if>
+      <if test="freightState != null" >
+        freight_state,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+      <if test="orderAddress != null" >
+        order_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="salesFreightId != null" >
+        #{salesFreightId,jdbcType=BIGINT},
+      </if>
+      <if test="contactId != null" >
+        #{contactId,jdbcType=BIGINT},
+      </if>
+      <if test="salesOrderCode != null" >
+        #{salesOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="freightId != null" >
+        #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="freightName != null" >
+        #{freightName,jdbcType=VARCHAR},
+      </if>
+      <if test="freightNumber != null" >
+        #{freightNumber,jdbcType=BIGINT},
+      </if>
+      <if test="freightState != null" >
+        #{freightState,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="orderAddress != null" >
+        #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.SalesFreight" >
+    update sales_freight
+    <set >
+      <if test="contactId != null" >
+        contact_id = #{contactId,jdbcType=BIGINT},
+      </if>
+      <if test="salesOrderCode != null" >
+        sales_order_code = #{salesOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="freightId != null" >
+        freight_id = #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="freightName != null" >
+        freight_name = #{freightName,jdbcType=VARCHAR},
+      </if>
+      <if test="freightNumber != null" >
+        freight_number = #{freightNumber,jdbcType=BIGINT},
+      </if>
+      <if test="freightState != null" >
+        freight_state = #{freightState,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="orderAddress != null" >
+        order_address = #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sales_freight_id = #{salesFreightId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.SalesFreight" >
+    update sales_freight
+    set contact_id = #{contactId,jdbcType=BIGINT},
+      sales_order_code = #{salesOrderCode,jdbcType=VARCHAR},
+      freight_id = #{freightId,jdbcType=BIGINT},
+      freight_name = #{freightName,jdbcType=VARCHAR},
+      freight_number = #{freightNumber,jdbcType=BIGINT},
+      freight_state = #{freightState,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT},
+      order_address = #{orderAddress,jdbcType=VARCHAR}
+    where sales_freight_id = #{salesFreightId,jdbcType=BIGINT}
+  </update>
+</mapper>

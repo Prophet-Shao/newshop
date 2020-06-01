@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.SalesFreightCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.SalesFreightCompany" >
+    <id column="freight_id" property="freightId" jdbcType="BIGINT" />
+    <result column="freight_company" property="freightCompany" jdbcType="VARCHAR" />
+    <result column="freight_phone" property="freightPhone" jdbcType="VARCHAR" />
+    <result column="freight_address" property="freightAddress" jdbcType="VARCHAR" />
+    <result column="freight_api" property="freightApi" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="memo2" property="memo2" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    freight_id, freight_company, freight_phone, freight_address, freight_api, memo, memo2, 
+    account_set_id
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sales_freight_company
+    where freight_id = #{freightId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByCompany" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sales_freight_company
+    where freight_company = #{freightCompany}
+  </select>
+
+  <select id="querySalesFreightCompany" resultMap="BaseResultMap"  >
+    select * from sales_freight_company
+  </select>
+
+  <!--querySalesFreightCompany-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sales_freight_company
+    where freight_id = #{freightId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.SalesFreightCompany" >
+    insert into sales_freight_company (freight_id, freight_company, freight_phone, 
+      freight_address, freight_api, memo, 
+      memo2, account_set_id)
+    values (#{freightId,jdbcType=BIGINT}, #{freightCompany,jdbcType=VARCHAR}, #{freightPhone,jdbcType=VARCHAR}, 
+      #{freightAddress,jdbcType=VARCHAR}, #{freightApi,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{memo2,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.SalesFreightCompany" >
+    insert into sales_freight_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="freightId != null" >
+        freight_id,
+      </if>
+      <if test="freightCompany != null" >
+        freight_company,
+      </if>
+      <if test="freightPhone != null" >
+        freight_phone,
+      </if>
+      <if test="freightAddress != null" >
+        freight_address,
+      </if>
+      <if test="freightApi != null" >
+        freight_api,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="memo2 != null" >
+        memo2,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="freightId != null" >
+        #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="freightCompany != null" >
+        #{freightCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="freightPhone != null" >
+        #{freightPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="freightAddress != null" >
+        #{freightAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="freightApi != null" >
+        #{freightApi,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo2 != null" >
+        #{memo2,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.SalesFreightCompany" >
+    update sales_freight_company
+    <set >
+      <if test="freightCompany != null" >
+        freight_company = #{freightCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="freightPhone != null" >
+        freight_phone = #{freightPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="freightAddress != null" >
+        freight_address = #{freightAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="freightApi != null" >
+        freight_api = #{freightApi,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo2 != null" >
+        memo2 = #{memo2,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where freight_id = #{freightId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.SalesFreightCompany" >
+    update sales_freight_company
+    set freight_company = #{freightCompany,jdbcType=VARCHAR},
+      freight_phone = #{freightPhone,jdbcType=VARCHAR},
+      freight_address = #{freightAddress,jdbcType=VARCHAR},
+      freight_api = #{freightApi,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      memo2 = #{memo2,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where freight_id = #{freightId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.CrmPayTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.CrmPayType" >
+    <id column="pay_code" property="payCode" jdbcType="BIGINT" />
+    <result column="pay_name" property="payName" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="VARCHAR" />
+    <result column="bak1" property="bak1" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="crm_partner_id" property="crmPartnerId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pay_code, pay_name, type_id, bak1, memo, crm_partner_id
+  </sql>
+
+  <!-- 查询所有支付类型-->
+  <select id="queryPayTypeInfo"  resultMap="BaseResultMap" >
+    select * from  crm_pay_type
+  </select>
+
+  <!-- 按支付名称查询-->
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from crm_pay_type
+    where payName = #{pay_name}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_pay_type
+    where pay_code = #{payCode,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from crm_pay_type
+    where pay_code = #{payCode,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.CrmPayType" >
+    insert into crm_pay_type (pay_code, pay_name, type_id, 
+      bak1, memo, crm_partner_id
+      )
+    values (#{payCode,jdbcType=BIGINT}, #{payName,jdbcType=VARCHAR}, #{typeId,jdbcType=VARCHAR}, 
+      #{bak1,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{crmPartnerId,jdbcType=BIGINT}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.CrmPayType" >
+    insert into crm_pay_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="payName != null" >
+        pay_name,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="bak1 != null" >
+        bak1,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="crmPartnerId != null" >
+        crm_partner_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="payCode != null" >
+        #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="payName != null" >
+        #{payName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bak1 != null" >
+        #{bak1,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="crmPartnerId != null" >
+        #{crmPartnerId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.CrmPayType" >
+    update crm_pay_type
+    <set >
+      <if test="payName != null" >
+        pay_name = #{payName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bak1 != null" >
+        bak1 = #{bak1,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="crmPartnerId != null" >
+        crm_partner_id = #{crmPartnerId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where pay_code = #{payCode,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.CrmPayType" >
+    update crm_pay_type
+    set pay_name = #{payName,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=VARCHAR},
+      bak1 = #{bak1,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      crm_partner_id = #{crmPartnerId,jdbcType=BIGINT}
+    where pay_code = #{payCode,jdbcType=BIGINT}
+  </update>
+</mapper>

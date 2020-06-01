@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockInDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockInDetail" >
+    <id column="stocks_detail_code" property="stocksDetailCode" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <resultMap id="QueryResultMap" type="com.ss.springbootNewshop.bean.StockInDetail" >
+    <id column="stocks_detail_code" property="stocksDetailCode" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    stocks_detail_code, number, invoice_code, products_code, products_model, color, size,
+    unit_id, quantity, price, money, ext1, ext2, ext3, memo, type_id
+  </sql>
+
+  <sql id="Query_Column_List" >
+    stocks_detail_code, number, stock_in_detail.invoice_code, stock_in_detail.products_code, products_model,
+    stock_in_detail.color, stock_in_detail.size,
+    stock_in_detail.unit_id, stock_in_detail.quantity, stock_in_detail.price, stock_in_detail.money,
+    stock_in_detail.ext1, stock_in_detail.ext2, stock_in_detail.ext3, stock_in_detail.memo,
+    stock_in_detail.type_id, products.id,products.product_name,
+    products_unit.symbol, products.sales_price, category.category_name
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_in_detail
+    where stocks_detail_code = #{stocksDetailCode,jdbcType=BIGINT}
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByInvoiceCode" resultMap="QueryResultMap" parameterType="com.ss.springbootNewshop.bean.StockInDetail">
+    SELECT
+    <include refid="Query_Column_List" />
+    FROM stock_in_detail,products,category,products_unit
+    <where>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode}
+        and stock_in_detail.products_code = products.memo2
+        and stock_in_detail.products_model =  category.category_id
+        and stock_in_detail.unit_id =  products_unit.unit_id
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_in_detail
+    where stocks_detail_code = #{stocksDetailCode,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockInDetail" >
+    insert into stock_in_detail (stocks_detail_code, number, invoice_code, 
+      products_code, products_model, color, 
+      size, unit_id, quantity, 
+      price, money, ext1, 
+      ext2, ext3, memo, type_id
+      )
+    values (#{stocksDetailCode,jdbcType=BIGINT}, #{number,jdbcType=BIGINT}, #{invoiceCode,jdbcType=VARCHAR}, 
+      #{productsCode,jdbcType=VARCHAR}, #{productsModel,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
+      #{size,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{quantity,jdbcType=DECIMAL}, 
+      #{price,jdbcType=DECIMAL}, #{money,jdbcType=DECIMAL}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockInDetail" >
+    insert into stock_in_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stocksDetailCode != null" >
+        stocks_detail_code,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code,
+      </if>
+      <if test="productsCode != null" >
+        products_code,
+      </if>
+      <if test="productsModel != null" >
+        products_model,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stocksDetailCode != null" >
+        #{stocksDetailCode,jdbcType=BIGINT},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockInDetail" >
+    update stock_in_detail
+    <set >
+      <if test="number != null" >
+        number = #{number,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        products_code = #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        products_model = #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where stocks_detail_code = #{stocksDetailCode,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockInDetail" >
+    update stock_in_detail
+    set number = #{number,jdbcType=BIGINT},
+      invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      products_code = #{productsCode,jdbcType=VARCHAR},
+      products_model = #{productsModel,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      money = #{money,jdbcType=DECIMAL},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT}
+    where stocks_detail_code = #{stocksDetailCode,jdbcType=BIGINT}
+  </update>
+</mapper>

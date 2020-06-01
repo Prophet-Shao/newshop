@@ -1,0 +1,623 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>出库单详情</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+
+</head>
+ 
+<!-- 选择出库商品-->
+<div id="UpdateArea" class="flex" style="padding: 20px;display: none;flex-direction: column;"> 
+    <form class="layui-form" lay-filter="selectFrom" >
+        <div class="layui-form-item" style="padding: 10px;margin: 0;">
+            <label class="layui-form-label" style="width: 140px">商品类别:</label>
+            <div class="layui-input-inline">
+                <select id="ProductsCategory" name="ProductsCategory" lay-filter="ProductsCategory">
+                <!--  <option value=""></option> -->
+                </select>
+            </div>
+        </div>
+    </form>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="ProductsList" lay-filter="ProductsList"></table>
+        <div id="laypage"></div>
+    </div>
+</div>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+          <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;" onclick="backToStockOut()" />
+        </div>
+        <div class="flex header-center">
+          <span class="no-wrap">出库单详情界面</span>
+        </div>
+    </div>
+    <!-- 头部区域结束 -->
+    <!-- <div class="layui-form-item" style="padding-top: 55px; padding-left: 55px; margin: 0;">
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn"  onclick="insertNewStockIn()">新增出库单</button>
+        </div>
+    </div> -->
+    <form class="layui-form flex layui-form-pane" style="flex-wrap: wrap; padding-top: 55px; padding-left: 55px;margin: 0;" lay-filter="insertFrom" >
+            <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <label class=" layui-form-label" style="width: 140px">出库单号:</label>
+                <div class="layui-input-inline">
+                  <input id="invoiceCode" type="text"  name="invoiceCode" placeholder="出库单号" autocomplete="off" class="layui-input" readonly="readonly">
+                </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">出库类型:</label>
+                  <div class="layui-input-inline">
+                    <input id="moveTypeId" type="text"  name="moveTypeId" placeholder="出库类型" autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">创建时间:</label>
+                  <div class="layui-input-inline">
+                      <input  id="createDate" type="text" name="createDate" required  lay-verify="required" placeholder="创建时间" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">修改时间:</label>
+                  <div class="layui-input-inline">
+                      <input id="modifiedDate" type="text" name="modifiedDate" required  lay-verify="required" placeholder="修改时间" autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">出库仓库:</label>
+                <div class="layui-input-inline">
+                    <!--  <input id="stockhouseCode" type="text" name="stockhouseCode" required  lay-verify="required" placeholder="出库仓库" autocomplete="off" class="layui-input"> -->
+                    <select id="stockhouseCode" name="stockhouseCode" lay-verify="ProductsCategory">
+                        <option value="WH_1001">总仓</option>
+                        <option value="WH_1002">分仓2号</option>
+                        <option value="WH_1003">分仓3号</option>
+                        <option value="WH_1004">分仓4号</option>
+                        <option value="WH_1005">分仓5号</option>
+                    </select>      
+                </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">出库状态:</label>
+                <div class="layui-input-inline">
+                   <!--  <input id="processStatus" type="text" name="processStatus" required  lay-verify="required" placeholder="出库状态" autocomplete="off" class="layui-input" readonly="readonly"> -->
+                    <select id="processStatus" name="processStatus" lay-verify="ProductsCategory">
+                        <option value="0">未入库</option>
+                        <option value="1">已入库</option>
+                    </select>    
+                </div>            
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">总数量:</label>
+                  <div class="layui-input-inline">
+                      <input id="totalQty" type="text" name="totalQty" required  lay-verify="required" placeholder="总数量" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">总价格:</label>
+                  <div class="layui-input-inline">
+                      <input id="totalCost" type="text" name="totalCost" required  lay-verify="required" placeholder="总价格" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">备注:</label>
+                  <div class="layui-input-inline">
+                    <input id="memo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+            <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn"  lay-submit  lay-filter="onProductsSave">保存出库单</button>
+                </div>
+            </div>
+    </form>
+    
+    <div class="layui-form-item" style="padding-top: 0px; padding-left: 55px; margin: 0;">
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn"  onclick="selectProduct()">选择出库商品</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding-left: 55px;">
+        <table id="stockOutDetailList" lay-filter="stockOutDetailList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+
+    var url=window.location.href;
+    var isUnit= "isUnit";
+
+    var layui_element;
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_upload;
+    var layui_$;
+    var offset = 0;
+    var limit = 10;
+    var ProductsTable;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+    var urlArr;             //截取URL中的 invoiceCode
+    var invoiceCode;
+    var maxCategoryId;
+
+    urlArr = url.split("invoiceCode=");
+    invoiceCode = urlArr[1];
+    console.log(urlArr[1]);
+    /* 加载已有出库单 */
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','upload','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+
+        var param = {};
+        //加载所有商品类别  打印到弹出层上
+        param.isCategory = "isCategory";
+        loadCategoryInfo(param);
+
+        //保存出库单和子单
+        layui_form.on("submit(onProductsSave)",function (obj) {
+            saveProducts(obj);
+            return false;//设置成功后 回调
+        });
+        
+        //监听弹出框 商品选择类别
+        layui_form.on('select(ProductsCategory)',function (data) {
+            var selectProductCategory ={};
+            selectProductCategory.ProductsCategory = data.value;
+            loadProducts(selectProductCategory);
+            //return false;//设置成功后 回调
+        });
+
+        //初始化弹出层商品表格
+        ProductsTable = layui_table.render({
+            elem: '#ProductsList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页            limit:data.length,
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                {type: 'checkbox', fixed: 'left'}
+                , { field: 'id', title: '商品ID', width: 100 }
+                , { field: 'productName', title: '商品名称', width: 130 }
+                , { field: 'categoryName', title: '分类', width: 130 }
+                , { field: 'symbol', title: '单位', width: 70 }
+                , { field: 'price', title: '原价(元)', width: 90 }
+                , { field: 'salesPrice', title: '销售价格(元)', width: 110 }
+            ]]
+        });
+        
+        /* 若有出库单号传入 加载已有出库单 */
+        if(null!= invoiceCode && invoiceCode != ""){
+            layui_layer.msg("加载已有出库单");
+            loadStockOut(invoiceCode);
+        }
+
+        //普通图片上传
+        var uploadInst = layui_upload.render({
+            elem: '#uploadImg'
+            ,accept: 'file' 
+            ,url: 'http://localhost:8080/newshop/upload/uploadProductsImg' //改成您自己的上传接口
+            ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#mainImage').attr('src', result); //图片链接（base64）
+            });
+            }
+            ,done: function(data){
+                //如果上传失败
+                console.log(data);
+                if(data.success){
+                    layer.msg('上传成功');
+                    if(null!=data.src){
+                        $('#mainImage').attr('value', data.src); //图片链接（base64）hiddeImg
+                        $('#hiddeImg').attr('value', data.src);
+                    }
+                }else{
+                    return layer.msg('上传失败');
+                }
+            //上传成功
+            }
+            ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            }
+        });
+
+    });
+
+    // 优化layui表格选择 点击一种一行  可选中
+    $(document).on("click", ".layui-table-body table.layui-table tbody tr", function () {
+			var checkbox = $(this).find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+			if (checkbox.length != 0) {
+				var obj = event ? event.target : event.srcElement;
+				var tag = obj.tagName;
+				if (tag == 'DIV') {
+					checkbox.click();
+				}
+			}
+		});
+        //排除layui自身事件和点击事件冲突
+		$(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
+			e.stopPropagation();
+		});
+
+    /* 加载URL传输的出库单 */
+    function loadStockOut(invoiceCode){
+        var obj = {};
+        obj.invoiceCode = invoiceCode;
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/stockOut/selectStockOut",
+            type:"POST",
+            async:true,
+            data:obj,
+            success: data=>{
+                    var selStockOut = data.data[0];
+                    if(data.success === true){
+                        $("#invoiceCode").val(selStockOut.invoiceCode);    //出库单名称
+                        //赋值出库单类别
+                        //$("#ProductsCategory").find("option[value='"+selProducts.categoryId+"']").attr("selected",true);
+                        //$("#ProductsCategory option[value='"+selProducts.categoryId+"']").attr("selected","selected");
+                        $("#moveTypeId").val(selStockOut.moveTypeName);     //赋值出库单描述
+                        $("#createDate").val(selStockOut.createDate);
+                        $("#modifiedDate").val(selStockOut.modifiedDate);
+                        /* $("#stockhouseCode").val(selStockOut.stockhouseCode); */
+                        /* 仓库号 */
+                        $("#stockhouseCode").find("option[value='"+selStockOut.stockhouseCode+"']").attr("selected",true);
+                        $("#processStatus").find("option[value='"+selStockOut.processStatus+"']").attr("selected",true);
+                        $("#price").val(selStockOut.price);
+                        /* $("#processStatus").val(selStockOut.processStatusName); */
+                        $("#totalQty").val(selStockOut.totalQty);
+                        $("#totalCost").val(selStockOut.totalMoney);
+                        $("#memo").val(selStockOut.memo);//赋值出库单备注
+                        layui_form.render('select','selectFrom');
+                        //若存在子单 则放入表格中
+                            if (null != data.stockOutDetailData){
+                                layui_table.render({
+                                    totalRow: true
+                                    , elem: '#stockOutDetailList'
+                                    , even: true
+                                    , data: data.stockOutDetailData//数据接口 初始化空表格数据
+                                    , page: true //开启分页            limit:data.length,
+                                    , cellMinWidth: 70
+                                    , cols: [[
+                                    { field: 'id', title: '商品ID', width: 100 , totalRowText: '合计'}
+                                    , { field: 'productName', title: '商品名称', width: 130 }
+                                    , { field: 'categoryName', title: '分类', width: 130 }
+                                    , { field: 'symbol', title: '单位', width: 100 }
+                                    , { field: 'price', title: '原价(元)', width: 110 }
+                                    , { field: 'salesPrice', title: '销售价格(元)', width: 110 }
+                                    , { field: 'quantity', title: '数量', width: 110, totalRow: true , edit: 'text'}
+                                    ]]
+                                });
+                                //监听单元格编辑   可做到合计动态修改
+                                layui_table.on('edit(stockOutDetailList)', function (obj) {
+                                    var field = obj.field;
+                                    var objTemp = {};
+                                    if ("quantity" == field) {
+                                        var __inputVal = Number(obj.value);//输入值
+                                        objTemp.actualExpense = __inputVal;
+                                    } else if ("price" == field) {
+                                        var __inputVal = Number(obj.value);//输入值
+                                        objTemp.price = __inputVal;
+                                    }
+                                    obj.update(objTemp);//更新子单的数据
+                                    //重新渲染子单
+                                    layui_table.reload('stockOutDetailList', { data: layui_table.cache.stockOutDetailList });
+                                    //遍历修改子单
+                                    var stockOutDetailList_cache = layui_table.cache.stockOutDetailList;
+                                    var totalNumber = 0;
+                                    var totalMoney = 0;
+                                    for (var j = 0; j < stockOutDetailList_cache.length; j++) {
+                                        if (stockOutDetailList_cache[j].id == obj.data.id) {
+                                            if ("quantity" == field) {
+                                                stockOutDetailList_cache[j].actualExpense = Number(obj.value);
+                                            }else if ("price" == field) {
+                                                stockOutDetailList_cache[j].price = Number(obj.value);// 单价 * 数量 = 总价
+                                                //总价可以读取缓存来计算
+                                            }
+                                        } 
+                                        totalNumber += Number(stockOutDetailList_cache[j].quantity);
+                                        totalMoney += Number(stockOutDetailList_cache[j].quantity)*Number(stockOutDetailList_cache[j].price);
+                                        //重新渲染子单
+                                        layui_table.reload('stockOutDetailList', { data: stockOutDetailList_cache, });  
+                                    }
+                                    $("#totalQty").val(totalNumber);    //出库总数量
+                                    $("#totalCost").val(totalMoney);    //出库总价
+                                });
+                            }
+                    }else{
+                        layer.alert("编辑原有出库单失败, 请稍后重试", {
+                            icon: 5,
+                            title: "提示"
+                            });
+                    }
+                }
+            });
+    }
+
+   function insertNewStockIn(){
+       var obj = {};
+       obj.isStockInInsert = "isStockInInsert";
+        $.ajax({
+                headers: { Accept: "application/json; charset=utf-8"},
+                url:"http://localhost:8080/newshop/stockIn/insertStockIn",
+                type:"POST",
+                async:true,
+                data:obj,
+                success: data=>{
+                        if(data.success === true){
+                            var newStockIn = data.stockIn;
+                            $("#invoiceCode").val(newStockIn.invoiceCode);    //出库单名称
+                            //赋值出库单类别
+                            //$("#ProductsCategory").find("option[value='"+selProducts.categoryId+"']").attr("selected",true);
+                            //$("#ProductsCategory option[value='"+selProducts.categoryId+"']").attr("selected","selected");
+                            $("#moveTypeId").val(newStockIn.moveTypeName);     //赋值出库单描述
+                            $("#createDate").val(newStockIn.createDate);
+                            $("#modifiedDate").val(newStockIn.modifiedDate);
+                           /*  $("#stockhouseCode").val(newStockIn.stockhouseCode); */
+                            $("#stockhouseCode").find("option[value='"+newStockIn.stockhouseCode+"']").attr("selected",true);
+                            $("#price").val(newStockIn.price);
+                            $("#processStatus").find("option[value='"+newStockIn.processStatus+"']").attr("selected",true);
+                           /*  $("#processStatus").val(newStockIn.processStatusName); */
+                            $("#totalQty").val(newStockIn.totalQty);
+                            $("#totalCost").val(newStockIn.totalMoney);
+                            $("#memo").val(newStockIn.memo);//赋值出库单备注
+                            layui_form.render('select','selectFrom');
+                        }else{
+                            layer.alert("编辑原有出库单失败, 请稍后重试", {
+                                icon: 5,
+                                title: "提示"
+                                });
+                        }
+                        console.log("编辑原有出库单失败, 请稍后重试");
+                    }
+        });
+   }
+
+    
+    /* 选择商品  弹出框 选择对应商品后 */
+    function selectProduct(){
+        layui_layer.open({
+                type:1,
+                area: [(windowWidth * 0.8) + 'px', (windowHeight * 0.8) + 'px'],
+                content:$('#UpdateArea')    
+                , btn: ['确认', '取消']
+                , yes: function (index, layero) {
+                    var selectProduct_cache = layui_table.cache.ProductsList;
+                    var checkStatus = layui_table.checkStatus('ProductsList');//检查选中项目
+                    var selectData = checkStatus.data;
+                    if (null != selectProduct_cache ){
+                       console.log(selectData);
+                       layui_table.render({
+                            totalRow: true
+                            , elem: '#stockOutDetailList'
+                            , even: true
+                            , data: selectData//数据接口 初始化空表格数据
+                            , page: true //开启分页            limit:data.length,
+                            , cellMinWidth: 70
+                            , cols: [[
+                            { field: 'id', title: '商品ID', width: 100 , totalRowText: '合计'}
+                            , { field: 'productName', title: '商品名称', minWidth: 130 }
+                            , { field: 'categoryName', title: '分类', width: 130 }
+                            , { field: 'symbol', title: '单位', width: 100 }
+                            , { field: 'price', title: '原价(元)', width: 110 }
+                            , { field: 'salesPrice', title: '销售价格(元)', width: 110 }
+                            , { field: 'quantity', title: '数量', width: 110, totalRow: true , edit: 'text'}
+                            ]]
+                        });
+                        //监听单元格编辑   可做到合计动态修改
+                        layui_table.on('edit(stockOutDetailList)', function (obj) {
+                            var field = obj.field;
+                            var objTemp = {};
+                            if ("quantity" == field) {
+                                var __inputVal = Number(obj.value);//输入值
+                                objTemp.actualExpense = __inputVal;
+                            } else if ("price" == field) {
+                                var __inputVal = Number(obj.value);//输入值
+                                objTemp.price = __inputVal;
+                            }
+                            obj.update(objTemp);//更新子单的数据
+                            //重新渲染子单
+                            layui_table.reload('stockOutDetailList', { data: layui_table.cache.stockOutDetailList });
+                            //遍历修改子单
+                            var stockOutDetailList_cache = layui_table.cache.stockOutDetailList;
+                            var totalNumber = 0;
+                            var totalMoney = 0;
+                            for (var j = 0; j < stockOutDetailList_cache.length; j++) {
+                                if (stockOutDetailList_cache[j].id == obj.data.id) {
+                                    if ("quantity" == field) {
+                                        stockOutDetailList_cache[j].actualExpense = Number(obj.value);
+                                    }else if ("price" == field) {
+                                        stockOutDetailList_cache[j].price = Number(obj.value);// 单价 * 数量 = 总价
+                                        //总价可以读取缓存来计算
+                                    }
+                                } 
+                                totalNumber += Number(stockOutDetailList_cache[j].quantity);
+                                totalMoney += Number(stockOutDetailList_cache[j].quantity)*Number(stockOutDetailList_cache[j].price);
+                                //重新渲染子单
+                                layui_table.reload('stockOutDetailList', { data: stockOutDetailList_cache, });  
+                            }
+                            $("#totalQty").val(totalNumber);    //出库总数量
+                            $("#totalCost").val(totalMoney);    //出库总价
+                        });
+                        layui_layer.closeAll();      
+                    }
+                }
+                , btn2: function (index, layero) {
+                    layui_layer.closeAll();      
+                }        
+        });
+
+        var param = {};
+        param.ProductsCategory = "-1";
+        loadProducts(param);
+    }
+
+    /* 加载所有出库单分类 */
+    function loadCategoryInfo(param){
+        var resultData;
+        var htmls = '<option value="-1">请选择</option>'; //全局变量
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/category/loadCategory",
+            type:"POST",
+            async:true,
+            data:param,
+            success: data=>{
+                if(data.success === true){
+                    resultData = data.data;//categoryId  categoryName
+                    for(var x in resultData){
+                        htmls += '<option value = "' + resultData[x].categoryId + '">' + resultData[x].categoryName + '</option>'
+                    } 
+                    $("#ProductsCategory").html(htmls);  
+                    layui_form.render('select','selectFrom');
+                }else{
+                    layui_layer.msg('加载出库单分类列表失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+            }
+        });
+    }
+    
+    /* 弹出层加载商品选择 */
+    function loadProducts(param){
+        $.ajax({
+                url: "http://localhost:8080/newshop/products/selectProducts",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('查找商品成功: 成功',{
+                            icon:6,
+                        });
+                        ProductsTable.reload({
+                            data:data.data,
+                            limit:10,
+                        });
+                    }else{
+                        layui_layer.msg('查找商品失败,请稍后重试',{
+                            icon:3,
+                        });
+                    }
+                }
+            })
+    }
+    
+    //返回出库单主页
+    function backToStockOut(){
+        layui_layer.closeAll();
+        window.location.href = "http://localhost:8080/newshop/stockOut/Index";
+    }
+
+    /* 插入实体 */
+    function saveProducts(obj){
+        if(null == layui_table.cache.stockOutDetailList){
+            layui_layer.msg("未填写出库商品,请选择出库的商品并填写完整信息");
+        }else{
+            var __stockOutDetailList = layui_table.cache.stockOutDetailList;
+            if(__stockOutDetailList.length>0){
+                var stockOutDetailMsg = "";
+                for (var k = 0; k < __stockOutDetailList.length; k++) {
+                    if (k > 0) {
+                        stockOutDetailMsg += ";";
+                    }
+                    stockOutDetailMsg += __stockOutDetailList[k].memo2;
+                    stockOutDetailMsg += ",";
+                    stockOutDetailMsg += __stockOutDetailList[k].unitId;
+                    stockOutDetailMsg += ",";
+                    stockOutDetailMsg += __stockOutDetailList[k].categoryId;
+                    stockOutDetailMsg += ",";
+                    stockOutDetailMsg += __stockOutDetailList[k].price;
+                    stockOutDetailMsg += ",";
+                    stockOutDetailMsg += __stockOutDetailList[k].quantity;
+                }
+                saveStockInDetailToBack(stockOutDetailMsg);
+            }else {
+                layui_layer.close(index);
+                layui_layer.open({
+                    type: 1
+                    , title: "保存失败"
+                    , content: '<div style="padding: 10px;"><span style="font-size: 1.8rem;">未选择费用类型</span></div>'
+                });
+            } 
+        }
+    }
+
+    /* 保存总单子单 */
+    function  saveStockInDetailToBack(stockOutDetailMsg){
+        var data = {};
+        data.stockOutDetailMsg =stockOutDetailMsg ;
+        data.invoiceCode =  $("#invoiceCode").val();
+        data.isStockOutInsertDetail = "isStockOutInsertDetail";
+        data.totalMoney =  $("#totalCost").val();
+        data.totalQty = $("#totalQty").val();
+        data.memo =  $("#memo").val();
+        data.stockhouseCode = $("#stockhouseCode option:selected").val();/* $("#stockhouseCode").val(); */
+        data.processStatus =$("#processStatus option:selected").val(); /* $("#processStatus").val(); */
+        $.ajax({
+                headers: { Accept: "application/json; charset=utf-8"},
+                url:"http://localhost:8080/newshop/stockOut/insertStockOutDetail",
+                type:"POST",
+                async:true,
+                data:data,
+                success: data=>{
+                if(data.success === true){
+                    layui_layer.open({
+                        type: 1
+                        , title: "保存成功"
+                        , content: '<div style="padding: 10px;"><span style="font-size: 1.8rem;">保存成功,即将返回出库单首页</span></div>'
+                        , btn: ['确认', '取消']
+                        , yes: function (index, layero) {
+                            backToStockOut();
+                        }
+                        , btn2: function (index, layero) {
+                            layui_layer.closeAll();      
+                        }
+                    });
+                }else{
+                    layer.alert("编辑原有出库单失败, 请稍后重试", {
+                        icon: 5,
+                        title: "提示"
+                        });
+                }
+            }
+        });
+    }    
+</script>
+</body>
+</html>

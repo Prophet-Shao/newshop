@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+
+    </style>
+    <!-- 修改弹出层-->
+<div id="UserAddress" style="padding: 20px;display: none"> 
+    <form class="layui-form" >
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">收货人:</label>
+          <div class="layui-input-block">
+            <input id="company" type="text"  name="company" placeholder="收货人" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">收获地址:</label>
+            <div class="layui-input-block">
+              <input id="updateAddress" type="text"  name="address" placeholder="收获地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">联系电话:</label>
+            <div class="layui-input-block">
+              <input id="phone" type="text"  name="phone" placeholder="联系电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        
+      </form>
+</div>
+
+<div id="payImage" class="flex" style="padding: 20px;display: none;justify-content: center; align-items: baseline;"> 
+    <img alt="??" src="http://localhost:8080/newshop/static/Image/PayImage/AliPay.jpg"style="width:80%; height:80%;" />
+</div>
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/left_white48.png" style="height: 2.4rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">个人中心</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/ecomUserBasket/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/cart_empty.png"/>
+            </a>
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/home_white32.png"/>
+			</a>
+        </div>
+    </div>
+    
+    <!-- 订单数据 -->
+	<div class="flex" style="flex-direction: column;padding-top: 1rem;width: 100%;">
+		<div class="flex" style="width: 100%;height: 4rem;flex-direction: column;margin-top: 1.5rem;
+                                margin-bottom: 10px;padding-bottom: 5rem;background-color: white;"
+                                onclick="gotoUrl('userIndex/detail')">
+            <div class="flex" style="justify-content: center; padding-left: 1rem;padding-right: 1.5rem;">  
+                <span style="font-size: 1.5rem;color: #515151;">您的金额剩余:</span>
+            </div>
+            <div class="flex" style="justify-content: center; padding-left: 1rem;padding-right: 1.5rem;">  
+                <span style="font-size: 2rem;"><span id="userPoint">0</span>￥</span>
+            </div>
+        </div>
+
+        <span style="font-size: 1.6rem; color: #515151;">请输入充值金额</span>
+        <span style="font-size: 1.6rem; color: #515151;">￥</span>
+
+        <div class="flex" style="width: 100%;height: 1.2rem;flex-direction: row;margin-top: 1rem;padding-top: 1rem;
+                                margin-bottom: 5px;padding-bottom: 5rem;background-color: white;">
+            <div id="userPointArea" class="flex" style="width: 100%;flex-direction: column;
+                                                margin-bottom: 1px;padding-bottom: 0.5rem;background-color: white;">
+                <input id="chargeNum" type="text" onkeyup="validationNumber(this,0)" 
+                        value="0" style="border: 0px; outline: none;font-size: 2rem;"/>
+            </div>
+        </div>
+        <div class="flex" style="align-items: center;padding: 1rem;">
+            <button type="button" class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius layui-btn-fluid" 
+            onclick="onChargeMoney()">
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/coin_32.png"/>
+            充值金额
+        </button>
+        </div>  
+    </div>
+ 
+
+<script th:inline="none"> //防止内联语法出错
+    var url=window.location.href;
+
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+
+    urlArr = url.split("userName=");
+    invoiceCode = urlArr[1];
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_$ = layui.jquery;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_$ = layui.jquery;
+
+        //加载用户信息
+        loadUserInfo();        
+    });
+
+    /* 检验输入数字 */
+    function validationNumber(e, num) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if (e.value != "") {
+                if (!regu.test(e.value)) {
+                    //alert("请输入正确的数字");
+                    e.value = e.value.substring(0, e.value.length - 1);
+                    e.focus();
+                } else {
+                    if (num == 0) {
+                        if (e.value.indexOf('.') > -1) {
+                            e.value = e.value.substring(0, e.value.length - 1);
+                            e.focus();
+                        }
+                    }
+                    if (e.value.indexOf('.') > -1) {
+                        if (e.value.split('.')[1].length > num) {
+                            e.value = e.value.substring(0, e.value.length - 1);
+                            e.focus();
+                        }
+                    }
+                }
+            }
+        }
+    
+    /* 加载用户信息 */
+    function loadUserInfo(){
+        var obj = {};
+        obj.userName = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/userInfo/loadUserIndexInfo",
+                data: obj,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        if(null != data.data.userPoint ){
+                            $('#userPoint').text(Number(data.data.userPoint)/100);   //我的钱包 用户积分 userPoint
+                        }
+                        layui_layer.closeAll();      
+                    }else{
+                        layui_layer.closeAll();  
+                        layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+    
+    /* 检测输入金额 */
+    function onChargeMoney(){
+        var obj = {};
+        obj.userPoint =  $('#chargeNum').val();
+        if(obj.userPoint.length>6){
+            layui_layer.open({
+                type:1,
+                content:'充值金额大于6位数,是否确认充值'
+                , title:"提示"
+                ,area: [(windowWidth * 0.7) + 'px', (windowHeight * 0.2) + 'px']
+                , btn: ['确认', '取消']
+                , yes: function (index, layero) {               
+                    onChargeMoneyBack(obj);
+                }
+                , btn2: function (index, layero) {
+                    layui_layer.closeAll();      
+            }});
+        } else if(obj.userPoint == 0){
+            layui_layer.msg('充值数额需大于0!');
+        }else{
+            onChargeMoneyBack(obj);
+        }
+    }
+    
+    /* 修改用户积分数据 */
+    function onChargeMoneyBack(obj){
+        layui_layer.open({
+            type:1,
+            content:$('#payImage')
+            , title:"请扫描下方支付码付款"
+            ,area: [(windowWidth * 0.7) + 'px', (windowHeight * 0.5) + 'px']
+            , btn: ['确认', '取消']
+            , yes: function (index, layero) {               
+                $.ajax({
+                    url: "http://localhost:8080/newshop/userInfo/PointCharge",
+                    data: obj,
+                    type: "post",
+                    success: data=>{
+                        console.log(data);
+                        if(data.success === true ){
+                            layui_layer.closeAll();
+                            layui_layer.msg('充值成功,即将返回个人中心',{icon:1,time:3000,shade:0.4},function() {
+                                window.location.href = "http://localhost:8080/newshop/userIndex";
+                        });      
+                            
+                        }else{
+                            layui_layer.closeAll();  
+                            layui_layer.msg(data.error,{icon:3,});
+                        }
+                    }
+                });
+            }
+            , btn2: function (index, layero) {
+                layui_layer.closeAll();      
+            }});
+    }
+
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+
+    <script th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+    <script th:inline="none"> // js内部使用thymeleaf语法
+        //JavaScript代码区域
+        layui.use(['element', 'layer', 'jquery'], function () {
+            var element = layui.element;
+            var layui_layer = layui.layer;
+            var $ = layui.$;
+            // 配置tab实践在下面无法获取到菜单元素
+            $('.site-demo-active').on('click', function () {
+                var dataid = $(this);
+                //这时会判断右侧.layui-tab-title属性下的有lay-id属性的li的数目，即已经打开的tab项数目
+                if ($(".layui-tab-title li[lay-id]").length <= 0)    {
+                    //如果比零小，则直接打开新的tab项
+                    active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+                } else {
+                    //否则判断该tab项是否以及存在
+                    var isData = false; //初始化一个标志，为false说明未打开该tab项 为true则说明已有
+                    $.each($(".layui-tab-title li[lay-id]"), function () {
+                        if ($(this).attr("lay-id") == dataid.attr("data-id")) {//如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开
+                            isData = true;
+                        }
+                    })
+                    if (isData == false) {
+                        //标志为false 新增一个tab项
+                        active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+                    }
+                }
+                //最后不管是否新增tab，最后都转到要打开的选项页面上
+                active.tabChange(dataid.attr("data-id"));
+            });
+
+            var active = {
+                //在这里给active绑定几项事件，后面可通过active调用这些事件
+                tabAdd: function (url, id, name) {
+                    //新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+                    //关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
+                    var baseurl = "http://localhost:8080/newshop/";
+                    element.tabAdd('tabs', {
+                        title: name,
+                        content: '<iframe data-frameid="' + id + '" scrolling="auto" frameborder="0" src="http://localhost:8080/newshop/'+url+'" style="width:100%;height:99%;overflow-x：hidden；overflow-y：auto；"></iframe>',
+                        /*th:src="@{/'+ url + '} "*/
+                        id: id //规定好的id
+                    })
+                    FrameWH();  //计算ifram层的大小
+                },
+                tabChange: function (id) {
+                    //切换到指定Tab项
+                    element.tabChange('tabs', id); //根据传入的id传入到指定的tab项
+                },
+                tabDelete: function (id) {
+                    if(id === 0){
+                        layui_layer.msg('已经回到首页!');
+                    }else
+                    {
+                        element.tabDelete("tabs", id);//删除
+                    }
+                }
+                //layui_layer.reload;
+            };
+            function FrameWH() {
+                var h = $(window).height();
+                $("iframe").css("height",h+"px");
+            }
+        });
+
+
+    </script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">newshop后台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <!-- <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">购买系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">特价商品管理</a></dd>
+                    <dd><a href="">物流管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul> -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    <!-- 设置用户名登录-->
+                    [[${session.loginUser}]]
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a th:href="@{/logOut}">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">首页管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="0" data-title="首页信息" data-url="Index" class="site-demo-active" data-type="tabAdd">首页信息</a></dd>
+                    </dl><!--th:href="@{/show}" data-id="2"-->
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">商品管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="1" data-title="商品管理" data-url="products/Index" class="site-demo-active" data-type="tabAdd">商品管理</a></dd>
+                        <dd><a href="javascript:;" data-id="2" data-title="商品分类" data-url="category/Index" class="site-demo-active" data-type="tabAdd">分类管理</a></dd>
+                       <!--  <dd><a href="javascript:;" data-id="14" data-title="商品上架" data-url="Index" class="site-demo-active" data-type="tabAdd">商品上架</a></dd>
+                        <dd><a href="javascript:;" data-id="15" dat a-title="商品添加" data-url="Index" class="site-demo-active" data-type="tabAdd">商品添加</a></dd> -->
+                    </dl><!--th:href="@{/show}" data-id="2"-->
+                </li>
+                <li class="layui-nav-item"> 
+                    <a href="javascript:;">订单管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="3" data-title="订单管理" data-url="salesOrder/Index" class="site-demo-active" data-type="tabAdd">订单管理</a></dd>
+                        <!-- <dd><a href="javascript:;" data-id="4" data-title="导入商品信息" data-url="userIndex" class="site-demo-active" data-type="tabAdd">导入商品</a></dd> -->
+                    </dl>
+                </li>
+                <li class="layui-nav-item"> 
+                    <a href="javascript:;">SKU管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="12" data-title="商品单位设置" data-url="productsUnit/Index" class="site-demo-active" data-type="tabAdd">商品单位</a></dd>
+                       <!--  <dd><a href="javascript:;" data-id="13" data-title="商品信息配置" data-url="userIndex" class="site-demo-active" data-type="tabAdd">商品信息配置</a></dd> -->
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">库存管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="5" data-title="库存核对" data-url="userIndex" class="site-demo-active" data-type="tabAdd">库存核对</a></dd>
+                        <dd><a href="javascript:;" data-id="6" data-title="出库管理" data-url="stockOut/Index" class="site-demo-active" data-type="tabAdd">出库</a></dd>
+                        <dd><a href="javascript:;" data-id="7" data-title="入库管理" data-url="stockIn/Index" class="site-demo-active" data-type="tabAdd">入库</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">配送管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="8" data-title="配送员管理" data-url="salesFreightCompany/Index" class="site-demo-active" data-type="tabAdd">配送员管理</a></dd>
+                        <dd><a href="javascript:;" data-id="9" data-title="配送信息" data-url="salesFreight/Index" class="site-demo-active" data-type="tabAdd">配送信息</a></dd>
+                        <!-- <dd><a href="javascript:;" data-id="7" data-title="配送区域" data-url="userIndex" class="site-demo-active" data-type="tabAdd">配送区域</a></dd> -->
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                       <!--  <dd><a href="javascript:;" data-id="8" data-title="功能设置" data-url="userIndex" class="site-demo-active" data-type="tabAdd">功能设置</a></dd> -->
+                        <dd><a href="javascript:;" data-id="10" data-title="用户设置" data-url="userInfo/Index" class="site-demo-active" data-type="tabAdd">用户管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"> <a href="javascript:;">支付管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="11" data-title="支付方式" data-url="payType/Index" class="site-demo-active" data-type="tabAdd">支付方式</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"> <a href="javascript:;">店铺管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-id="15" data-title="店铺信息" data-url="ecomShop/Index" class="site-demo-active" data-type="tabAdd">店铺信息</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <!--<div style="padding: 15px;">今日用户登录次数</div>-->
+        <div class="layui-tab" lay-filter="tabs" lay-allowClose="true">
+            <ul class="layui-tab-title">
+                <!--<li class="layui-this" >首页</li>-->
+                <!--data-id="0" data-title="首页" data-url="userIndex" class="site-demo-active" data-type="tabAdd"-->
+            </ul>
+            <div class="layui-tab-content">
+               <!-- <div class="layui-tab-item layui-show" >首页内容</div>-->
+            </div>
+        </div>
+       <!-- <iframe scrolling="auto" frameborder="0"  th:src="@{/register}" style="width:99%;height:99%;"></iframe>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © newshop - 新零售平台
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,306 @@
+@charset "utf-8";
+/* 基准字号 */
+
+html {
+    height: 100%;
+    font-size: 62.5%;
+}
+body{
+    height: 100%;
+    background-color: #FFFFFF ;
+}
+.flex{
+    display: flex;
+    display: -webkit-flex;
+}
+
+/* 隐藏 */
+.hide{
+    display: none !important;
+}
+
+.header{
+    background: #009688;
+    height: 4rem;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100000;
+}
+
+/* (页面顶部-左边部分)与页面左边的距离*/
+.header-left{
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+/* (页面顶部-中间标题) */
+.header-center{
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+/* (页面顶部-中间标题-字体样式)字体颜色,字体大小,字体粗细 */
+.header-center span{
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+/* (页面顶部-右边部分)与页面右边的距离*/
+.header-right{
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.layui-btn {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: white;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+/* 清除原生button的边框 */
+.button-clear{
+	border: none;
+	outline: none;
+}
+/* 隐藏 */
+.hide{
+	display: none !important;
+}
+/* 溢出部分用省略号代替,禁止换行 */
+.no-wrap{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow : ellipsis;
+}
+/* 溢出部分用省略号代替,文本最多显示行数(默认为3,需要调整请在行内添加-webkit-line-clamp样式) */
+.max-wrap{
+	-webkit-line-clamp: 3;
+	overflow : hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+
+.footer{
+	background: #FFFFFF;
+	height: 5.1rem;
+	border-top: 1px solid #ddd;
+	justify-content: space-between;
+    
+	position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    z-index: 10000000;
+}
+.select-nav{
+    width: 9rem;
+    height: 5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.am-container{
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+}
+.am-list-news-hd{
+    padding-top: 1.2rem;
+    padding-bottom: 5.8rem;
+}
+.am-list-news-hd a {
+    display: block;
+}
+.am-container>.am-g {
+    width: auto;
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+.am-g {
+    margin: 0 auto;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+/* 商品元素展示 */
+.am-u-sm-6 {
+    width: 50%;
+}
+.dp-item {
+    margin: 5px 0;
+    /* position: relative; */
+    float: left;
+}
+/* 图片 */
+.am-img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* 购物车 */
+
+.mtn {
+    margin-top: 0!important;
+    
+}  
+
+section {
+    background-color: #fff;
+    margin: 10px 0;
+    display: block;
+}
+
+.catbox{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+.am-modal {
+    width: 270px;
+    position: fixed;
+    display: none;
+    z-index: 1110;
+    left: 50%;
+    margin-left: -135px;
+    margin-top: 0;
+    top: 50%;
+    text-align: center;
+    border-radius: 0;
+    opacity: 0;
+    -webkit-transform: translate3d(0, 0, 0) scale(1.185);
+    transform: translate3d(0, 0, 0) scale(1.185);
+    -webkit-transition-property: -webkit-transform, opacity;
+    transition-property: transform, opacity;
+}
+
+.am-modal-dialog {
+    border-radius: 10px;
+}
+
+.am-modal-hd {
+    padding: 30px 10px 25px 10px;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.am-modal-footer {
+    height: 44px;
+    overflow: hidden;
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.am-modal-btn:first-child {
+    color: #1e91e2;
+}
+/* 购物车底部 */
+.Grid {
+    display: flex;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    -o-flex-direction: row;
+    flex-direction: row;
+    background-color: white;
+}
+
+
+.Grid-cell {
+    flex: 1;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    width: 20%;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.pay-btn {
+    padding: 24px;
+    color: #fff;
+    background: #009688;
+    float: right;
+}
+
+.product-footer{
+    width: 100%;
+    height: 12.1rem;
+	border-top: 1px solid #ddd;
+	justify-content: space-between;
+	position: fixed;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    z-index: 10000000;
+}
+
+.goods-item-right{
+    display: flex;
+    flex-direction: column;
+    width:80%;
+}
+
+/* 商品文字 */
+.goods-item-right b {
+    color: #ff2c54;
+    font-size: 1.2rem;
+    margin-left: 5px;
+}
+
+.am-fl {    
+    float: left;
+}
+
+.am-table {
+    width: 100%;
+    margin-bottom: 1.6rem;
+    border-collapse: separate;
+}
+
+.am-table, table {
+    border-spacing: 0;
+}
+
+/* 隐藏 */
+.hide{
+	display: none !important;
+}

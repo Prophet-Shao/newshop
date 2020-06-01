@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.ProductsUnitMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.ProductsUnit" >
+    <id column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    unit_id, symbol, description, ext1, ext2, memo, account_set_id
+  </sql>
+  <!-- 查询所有商品单位-->
+  <select id="queryUnitInfo"  resultMap="BaseResultMap" >
+    select * from  products_unit
+  </select>
+
+    <!-- 按单位名称查询-->
+  <select id="selectByUnitName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from products_unit
+    where symbol = #{symbol}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from products_unit
+    where unit_id = #{unitId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from products_unit
+    where unit_id = #{unitId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.ProductsUnit" >
+    insert into products_unit (unit_id, symbol, description, 
+      ext1, ext2, memo, account_set_id
+      )
+    values (#{unitId,jdbcType=BIGINT}, #{symbol,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.ProductsUnit" >
+    insert into products_unit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="symbol != null" >
+        symbol,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="symbol != null" >
+        #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.ProductsUnit" >
+    update products_unit
+    <set >
+      <if test="symbol != null" >
+        symbol = #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where unit_id = #{unitId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.ProductsUnit" >
+    update products_unit
+    set symbol = #{symbol,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where unit_id = #{unitId,jdbcType=BIGINT}
+  </update>
+</mapper>

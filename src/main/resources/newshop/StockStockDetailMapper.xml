@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockStockDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockStockDetail" >
+    <id column="batch_stock_id" property="batchStockId" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="BIGINT" />
+    <result column="stock_id" property="stockId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="stock_position" property="stockPosition" jdbcType="VARCHAR" />
+    <result column="batch_quantity" property="batchQuantity" jdbcType="DECIMAL" />
+    <result column="batch_cost" property="batchCost" jdbcType="DECIMAL" />
+    <result column="batch_price" property="batchPrice" jdbcType="DECIMAL" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    batch_stock_id, number, stock_id, batch_no, stock_position, batch_quantity, batch_cost, 
+    batch_price, description, account_set_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_stock_detail
+    where batch_stock_id = #{batchStockId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_stock_detail
+    where batch_stock_id = #{batchStockId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockStockDetail" >
+    insert into stock_stock_detail (batch_stock_id, number, stock_id, 
+      batch_no, stock_position, batch_quantity, 
+      batch_cost, batch_price, description, 
+      account_set_id)
+    values (#{batchStockId,jdbcType=BIGINT}, #{number,jdbcType=BIGINT}, #{stockId,jdbcType=BIGINT}, 
+      #{batchNo,jdbcType=VARCHAR}, #{stockPosition,jdbcType=VARCHAR}, #{batchQuantity,jdbcType=DECIMAL}, 
+      #{batchCost,jdbcType=DECIMAL}, #{batchPrice,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
+      #{accountSetId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockStockDetail" >
+    insert into stock_stock_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="batchStockId != null" >
+        batch_stock_id,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="stockId != null" >
+        stock_id,
+      </if>
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="stockPosition != null" >
+        stock_position,
+      </if>
+      <if test="batchQuantity != null" >
+        batch_quantity,
+      </if>
+      <if test="batchCost != null" >
+        batch_cost,
+      </if>
+      <if test="batchPrice != null" >
+        batch_price,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="batchStockId != null" >
+        #{batchStockId,jdbcType=BIGINT},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=BIGINT},
+      </if>
+      <if test="stockId != null" >
+        #{stockId,jdbcType=BIGINT},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stockPosition != null" >
+        #{stockPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="batchQuantity != null" >
+        #{batchQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="batchCost != null" >
+        #{batchCost,jdbcType=DECIMAL},
+      </if>
+      <if test="batchPrice != null" >
+        #{batchPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockStockDetail" >
+    update stock_stock_detail
+    <set >
+      <if test="number != null" >
+        number = #{number,jdbcType=BIGINT},
+      </if>
+      <if test="stockId != null" >
+        stock_id = #{stockId,jdbcType=BIGINT},
+      </if>
+      <if test="batchNo != null" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stockPosition != null" >
+        stock_position = #{stockPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="batchQuantity != null" >
+        batch_quantity = #{batchQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="batchCost != null" >
+        batch_cost = #{batchCost,jdbcType=DECIMAL},
+      </if>
+      <if test="batchPrice != null" >
+        batch_price = #{batchPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where batch_stock_id = #{batchStockId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockStockDetail" >
+    update stock_stock_detail
+    set number = #{number,jdbcType=BIGINT},
+      stock_id = #{stockId,jdbcType=BIGINT},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      stock_position = #{stockPosition,jdbcType=VARCHAR},
+      batch_quantity = #{batchQuantity,jdbcType=DECIMAL},
+      batch_cost = #{batchCost,jdbcType=DECIMAL},
+      batch_price = #{batchPrice,jdbcType=DECIMAL},
+      description = #{description,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where batch_stock_id = #{batchStockId,jdbcType=BIGINT}
+  </update>
+</mapper>

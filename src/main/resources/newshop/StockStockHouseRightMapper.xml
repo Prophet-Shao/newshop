@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockStockHouseRightMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockStockHouseRight" >
+    <id column=" stock_purview_id" property="stockPurviewId" jdbcType="BIGINT" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    " stock_purview_id", dept_id, stockhouse_code, description, account_set_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_stockhouse_right
+    where " stock_purview_id" = #{stockPurviewId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_stockhouse_right
+    where " stock_purview_id" = #{stockPurviewId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockStockHouseRight" >
+    insert into stock_stockhouse_right (" stock_purview_id", dept_id, stockhouse_code, 
+      description, account_set_id)
+    values (#{stockPurviewId,jdbcType=BIGINT}, #{deptId,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockStockHouseRight" >
+    insert into stock_stockhouse_right
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockPurviewId != null" >
+        " stock_purview_id",
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockPurviewId != null" >
+        #{stockPurviewId,jdbcType=BIGINT},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockStockHouseRight" >
+    update stock_stockhouse_right
+    <set >
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where " stock_purview_id" = #{stockPurviewId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockStockHouseRight" >
+    update stock_stockhouse_right
+    set dept_id = #{deptId,jdbcType=BIGINT},
+      stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where " stock_purview_id" = #{stockPurviewId,jdbcType=BIGINT}
+  </update>
+</mapper>

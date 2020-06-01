@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商城首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <!-- <link rel="stylesheet" th:href="@{/static/css/mui.min.css}"> -->
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+    </style>
+</head>
+
+<script id="specialData" type="text/html" th:inline="none">
+    {{#  layui.each(d.data, function(index, item){ }}
+    <div class="am-u-sm-6 dp-item">
+        <input id="code-{{item.id}}" type="hidden" value="{{item.memo2}}">
+        <input id="unit-{{item.id}}" type="hidden" value="{{item.unitId}}">
+        <input id="category-{{item.id}}" type="hidden" value="{{item.categoryId}}">
+        <input id="price-{{item.id}}" type="hidden" value="{{item.categoryId}}">
+        <a href="javascript:void(0)" >
+            <div style="display: block;margin-block-end: 1rem;margin-block-start: 1rem;margin-inline-start: 10px;margin-inline-end: 10px;">
+                <img class="am-img-responsive" src="http://localhost:8080/newshop/{{ item.mainPic }}" 
+                style="width:160px;height:160px;padding:0;border:0px solid #ccc;" 
+                onclick = "gotoUrl('shop/ProductsDetail?ProductsCode={{item.memo2}}')"><!-- 商品代码跳转 -->
+                <div style="display: block;">
+                    <p style="height: 12px;font-size: 14px;padding: 10px 0;overflow: hidden;">{{ item.productName }}</p>
+                    <div class="price-amount">
+                        <b>￥{{ item.price }}</b>
+                        <span><span>原价:{{ item.salesPrice }}</span></span>
+                    </div>
+                </div>
+            <br>
+            <div style="width:100%;">
+                <div style="width:30%;padding: 5px 5px 5px 5px;
+                margin: 0 auto;font-size:1.2rem;text-align: center;border-radius:15px;
+                background-color: red;color:white;" onclick="addBasket('{{ item.id }}')">
+                立即购
+                </div>
+            </div></div>
+        </a>		  				 
+        </div>
+    {{#  }); }}
+    </script>
+
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <p style="color: #fff;font-size: 1.7rem;">新零售</p>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;background-color: #fff;height: 30px;" >
+                <img alt="??" th:src="@{../static/icon/search.png}"/> 
+                <input id = "selectInput" type="text"  placeholder="搜索" style="border-radius:10px;border: 0;">
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a  onclick="gotoUrl('ecomUserBasket/Index')"> 
+                <img alt="??" th:src="@{../static/icon/cart_empty.png}"/>
+            </a>
+        </div>
+    </div>
+    <!-- 轮播区域 -->
+    <div class="layui-carousel" id="IndexImage">
+        <div carousel-item lay-filter="IndexImage">
+          <div><img th:src="@{../static/Image/ShopIndex/shop001.jpg}" width="100%" alt="图片加载失败！" /></div>  
+          <div><img th:src="@{../static/Image/ShopIndex/shop002.jpg}" width="100%" alt="图片加载失败！" /></div>  
+          <div><img th:src="@{../static/Image/ShopIndex/shop003.jpg}" width="100%" alt="图片加载失败！" /></div>  
+        </div>
+    </div>
+    
+    <!-- 公告栏 -->
+    <div class="flex" style="background-color: #f4f4f4;padding-top: 2rem;padding-block-end: 2rem;">
+        <div class="flex" onclick="gotoUrl('shop/Index')" style="height: 100%;
+                width: 50%;
+                justify-content: space-evenly;
+                margin-right: 5px;
+                padding: 1rem 0;
+                background: #FFF;">
+            <div class="flex" style="flex-direction: column;justify-content: space-evenly;">
+                <span style="font-weight: bold;font-size: 1.4rem;">公司介绍</span>
+                <span style="font-size: 1.4rem;"><p>点击了解详情</p></span>
+            </div>
+            <div class="btn-img" style="background-repeat: no-repeat;background-position: center;background-size: contain;height: 50px;">
+                <img th:src="@{../static/icon/cooperation48.png}" alt="店铺详情">
+            </div>
+        </div>
+        <div class="flex" onclick="openCooperation()" style="height: 100%;
+                width: 50%;
+                justify-content: space-evenly;
+                margin-left: 5px;
+                padding: 1rem 0;
+                background: #FFF;">
+            <div class="flex" style="flex-direction: column;justify-content: space-evenly;">
+                <span style="font-weight: bold;font-size: 1.4rem;">商务合作</span>
+                <span style="font-size: 1.4rem;"><p>15521226924</p></span>
+            </div>
+            <div class="btn-img" style="background-repeat: no-repeat;background-position: center;background-size: contain;height: 50px;">
+                <img th:src="@{../static/icon/shakeHands48.png}" alt="合作图片">
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品展示区 -->
+    <div class="am-list-news-hd am-cf">      
+        <a href="" class="" style="display: flex;justify-content: space-between;">
+          <h2>热卖商品</h2>
+          <span class="am-list-news-more am-fr">更多&gt;</span>
+        </a>
+        <!-- 商品渲染 -->
+        <div id = "spacialProducts" class="am-g flex">
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="footer flex">
+        <div id="homeImg" class="active select-nav flex" onclick="gotoUrl('shop/Index')">
+            <img th:src="@{../static/icon/home_choosed32.png}" alt="主页">
+            <div class="flex">
+                <span class="no-wrap">主页</span>
+            </div>
+        </div>
+        <div id="shopCatImg" class="select-nav flex" onclick="gotoUrl('ecomUserBasket/Index')">
+            <img th:src="@{../static/icon/cart_black.png}" alt="购物车页面">
+            <div class="flex">
+                <span class="no-wrap">购物车</span>
+            </div>
+        </div><!--  onclick="gotoUrl(' ')" -->
+        <div id="settingImg" class="select-nav flex" onclick="gotoUrl('userIndex')">
+            <img th:src="@{../static/icon/integral.png}" alt="个人页面">
+            <div class="flex">
+                <span class="no-wrap">我的</span>
+            </div>
+        </div>
+    </div>  
+
+<script th:inline="none"> //防止内联语法出错
+    var url=window.location.href;
+    var isUserLoad= "isUserLoad";
+
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_upload;
+    var layui_laytpl;
+    var layui_$;
+    var layui_carousel;  //layui轮播图
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+    var urlArr;             
+    var userName;         //截取URL中的 用户名 校验是否登录
+    
+    urlArr = url.split("userName=");
+    userName = urlArr[1];
+    /* 加载已有入库单 */
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','carousel','laytpl'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+        layui_carousel = layui.carousel;
+        layui_laytpl = layui.laytpl;
+
+        /* 加载首页轮播图 */
+        layui_carousel.render({
+            elem: '#IndexImage'
+            ,width: '100%' //设置容器宽度
+            ,height: '200px' //设置容器高度
+            ,arrow: 'always' //始终显示箭头
+            ,anim: 'default' //切换动画方式 左右切换
+        });
+        
+        /* 加载首页特价商品 */
+       loadSpacialProduct();
+        
+        /* 若有用户登录 加载用户数据到httprequest */
+        if(null!= userName && userName != ""){
+            //layui_layer.msg("欢迎登入商城");
+            //loadStockIn(invoiceCode);
+        }
+
+    });
+    
+    /* 加载特价商品选择 */
+    function loadSpacialProduct(){
+        var param = {};
+        param.ProductsCategory = "4";
+        var htmls = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/products/selectProducts",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true && data.data.length > 0 ){
+                        console.log(data);
+                        var getTpl = document.getElementById('specialData').innerHTML
+                        ,view = document.getElementById('spacialProducts');
+                        layui_laytpl(getTpl).render(data, function(html){
+                        view.innerHTML = html;
+                        layui.use(['element'], function (args) {
+                            var element = layui.element;
+                            element.init();
+                        });
+                        layui_form.render();
+                    });      
+                    }else{
+                        layui_layer.msg('加载特价商品失败,请稍后重试',{icon:3,});
+                    }
+                }
+            });
+    }
+
+
+    function openCooperation(){
+        layui_layer.msg('联系方式:15521226924');
+    }
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    function addBasket(productId){
+        var param = {};
+        param.isBasketInsert = "isBasketInsert";
+        param.userName = '邵帅';
+        param.userId = '36';
+        param.productsCode = $('#code-'+productId+'').val();
+        param.productsUnit = $('#unit-'+productId+'').val();
+        param.categoryId = $('#category-'+productId+'').val();
+        param.basketQuantity = '1';
+        param.finalPrice = $('#price-'+productId+'').val();
+
+        var htmls = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/ecomUserBasket/insertBasket",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        layui_layer.msg('已添加购物车');     
+                    }else{
+                        layui_layer.msg('加载特价商品失败,请稍后重试',{icon:3,});
+                    }
+                }
+            });
+    }
+
+</script>
+</body>
+</html>

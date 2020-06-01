@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新零售后台首页</title>
+    <!-- Bootstrap core CSS -->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <!-- href="../static/css/bootstrap.min.css" -->
+    <!-- Custom styles for this template -->
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/layui/css/layui.css}"  rel="stylesheet" >
+    <!-- href="../static/css/bootstrap-theme.min.css"-->
+    <link type="text/css" th:href="@{/static/css/mui.min.css}"  rel="stylesheet" >
+    <!-- href="../static/css/mui.min.css"-->
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/echarts.min.js}"></script>
+
+
+    <style>
+        .flex {
+            display: flex;
+            display: -webkit-flex; /* Safari */
+        }
+        .chart-components{
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            border: 1px solid #ffd865;
+            background-color: #FFFFFF;
+            width: 40%;
+            height: 280px;
+        }
+        .chart-container{
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+  <!--  <a th:href="@{/userIndex.html}" >跳转首页</a>-->
+
+    <div class="flex" style="height:60%;padding: 3rem 0;justify-content: space-evenly;">
+        <div class="flex chart-components">
+            <div class="flex chart-container">
+                <div id="new-user" style="width:100%;height:100%;"></div>
+            </div>
+        </div>
+        <div class="flex chart-components">
+            <div class="flex chart-container">
+                <div id="sales-data" style="width:100%;height:100%;"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var newUserChart;
+        var salesDataChart;
+        //初始化两个图表
+        newUserChart = echarts.init(document.getElementById('new-user'));
+        salesDataChart = echarts.init(document.getElementById('sales-data'));
+        var month = ['1','12','11','10','9'];
+
+        var grid = {
+            top: 70,
+            bottom: 30,
+            left:60
+        };
+        var app = {};
+        option = null;
+        option = {
+            title: { text: '月销售额' },
+            tooltip: {},
+            legend: {
+                data: ['销售额（元）', '增速']
+            },
+            grid: grid,
+            dataZoom: [{ type: 'inside', start: 0, end: 100 }],
+            //X轴  月份
+            xAxis: [{ type: 'category', boundaryGap: true, data: month }],
+            yAxis: [
+                {
+                    type: 'value',
+                    scale: true,
+                    name: '销售额（元）',
+                    //max: 500,
+                    min: 0,
+                    boundaryGap: [0.2, 0.2],
+                    "splitLine": {     //网格线
+                        "show": false
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '销售额',
+                    type: 'bar',
+                    yAxisIndex: 0,
+                    //遍历对应月份销售额
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    itemStyle: {
+                        normal: {
+                            color: '#008000'
+                        }
+                    },
+                }
+            ]
+        };
+
+        salesDataChart.setOption(option);
+        if (option && typeof option === "object") {
+            salesDataChart.setOption(option, true);
+        }
+
+        var data = [120, 200, 150, 80, 70, 110, 130];
+        var day = ['12-28','12-29','12-30','12-31','01-01','01-02','01-03'];
+        var  userOption = {
+            title: {
+                text: '新用户注册数'
+            },
+            tooltip: {},
+            grid: grid,
+            xAxis: {
+                data: [day[6],day[5],day[4],day[3],day[2],day[1],day[0]],
+
+            },
+            yAxis: {
+                type: 'value',
+                "splitLine": {     //网格线
+                    "show": false
+                }
+            },
+            dataZoom: [{
+                type: 'inside',
+                start: 0,
+                end: 100
+            }],
+            series: [{
+                type: 'line',
+                data: [data[6], data[5], data[4], data[3], data[2], data[1], data[0]]
+            }]
+        };
+        newUserChart.setOption(userOption);
+        if (userOption && typeof userOption === "object") {
+            newUserChart.setOption(userOption, true);
+        }
+    </script>
+</body>
+</html>

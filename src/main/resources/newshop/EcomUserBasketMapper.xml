@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.EcomUserBasketMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    <id column="customers_basket_id" property="customersBasketId" jdbcType="BIGINT" />
+    <result column="portal_user_id" property="portalUserId" jdbcType="BIGINT" />
+    <result column="shop_prod_id" property="shopProdId" jdbcType="BIGINT" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="basket_quantity" property="basketQuantity" jdbcType="INTEGER" />
+    <result column="date_added" property="dateAdded" jdbcType="TIMESTAMP" />
+    <result column="final_price" property="finalPrice" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <resultMap id="extResultMap" type="com.ss.springbootNewshop.bean.EcomUserBasket" >
+  <id column="customers_basket_id" property="customersBasketId" jdbcType="BIGINT" />
+  <result column="portal_user_id" property="portalUserId" jdbcType="BIGINT" />
+  <result column="shop_prod_id" property="shopProdId" jdbcType="BIGINT" />
+  <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+  <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+  <result column="basket_quantity" property="basketQuantity" jdbcType="INTEGER" />
+  <result column="date_added" property="dateAdded" jdbcType="TIMESTAMP" />
+  <result column="final_price" property="finalPrice" jdbcType="DECIMAL" />
+  <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+  <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+  <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+  <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+  <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+
+  <result column="user_name" property="userName" jdbcType="VARCHAR" />
+
+  </resultMap>
+
+
+  <resultMap id="QueryResultMap" type="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    <id column="customers_basket_id" property="customersBasketId" jdbcType="BIGINT" />
+    <result column="portal_user_id" property="portalUserId" jdbcType="BIGINT" />
+    <result column="shop_prod_id" property="shopProdId" jdbcType="BIGINT" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="basket_quantity" property="basketQuantity" jdbcType="INTEGER" />
+    <result column="date_added" property="dateAdded" jdbcType="TIMESTAMP" />
+    <result column="final_price" property="finalPrice" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_desc" property="productDesc" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL" />
+    <result column="main_pic" property="mainPic" jdbcType="VARCHAR" />
+    <result column="left_pic" property="leftPic" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="memo2" property="memo2" jdbcType="VARCHAR" />
+    <result column="memo3" property="memo3" jdbcType="VARCHAR" />
+
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    customers_basket_id, portal_user_id, shop_prod_id, products_code, products_model, 
+    basket_quantity, date_added, final_price, ext1, ext2, ext3, shop_code, account_set_id
+  </sql>
+
+  <sql id="Ext_Column_List" >
+  customers_basket_id, portal_user_id, shop_prod_id, products_code, products_model,
+  basket_quantity, date_added, final_price, ecom_user_basket.ext1, ecom_user_basket.ext2,
+  ecom_user_basket.ext3, shop_code, ecom_user_basket.account_set_id,
+  crm_user.user_name
+  </sql>
+
+  <sql id="Query_Column_List" >
+    customers_basket_id, portal_user_id, shop_prod_id, products_code, products_model,
+    basket_quantity, date_added, final_price, ecom_user_basket.ext1, ecom_user_basket.ext2,
+    ecom_user_basket.ext3, shop_code, ecom_user_basket.account_set_id,
+    crm_user.user_name,
+    products.product_name, products.product_desc, products.category_id, products.unit_id,
+    products.cost, products.sales_price, products.main_pic, products.left_pic,products.memo, products.memo2,
+    products.memo3, products_unit.symbol
+  </sql>
+
+  <select id="queryEcomUserBasket" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from ecom_user_basket
+  </select>
+
+  <select id="selectByUserName" resultMap="QueryResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Query_Column_List" />
+      from ecom_user_basket,crm_user,products,category,products_unit
+      where portal_user_id = crm_user.user_id
+      and  user_name =  #{userName}
+      and products.memo2 = ecom_user_basket.products_code
+      and products.category_id = category.category_id
+      AND products.unit_id = products_unit.unit_id
+      ORDER BY ecom_user_basket.date_added DESC;
+  </select>
+
+  <!--通过用户ID查找-->
+  <select id="selectByUserId" resultMap="QueryResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Query_Column_List" />
+    from ecom_user_basket,crm_user
+    where portal_user_id = crm_user.user_id
+    and  portal_user_id =  #{portalUserId}
+  </select>
+
+  <!--通过商品Code 和 用户名查找-->
+  <select id="selectByBasket" resultMap="extResultMap" parameterType="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    select
+    <include refid="Ext_Column_List" />
+      from ecom_user_basket, crm_user
+      where portal_user_id = #{portalUserId,jdbcType=BIGINT}
+      and  products_code=  #{productsCode,jdbcType=VARCHAR}
+      and portal_user_id = crm_user.user_id
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from ecom_user_basket
+    where customers_basket_id = #{customersBasketId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ecom_user_basket
+    where customers_basket_id = #{customersBasketId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    insert into ecom_user_basket (customers_basket_id, portal_user_id, shop_prod_id, 
+      products_code, products_model, basket_quantity, 
+      date_added, final_price, ext1, 
+      ext2, ext3, shop_code, 
+      account_set_id)
+    values (#{customersBasketId,jdbcType=BIGINT}, #{portalUserId,jdbcType=BIGINT}, #{shopProdId,jdbcType=BIGINT}, 
+      #{productsCode,jdbcType=VARCHAR}, #{productsModel,jdbcType=VARCHAR}, #{basketQuantity,jdbcType=INTEGER}, 
+      #{dateAdded,jdbcType=TIMESTAMP}, #{finalPrice,jdbcType=DECIMAL}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{shopCode,jdbcType=VARCHAR}, 
+      #{accountSetId,jdbcType=BIGINT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    insert into ecom_user_basket
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="customersBasketId != null" >
+        customers_basket_id,
+      </if>
+      <if test="portalUserId != null" >
+        portal_user_id,
+      </if>
+      <if test="shopProdId != null" >
+        shop_prod_id,
+      </if>
+      <if test="productsCode != null" >
+        products_code,
+      </if>
+      <if test="productsModel != null" >
+        products_model,
+      </if>
+      <if test="basketQuantity != null" >
+        basket_quantity,
+      </if>
+      <if test="dateAdded != null" >
+        date_added,
+      </if>
+      <if test="finalPrice != null" >
+        final_price,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="shopCode != null" >
+        shop_code,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customersBasketId != null" >
+        #{customersBasketId,jdbcType=BIGINT},
+      </if>
+      <if test="portalUserId != null" >
+        #{portalUserId,jdbcType=BIGINT},
+      </if>
+      <if test="shopProdId != null" >
+        #{shopProdId,jdbcType=BIGINT},
+      </if>
+      <if test="productsCode != null" >
+        #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="basketQuantity != null" >
+        #{basketQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="dateAdded != null" >
+        #{dateAdded,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finalPrice != null" >
+        #{finalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCode != null" >
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    update ecom_user_basket
+    <set >
+      <if test="portalUserId != null" >
+        portal_user_id = #{portalUserId,jdbcType=BIGINT},
+      </if>
+      <if test="shopProdId != null" >
+        shop_prod_id = #{shopProdId,jdbcType=BIGINT},
+      </if>
+      <if test="productsCode != null" >
+        products_code = #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        products_model = #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="basketQuantity != null" >
+        basket_quantity = #{basketQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="dateAdded != null" >
+        date_added = #{dateAdded,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finalPrice != null" >
+        final_price = #{finalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCode != null" >
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where customers_basket_id = #{customersBasketId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.EcomUserBasket" >
+    update ecom_user_basket
+    set portal_user_id = #{portalUserId,jdbcType=BIGINT},
+      shop_prod_id = #{shopProdId,jdbcType=BIGINT},
+      products_code = #{productsCode,jdbcType=VARCHAR},
+      products_model = #{productsModel,jdbcType=VARCHAR},
+      basket_quantity = #{basketQuantity,jdbcType=INTEGER},
+      date_added = #{dateAdded,jdbcType=TIMESTAMP},
+      final_price = #{finalPrice,jdbcType=DECIMAL},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      shop_code = #{shopCode,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where customers_basket_id = #{customersBasketId,jdbcType=BIGINT}
+  </update>
+</mapper>

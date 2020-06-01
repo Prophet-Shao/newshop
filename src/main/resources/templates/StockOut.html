@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>出库管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .flex{
+            display: flex;
+            display: inline-flex;
+            display: -webkit-flex; /* Safari */
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="UpdateArea" style="padding: 20px;display: none"> 
+    <form class="layui-form" >
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">出库单号:</label>
+          <div class="layui-input-block">
+            <input id="invoiceCode" type="text"  name="invoiceCode" placeholder="出库单号" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">出库类型:</label>
+            <div class="layui-input-block">
+              <input id="moveTypeId" type="text"  name="moveTypeId" placeholder="出库类型" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">创建时间:</label>
+            <div class="layui-input-block">
+                <input  id="createdDate" type="text" name="createdDate" required  lay-verify="required" placeholder="创建时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">修改时间:</label>
+            <div class="layui-input-block">
+                <input id="modifiedDate" type="text" name="modifiedDate" required  lay-verify="required" placeholder="修改时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">出库仓库:</label>
+            <div class="layui-input-block">
+                <input id="stockhouseCode" type="text" name="stockhouseCode" required  lay-verify="required" placeholder="出库仓库" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">出库状态:</label>
+            <div class="layui-input-block">
+                <input id="processStatus" type="text" name="processStatus" required  lay-verify="required" placeholder="出库状态" autocomplete="off" class="layui-input">
+            </div>            
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">总数量:</label>
+            <div class="layui-input-block">
+                <input id="totalQty" type="text" name="totalQty" required  lay-verify="required" placeholder="总数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">总价格:</label>
+            <div class="layui-input-block">
+                <input id="totalCost" type="text" name="totalCost" required  lay-verify="required" placeholder="总价格" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">备注:</label>
+            <div class="layui-input-block">
+              <input id="memo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+      </form>
+</div>
+<body>  
+    <!-- 搜索栏 -->
+        <form class="layui-form flex" lay-filter="selectFrom" style="flex-direction: column;">
+            <div class="flex">
+                <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                    <label class="layui-form-label" style="width: 140px">出库单号:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="selInvoiceCode" name="ProductsName" required  lay-verify="required" placeholder="出库单号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                    <label class="layui-form-label" style="width: 140px">出库状态:</label>
+                    <div class="layui-input-inline">
+                        <select id="selMoveType" name="moveTypeId" lay-verify="ProductsCategory">
+                        <option value="0">未出库</option>
+                        <option value="1">已出库</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item flex" style="padding: 10px;margin-left: 65px;">
+                <div class="layui-form-mid">选择日期:</div>
+                <div class="layui-input-inline">
+                  <input onfocus="this.blur();" id="start" type="text" class="layui-input"
+                    style="margin-bottom: 0;margin-top: 0;">
+                </div>
+                <div class="layui-form-mid">————</div>
+                <div class="layui-input-inline">
+                  <input onfocus="this.blur();" id="end" type="text" class="layui-input"
+                    style="margin-bottom: 0;margin-top: 0;">
+                </div>
+                <div class="layui-form-item" style="padding: 0px;margin-top: 0px;">
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" onclick="selectStockIN()">搜索</button>
+                    </div>
+                </div>
+              </div>
+        </form>
+    <div class="layui-form-item" style="padding: 5px;margin: 0;">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="onStockOutInsert()">添加出库单</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="StockOutList" lay-filter="StockOutList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isStockOut= "isStockOut";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var StockOutListTable;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+
+    var maxCategoryId;
+
+    var date = new Date();
+    var _year = date.getFullYear();
+    var _month = date.getMonth() + 1;
+    if (_month < 10) {
+      _month = "0" + _month;
+    }
+    var _day = date.getDate();
+    if (_day < 10) {
+      _day = "0" + _day;
+    }
+    var month_first_day = _year + "-" + _month + "-01"; //当月首月日期
+    var today = _year + "-" + _month + "-" + _day;      //当前日期
+    var start = month_first_day;
+    var end = today;
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+      
+        layui_laydate.render({
+          elem: '#start'
+          , value: month_first_day
+          , lang: 'cn'
+          , done: function (value, date, endDate) {
+            start = value;
+          }
+          , btns: ['now', 'confirm']
+          , theme: '#009688'
+        });
+        layui_laydate.render({
+          elem: '#end'
+          , value: today
+          , lang: 'cn'
+          , theme: '#009688'
+          , done: function (value, date, endDate) {
+            end = value;
+          }
+          , btns: ['now', 'confirm']
+        });
+
+        StockOutListTable = layui_table.render({
+            elem: '#StockOutList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页            limit:data.length,
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'stockInoutId', title: '出库单ID', width: 90, fixed: 'left', }
+                , { field: 'invoiceCode', title: '出库单号', width: 160 }
+                , { field: 'totalMoney', title: '花费', width: 70 }
+                , { field: 'totalQty', title: '出库件数', width: 90 }
+                , { field: 'moveTypeName', title: '出库类型', width: 90 }
+                , { field: 'processStatusName', title: '出库状态', width: 90 }
+                , { field: 'stockhouseCode', title: '仓库', width: 100 }
+                , { field: 'createDate', title: '创建时间', width: 150 }
+                , { field: 'modifiedDate', title: '修改时间', width: 150 }
+                , { field: 'memo', title: '备注', width: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar', width: 200 }
+            ]]
+        });
+
+
+        //监听工具条
+        layui_table.on('tool(StockOutList)', function (obj) {
+            var layEvent = obj.event;
+            var stockInoutId = obj.data.stockInoutId;
+            var invoiceCode = obj.data.invoiceCode;
+            var totalMoney = obj.data.totalMoney;
+            var totalQty = obj.data.totalQty;
+            var moveTypeId = obj.data.moveTypeId;
+            var moveTypeName = obj.data.moveTypeName;
+            var processStatusName = obj.data.processStatusName;
+            var stockhouseCode = obj.data.stockhouseCode;
+            var createDate = obj.data.createDate;
+            var modifiedDate = obj.data.modifiedDate;
+            var memo = obj.data.memo;
+    
+                $("#invoiceCode").val(invoiceCode);
+                $("#totalCost").val(totalMoney);
+                $("#totalQty").val(totalQty);
+                $("#moveTypeId").val(moveTypeName);
+                $("#processStatus").val(processStatusName);
+                $("#stockhouseCode").val(stockhouseCode);
+                $("#createdDate").val(createDate);
+                $("#modifiedDate").val(modifiedDate);
+                $("#memo").val(memo);
+                
+            if (layEvent === 'edit') {
+                //显示弹出层
+                window.location.href = "http://localhost:8080/newshop/stockOut/save?invoiceCode="+invoiceCode;
+               
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+invoiceCode+"'该出库单吗？";
+                if ( null !=  invoiceCode) {
+                        title = "该出库单已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (null != invoiceCode ) {
+                        var deleteFlag;
+                        deleteFlag =  onDeleteStockOut(invoiceCode);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                    } else {
+                        alert('删除出库单失败 数据出错');
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                    
+                });
+            }
+        });
+        var param = {};
+        param.isStockOut = isStockOut;
+        loadStockOutInfo(param);
+
+    });
+
+    /* 加载所有数据 */
+    function loadStockOutInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/stockOut/loadStockOut",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data.data.length);
+                if(data.success === true){
+                    StockOutListTable.reload({
+                        data:data.data,
+                        limit:data.length,
+                    });
+                    console.log("加载出库单列表成功");
+                }else{
+                    layui_layer.msg('加载出库单列表失败,请稍后重试',{
+                            icon:6,
+                    });
+                }
+            }
+        });
+    }
+
+    /* 更新数据 */
+    function updateUnitInfo(obj) {
+        let data = obj.data;
+        var updateFlag = 0;
+        var unit = {}; 
+        unit.id = data.id;
+        unit.productName = $("#updateName").val();
+        unit.memo = $("#updateMemo").val();  
+        unit.description =  $("#updateDescription").val();  
+        unit.accountSetId = 1;  
+       
+            $.ajax({
+                url: "http://localhost:8080/newshop/productsUnit/updateUnit",
+                data: unit,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        updateFlag = 1;
+                        layui_layer.msg('更新出库单成功: '+data.data.productName+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isStockOut = isStockOut;
+                            loadStockOutInfo(param);
+                    } else{
+                        layui_layer.msg('更新出库单失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+            return updateFlag;
+    }
+    /* 删除数据*/
+    function onDeleteStockOut(invoiceCode){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.invoiceCode= invoiceCode;
+        param.isDeleteStockOut = "isDeleteStockOut";
+        $.ajax({
+                url: "http://localhost:8080/newshop/stockOut/deleteStockOut",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            layui_layer.msg('删除出库单成功: ',{
+                                icon:6,
+                            });
+                            var loadStockOut = {};
+                            loadStockOut.isStockOut = isStockOut;
+                            loadStockOutInfo(loadStockOut);
+                    } else{
+                        layui_layer.msg('删除出库单失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+        return deleteFlag;
+    };
+    
+    /* 插入实体 */
+    function onStockOutInsert(){
+        var obj = {};
+        obj.isStockOutInsert = "isStockOutInsert";
+        obj.totalQty = "0";
+        obj.totalMoney = "0";
+        $.ajax({
+                headers: { Accept: "application/json; charset=utf-8"},
+                url:"http://localhost:8080/newshop/stockOut/insertStockOut",
+                type:"POST",
+                async:true,
+                data:obj,
+                success: data=>{
+                        if(data.success === true){
+                            layer.alert("新增出库单成功,可编辑该出库单", {
+                                icon: 1,
+                                title: "提示"
+                            });
+                        }else{
+                            layer.alert("编辑原有出库单失败, 请稍后重试", {
+                                icon: 5,
+                                title: "提示"
+                            });
+                        }
+                    }
+        });
+        var param = {};
+        param.isStockOut = isStockOut;
+        loadStockOutInfo(param);
+    }
+
+    function selectStockIN() {
+        var selectFlag;
+        var obj = {}; //selInvoiceCode selMoveType start end
+        obj.invoiceCode= $("#selInvoiceCode").val();
+        obj.processStatus = $("#selMoveType").find("option:selected").val();
+        obj.createdDate= $("#start").val() + ' 00:00:00';
+        obj.modifiedDate= $("#end").val() + ' 23:59:59';
+            $.ajax({
+                url: "http://localhost:8080/newshop/stockOut/selectStockOut",
+                data: obj,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('查找出库单成功: '+obj.invoiceCode+'成功',{
+                            icon:6,
+                        });
+                        StockOutListTable.reload({   
+                            data:data.data,
+                            limit:data.length,
+                        });
+                    }else{
+                        layui_layer.msg('查找出库单失败,请稍后重试',{
+                            icon:3,
+                        });
+                        var param = {};
+                        param.isStockOut = isStockOut;
+                        loadStockOutInfo(param);
+                    }
+                }
+            })
+    }
+
+</script>
+</body>
+</html>

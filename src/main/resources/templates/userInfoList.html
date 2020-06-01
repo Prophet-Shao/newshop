@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="userUpdateArea" style="padding: 20px;display: none">
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">用户昵称:</label>
+          <div class="layui-input-block">
+            <input id="updateUserName" type="text" name="userName" placeholder="用户昵称" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">密码:</label>
+            <div class="layui-input-block">
+              <input id="updatePassword" type="text" name="password" placeholder="密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">手机号:</label>
+            <div class="layui-input-block">
+              <input id="updatePhone" type="text" name="phone" placeholder="手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">地址:</label>
+            <div class="layui-input-block">
+              <input id="updateAddress" type="text" name="address" placeholder="收货地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+      </form>
+</div>
+<body>
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="userList" lay-filter="userList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isSetInfo= "isSetInfo";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var userListTable;
+    var offset = 0;
+    var limit = 10;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+
+        userListTable = layui_table.render({
+            elem: '#userList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'userId', title: '用户编号', width: 130, fixed: 'left', }
+                , { field: 'userName', title: '用户名称', width: 120 }
+                , { field: 'description', title: '详细描述', width: 130 }
+                , { field: 'phone', title: '电话', width: 130 }
+                , { field: 'address', title: '地址', width: 130 }
+                , { field: 'sex', title: '性别', width: 70 }
+                , { field: 'userTypeId', title: '用户等级', width: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar' }
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(userList)', function (obj) {
+            var layEvent = obj.event;
+            var data = obj.data;
+            var userId = data.userId;
+            var userName = data.userName;
+            var password = data.password;
+            var phone = data.phone;
+            var address = data.address;
+            var sex = data.sex;
+            var userTypeId = data.userTypeId;
+                $("#updateUserName").val(userName);
+                $("#updatePassword").val(password);
+                $("#updatePhone").val(phone);
+                $("#updateAddress").val(address);
+            if (layEvent === 'edit') {
+                //显示弹出层
+                
+                layui_layer.open({
+                    type:1,
+                    content:$('#userUpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var updateFlag ;
+                        updateFlag = updateUserInfo(obj);
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+userName+"'该用户吗？";
+                if (userId != null ) {
+                        title = "该用户已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (userId != null ) {
+                        //删除用户
+                        //alert('删除用户成功 用户ID:'+userId+' 用户名称:'+userName);
+                        var deleteFlag;
+                        deleteFlag =  onDeleteUser(userId);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                       
+                    } else {
+                        //屏蔽用户
+                        alert('删除用户失败 用户不存在');
+                        //deleteOrder(salesOrderId);
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                //alert('查看事件: userID:{'+userId+'}: userName:{'+userName+'}');
+                layui_layer.open({
+                    type:1,
+                    content:$('#userUpdateArea')
+                });
+                //summitComp(salesOrderId, isPay);
+            }
+        });
+        var param = {};
+        param.isSetInfo = isSetInfo;
+        loadUserInfo(param);
+
+    });
+
+    /* 加载所有用户数据 */
+    //userId userName description phone address sex userTypeId
+    function loadUserInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"/newshop/userInfo/loadAllUser",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data);
+                if(data.success === true){
+                    userListTable.reload({
+                        data:data.data,
+                        limit:data.length,
+                    });
+                }else{
+                    layui_layer.msg('加载用户失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载用户成功");
+            }
+        });
+    }
+
+    /* 更新用户数据 */
+    function updateUserInfo(user) {
+        let data = user.data;
+        var updateFlag = 0;
+        var crmUser = {};
+        crmUser.userId = data.userId;
+        crmUser.userName = $("#updateUserName").val();
+        crmUser.password= $("#updatePassword").val();
+        crmUser.phone=$("#updatePhone").val();
+        crmUser.address=$("#updateAddress").val();
+            $.ajax({
+                url: "http://localhost:8080/newshop/userInfo/updateUser",
+                data: crmUser,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        //alert("更新用户成功");
+                        updateFlag = 1;
+                        layui_layer.msg('更新用户成功: '+data.data.userName+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isSetInfo = isSetInfo;
+                            loadUserInfo(param);
+                    } else{
+                        layui_layer.msg('更新用户失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                    
+                }
+            })
+
+            return updateFlag;
+    }
+    /* 删除用户*/
+    function onDeleteUser(userId){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.userId= userId;
+        param.isDeleteUser = "isDeleteUser";
+        $.ajax({
+                url: "http://localhost:8080/newshop/userInfo/deleteUser",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            alert("删除用户成功");
+                            layui_layer.msg('删除用户成功: ',{
+                                icon:6,
+                            });
+                            var loadUser = {};
+                            loadUser.isSetInfo = isSetInfo;
+                            loadUserInfo(loadUser);
+                    } else{
+                        layui_layer.msg('更新用户失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                    
+                }
+            })
+        return deleteFlag;
+    };
+
+</script>
+</body>
+</html>

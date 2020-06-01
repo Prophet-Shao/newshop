@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockOutDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockOutDetail" >
+    <id column="return_stocks_detail_code" property="returnStocksDetailCode" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="source_no" property="sourceNo" jdbcType="VARCHAR" />
+    <result column="detail_id" property="detailId" jdbcType="BIGINT" />
+    <result column="is_audit" property="isAudit" jdbcType="INTEGER" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="stock_position" property="stockPosition" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <resultMap id="QueryResultMap" type="com.ss.springbootNewshop.bean.StockOutDetail" >
+    <id column="return_stocks_detail_code" property="returnStocksDetailCode" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="source_no" property="sourceNo" jdbcType="VARCHAR" />
+    <result column="detail_id" property="detailId" jdbcType="BIGINT" />
+    <result column="is_audit" property="isAudit" jdbcType="INTEGER" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="stock_position" property="stockPosition" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    return_stocks_detail_code, number, invoice_code,products_code, products_model, color, size, unit_id,
+    quantity, price, money, ext1, ext2, ext3, memo, type_id, source_no, detail_id, is_audit,
+    batch_no, stock_position, account_set_id
+  </sql>
+
+  <sql id="Query_Column_List" >
+    return_stocks_detail_code, number, stock_out_detail.invoice_code, stock_out_detail.products_code, products_model,
+    stock_out_detail.color, stock_out_detail.size,
+    stock_out_detail.unit_id, stock_out_detail.quantity, stock_out_detail.price, stock_out_detail.money,
+    stock_out_detail.ext1, stock_out_detail.ext2, stock_out_detail.ext3, stock_out_detail.memo,
+    stock_out_detail.type_id, products.id,products.product_name,
+    products_unit.symbol, products.sales_price, category.category_name
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from stock_out_detail
+    where return_stocks_detail_code = #{returnStocksDetailCode,jdbcType=BIGINT}
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByInvoiceCode" resultMap="QueryResultMap" parameterType="com.ss.springbootNewshop.bean.StockOutDetail">
+    SELECT
+    <include refid="Query_Column_List" />
+    FROM stock_out_detail,products,category,products_unit
+    <where>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode}
+        and stock_out_detail.products_code = products.memo2
+        and stock_out_detail.products_model =  category.category_id
+        and stock_out_detail.unit_id =  products_unit.unit_id
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_out_detail
+    where return_stocks_detail_code = #{returnStocksDetailCode,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockOutDetail" >
+    insert into stock_out_detail (return_stocks_detail_code, number, invoice_code,
+      products_code,products_model, color, size,
+      unit_id, quantity, price,
+      money, ext1, ext2,
+      ext3, memo, type_id,
+      source_no, detail_id, is_audit,
+      batch_no, stock_position, account_set_id
+      )
+    values (#{returnStocksDetailCode,jdbcType=BIGINT}, #{number,jdbcType=BIGINT}, #{invoiceCode,jdbcType=VARCHAR},
+      #{productsCode,jdbcType=VARCHAR},#{productsModel,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR},
+      #{unitId,jdbcType=BIGINT}, #{quantity,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL},
+      #{money,jdbcType=DECIMAL}, #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR},
+      #{ext3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT},
+      #{sourceNo,jdbcType=VARCHAR}, #{detailId,jdbcType=BIGINT}, #{isAudit,jdbcType=INTEGER},
+      #{batchNo,jdbcType=VARCHAR}, #{stockPosition,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockOutDetail" >
+    insert into stock_out_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="returnStocksDetailCode != null" >
+        return_stocks_detail_code,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code,
+      </if>
+      <if test="productsCode != null" >
+        products_code,
+      </if>
+      <if test="productsModel != null" >
+        products_model,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="sourceNo != null" >
+        source_no,
+      </if>
+      <if test="detailId != null" >
+        detail_id,
+      </if>
+      <if test="isAudit != null" >
+        is_audit,
+      </if>
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="stockPosition != null" >
+        stock_position,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="returnStocksDetailCode != null" >
+        #{returnStocksDetailCode,jdbcType=BIGINT},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="sourceNo != null" >
+        #{sourceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null" >
+        #{detailId,jdbcType=BIGINT},
+      </if>
+      <if test="isAudit != null" >
+        #{isAudit,jdbcType=INTEGER},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stockPosition != null" >
+        #{stockPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockOutDetail" >
+    update stock_out_detail
+    <set >
+      <if test="number != null" >
+        number = #{number,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        products_code = #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        products_model = #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="sourceNo != null" >
+        source_no = #{sourceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null" >
+        detail_id = #{detailId,jdbcType=BIGINT},
+      </if>
+      <if test="isAudit != null" >
+        is_audit = #{isAudit,jdbcType=INTEGER},
+      </if>
+      <if test="batchNo != null" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stockPosition != null" >
+        stock_position = #{stockPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where return_stocks_detail_code = #{returnStocksDetailCode,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockOutDetail" >
+    update stock_out_detail
+    set number = #{number,jdbcType=BIGINT},
+      invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      products_code = #{productsCode,jdbcType=VARCHAR},
+      products_model = #{productsModel,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      money = #{money,jdbcType=DECIMAL},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT},
+      source_no = #{sourceNo,jdbcType=VARCHAR},
+      detail_id = #{detailId,jdbcType=BIGINT},
+      is_audit = #{isAudit,jdbcType=INTEGER},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      stock_position = #{stockPosition,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where return_stocks_detail_code = #{returnStocksDetailCode,jdbcType=BIGINT}
+  </update>
+</mapper>

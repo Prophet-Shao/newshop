@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>店铺添加</title>
+    <title>newshop后台</title>
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <!-- 百度地图API -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=OTqXb3sqmS7d4HhGDHKofKQPVl7ShQte"></script>
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+
+</head>
+ 
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+          <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;" onclick="backToEcomShop()" />
+        </div>
+        <div class="flex header-center">
+          <span class="no-wrap">店铺详情界面</span>
+        </div>
+    </div>
+    <!-- 头部区域结束 -->
+    <form class="layui-form flex layui-form-pane" style="flex-wrap: wrap; padding: 50px;" lay-filter="selectFrom" >
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">店铺名称:</label>
+          <div class="layui-input-block">
+            <input id="shopName" type="text"  name="shopName" placeholder="店铺名称" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">店铺代号:</label>
+            <div class="layui-input-block">
+              <input id="shopCode" type="text"  name="shopCode" placeholder="店铺代号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">联系人:</label>
+            <div class="layui-input-block">
+                <input  id="contactCompany" type="text" name="contactCompany" required  lay-verify="required" placeholder="联系人" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">联系电话:</label>
+            <div class="layui-input-block">
+                <input id="contactPhone" type="text" name="contactPhone" required  lay-verify="phones" placeholder="联系电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">城市:</label>
+            <div class="layui-input-block">
+                <input id="cityCode" type="text" name="cityCode" required  lay-verify="required" placeholder="城市" autocomplete="off" class="layui-input">
+            </div>            
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">详细地址:</label>
+            <div class="layui-input-block">
+                <input id="provinceCode" type="text" name="provinceCode" required  lay-verify="required" placeholder="具体到街道" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">维度:</label>
+            <div class="layui-input-block">
+                <input id="gpsX" type="text" name="gpsX" required  lay-verify="required" placeholder="定位维度" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">经度:</label>
+            <div class="layui-input-block">
+                <input id="gpsY" type="text" name="gpsY" required  lay-verify="required" placeholder="定位经度" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">仓库号:</label>
+            <div class="layui-input-block">
+                <select id="warehouseCode" name="warehouseCode" lay-verify="ProductsCategory">
+                    <option value="WH_1001">总仓</option>
+                    <option value="WH_1002">分仓2号</option>
+                    <option value="WH_1003">分仓3号</option>
+                    <option value="WH_1004">分仓4号</option>
+                    <option value="WH_1005">分仓5号</option>
+                </select>          
+              <!-- <input id="warehouseCode" type="text" name="warehouseCode" placeholder="仓库号" autocomplete="off" class="layui-input"> -->
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">备注:</label>
+            <div class="layui-input-block">
+              <input id="memo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <input  id="hiddeImg" type="hidden" name="mainImg"value=""/>
+            <label class="layui-form-label" style="width: 140px">店铺LOGO:</label>
+            <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="mainImage" style="width: 150px; height: 120px;" 
+                src="http://localhost:8080/newshop/static/Image/defaultProduct.png">
+                <p id="demoText"></p>
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <input  id="hiddeReferenceImg" type="hidden" name="refrenceImg"value=""/>
+            <label class="layui-form-label" style="width: 140px">商店营业凭据:</label>
+            <button type="button" class="layui-btn" id="refrenceImg">上传图片</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="referenceImg" style="width: 150px; height: 120px;" 
+                src="http://localhost:8080/newshop/static/Image/ShopReference/1586011471.jpg">
+                <p id="referenceDemoText"></p>
+            </div>
+        </div>
+        
+        <div class="layui-form-item" style="padding: 20px;margin: 0;">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn"  lay-submit  lay-filter="onProductsSave">保存店铺</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-form-item" style="padding: 20px;margin: 0;">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn"  onclick="openMap()">定位店铺坐标</button>
+        </div>
+    </div>
+    <div id='allmap' style='width: 75%; height: 75%; position: absolute; display: none'></div>
+
+<script th:inline="none"> //防止内联语法出错
+
+    var url=window.location.href;
+    var isEcomShop= "isEcomShop";
+
+    var layui_element;
+    var layui_layer;
+    var layui_form;
+    var layui_upload;
+    var layui_$;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+    var urlArr;             //截取URL中的ID ProductsId
+    var EcomShopId;
+    
+    urlArr = url.split("?id=");
+    EcomShopId = urlArr[1];
+    console.log(urlArr[0]);
+    console.log(urlArr[1]);
+    /* 加载已有店铺 */
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','upload'], function (args) {
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+
+        if(null!= EcomShopId && EcomShopId > 0){
+            layui_layer.msg("加载已有店铺");
+            loadEcomShop(EcomShopId);
+        }
+        /* 加载已有店铺 */
+
+        layui_form.on("submit(onProductsSave)",function (obj) {
+            saveEcomShop(obj);
+            return false;//设置成功后 回调
+        });
+        
+        //商店logo上传
+        var uploadInst = layui_upload.render({
+            elem: '#uploadImg'
+            ,accept: 'file' 
+            ,url: 'http://localhost:8080/newshop/upload/uploadEcomShopImg' //改成您自己的上传接口
+            ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#mainImage').attr('src', result); //图片链接（base64）
+            });
+            }
+            ,done: function(data){
+                //如果上传失败
+                console.log(data);
+                if(data.success){
+                    layer.msg('上传成功');
+                    if(null!=data.src){
+                        $('#mainImage').attr('value', data.src); //图片链接（base64）hiddeImg
+                        $('#hiddeImg').attr('value', data.src);
+                    }
+                }else{
+                    return layer.msg('上传失败');
+                }
+            //上传成功
+            }
+            ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            }
+        });
+
+        //商店凭据
+        var refrenceUploadInst = layui_upload.render({
+            elem: '#refrenceImg'
+            ,accept: 'file' 
+            ,url: 'http://localhost:8080/newshop/upload/uploadEcomShopReferenceImg' //改成您自己的上传接口
+            ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#referenceImg').attr('src', result); //图片链接（base64）
+            });
+            }
+            ,done: function(data){
+                console.log(data);
+                if(data.success){
+                    layer.msg('上传成功');
+                    if(null!=data.src){
+                        $('#referenceImg').attr('value', data.src); //图片链接（base64）hiddeImg
+                        $('#hiddeReferenceImg').attr('value', data.src);
+                    }
+                }else{
+                    return layer.msg('上传失败');
+                }
+
+            }
+            ,error: function(){
+            var demoText = $('#referenceDemoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                refrenceUploadInst.upload();
+            });
+            }
+        });
+
+    });
+
+    function loadEcomShop(EcomShopId){
+        var obj = {};
+        obj.ecomShopID = EcomShopId;
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/ecomShop/selectEcomShop",
+            type:"POST",
+            async:true,
+            data:obj,
+            success: data=>{
+                    var selEcomShop = data.data;
+                    if(data.success === true){
+                        $("#shopName").val(selEcomShop.shopName);    //店铺名称
+                        $("#shopCode").val(selEcomShop.shopCode);    //店铺代码
+                        $("#contactCompany").val(selEcomShop.contactCompany);    //合作人
+                        $("#contactPhone").val(selEcomShop.contactPhone);    //合作人
+                        $("#cityCode").val(selEcomShop.cityCode);    //店铺城市
+                        $("#provinceCode").val(selEcomShop.provinceCode);    //店铺地址  原→省份
+                        $("#gpsX").val(selEcomShop.gpsX);    //店铺城市
+                        $("#gpsY").val(selEcomShop.gpsY);    //店铺城市
+                        $("#warehouseCode").val(selEcomShop.warehouseCode);    //店铺仓库
+                        $("#memo").val(selEcomShop.memo);    //店铺备注
+                        if(""!=selEcomShop.shopLogo &&null!=selEcomShop.shopLogo){
+                            $("#mainImage").attr('src',"http://localhost:8080/newshop/"+selEcomShop.shopLogo);
+                            $("#hiddeImg").val(selEcomShop.shopLogo);
+                        }
+                        if(""!=selEcomShop.refrenceImg &&null!=selEcomShop.refrenceImg){
+                            $("#referenceImg").attr('src',"http://localhost:8080/newshop/"+selEcomShop.refrenceImg);
+                            $("#hiddeReferenceImg").val(selEcomShop.refrenceImg);
+                        }
+                    }else{
+                        layer.alert("编辑原有店铺失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                    console.log("编辑原有店铺失败, 请稍后重试");
+                }
+            });
+    }
+    
+    /* 插入实体 */
+    function saveEcomShop(obj){
+        console.log("保存店铺实体"+obj);
+        if(null!= EcomShopId && EcomShopId > 0){
+             layui_layer.open({
+                    type:1,
+                    content:"确认所有店铺信息填写完整"
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        saveEcomShopToBack(obj);
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.closeAll();      
+                    }});
+        }else{
+            obj.field.isEcomShopInsert="isEcomShopInsert";
+            layui_layer.msg("新增店铺");
+            $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/ecomShop/insertEcomShop",
+            type:"POST",
+            async:true,
+            data:obj.field,
+            success: data=>{
+                    if(data.success === true){
+                            layui_layer.open({
+                            type:1,
+                            content:"保存店铺成功,确认即返回店铺主页面"
+                            , btn: ['确认', '取消']
+                            , yes: function (index, layero) {
+                                backToEcomShop()  
+                            }
+                            , btn2: function (index, layero) {
+                                layui_layer.closeAll();      
+                            }});
+                    }else{
+                        layer.alert("新增店铺失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                    console.log("新增店铺失败, 请稍后重试");
+                }
+            });
+        }     
+    }
+
+    //返回店铺主页
+    function backToEcomShop(){
+            layui_layer.closeAll();
+            window.location.href = "http://localhost:8080/newshop/ecomShop/Index";
+        }
+
+    function  saveEcomShopToBack(obj){
+        //shopName shopCode contactCompany cityCode provinceCode gpsX gpsY warehouseCode memo mainImg
+        var objData = obj.field;
+        var updateEcomShop = {};
+            updateEcomShop.shopId =EcomShopId;
+            updateEcomShop.shopName =objData.shopName;
+            updateEcomShop.shopCode =objData.shopCode;
+            updateEcomShop.contactCompany =objData.contactCompany;
+            updateEcomShop.contactPhone =objData.contactPhone;
+            updateEcomShop.cityCode =objData.cityCode;
+            updateEcomShop.provinceCode =objData.provinceCode;
+            updateEcomShop.gpsX =objData.gpsX;
+            updateEcomShop.gpsY =objData.gpsY;
+            updateEcomShop.warehouseCode =$("#warehouseCode").find("option:selected").val();//;objData.warehouseCode
+            updateEcomShop.memo =objData.memo;
+            updateEcomShop.shopLogo =objData.mainImg;
+            updateEcomShop.refrenceImg =objData.refrenceImg;
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/ecomShop/updateEcomShop",
+            type:"POST",
+            async:true,
+            data:updateEcomShop,
+            success: data=>{
+                    if(data.success === true){
+                            layui_layer.open({
+                            type:1,
+                            content:"保存店铺成功,确认即返回店铺主页面"
+                            , btn: ['确认', '取消']
+                            , yes: function (index, layero) {
+                                backToEcomShop()  
+                            }
+                            , btn2: function (index, layero) {
+                                layui_layer.closeAll();      
+                            }});
+                    }else{
+                        layer.alert("保存店铺失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                    console.log("保存店铺分类列表成功");
+                }
+            });
+    }    
+
+
+    /* 地图处理 */
+    function validate() {
+        var sever_add = $('#allmap').val();
+        if (isNull(sever_add)) {
+            alert('请选择地址');
+            return false;
+        }
+        return true;
+    }
+ 
+    //判断是否是空
+    function isNull(a) {
+        return (a == '' || typeof(a) == 'undefined' || a == null) ? true : false;
+    }
+ 
+    function openMap() {
+        if ($('#allmap').hide()) {
+            $('#allmap').show();
+        } else {
+            $('#allmap').hide();
+        }
+    }
+ 
+    var map = new BMap.Map("allmap");
+    var geoc = new BMap.Geocoder();   //地址解析对象
+    var markersArray = [];
+    var geolocation = new BMap.Geolocation();
+ 
+    /* 三正坐标 */
+    var point = new BMap.Point(113.875979,23.003497);
+    map.centerAndZoom(point, 12); // 中心点
+    geolocation.getCurrentPosition(function (r) {
+        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            var mk = new BMap.Marker(r.point);
+            map.addOverlay(mk);
+            map.panTo(r.point);
+            map.enableScrollWheelZoom(true);
+        }
+        else {
+            alert('failed' + this.getStatus());
+        }
+    }, {enableHighAccuracy: true})
+    map.addEventListener("click", showInfo);
+ 
+ 
+    //清除标识
+    function clearOverlays() {
+        if (markersArray) {
+            for (i in markersArray) {
+                map.removeOverlay(markersArray[i])
+            }
+        }
+    }
+    //地图上标注
+    function addMarker(point) {
+        var marker = new BMap.Marker(point);
+        markersArray.push(marker);
+        clearOverlays();
+        map.addOverlay(marker);
+    }
+    //点击地图时间处理
+    function showInfo(e) {
+        //gpsX gpsY provinceCode
+        
+        geoc.getLocation(e.point, function (rs) {
+            var addComp = rs.addressComponents;
+            var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+            if (confirm("确定要地址是" + address + "?")) {
+                $('#gpsY').val(e.point.lng.toFixed(2));
+                $('#gpsX').val(e.point.lat.toFixed(2));
+                $('#allmap').hide();
+                $('#provinceCode').val(address);
+                $('#cityCode').val(addComp.city);
+            }
+        });
+        addMarker(e.point);
+    }
+ 
+</script>
+</body>
+</html>

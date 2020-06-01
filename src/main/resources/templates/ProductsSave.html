@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品添加</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+
+</head>
+ 
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+          <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;" onclick="backToProducts()" />
+        </div>
+        <div class="flex header-center">
+          <span class="no-wrap">商品详情界面</span>
+        </div>
+    </div>
+    <!-- 头部区域结束 -->
+    <form class="layui-form flex layui-form-pane" style="flex-wrap: wrap; padding: 50px;" lay-filter="selectFrom" >
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">商品名称</label>
+                <div class="layui-input-inline">
+                    <input id="ProductsName" type="text" name="ProductsName" required  lay-verify="required" placeholder="商品名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">商品类别:</label>
+                <div class="layui-input-inline">
+                    <select id="ProductsCategory" name="ProductsCategory" lay-verify="ProductsCategory">
+                    <!--  <option value=""></option> -->
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">商品描述</label>
+                <div class="layui-input-inline">
+                    <input id="ProductsDesc" type="text" name="ProductsDesc" required  lay-verify="required" placeholder="商品描述" autocomplete="off" class="layui-input">
+                </div>
+            </div> 
+            <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">商品单位:</label>
+                <div class="layui-input-inline">
+                    <select id="ProductsUnit" name="ProductsUnit" lay-verify="ProductsUnit">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">商品质量:</label>
+                <div class="layui-input-inline">
+                    <input id="quantity" type="text" name="quantity" required  lay-verify="required" placeholder="商品质量" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">颜色:</label>
+                <div class="layui-input-inline">
+                    <input id="color" type="text" name="color" required  lay-verify="required" placeholder="颜色" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">大小:</label>
+                <div class="layui-input-inline">
+                    <input id="size" type="text" name="size" required  lay-verify="required" placeholder="大小" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+          
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">原价:</label>
+                <div class="layui-input-inline">
+                    <input id="price" type="text" name="price" required  lay-verify="required" placeholder="原价(元)" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">售价:</label>
+                <div class="layui-input-inline">
+                    <input id="salesPrice" type="text" name="salesPrice" required  lay-verify="required" placeholder="售价(元)" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">代理价格:</label>
+                <div class="layui-input-inline">
+                    <input id="agentPrice" type="text" name="agentPrice" required  lay-verify="required" placeholder="代理价格(元)" autocomplete="off" class="layui-input">
+                </div>
+            </div>  
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <label class="layui-form-label" style="width: 140px">备注</label>
+                <div class="layui-input-inline">
+                    <input id="memo" type="text" name="memo" required  lay-verify="required" placeholder="商品描述" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <input  id="hiddeImg" type="hidden" name="mainImg"value=""/>
+                <label class="layui-form-label" style="width: 140px">上传图片:</label>
+                <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="mainImage" style="width: 150px; height: 120px;" 
+                    src="http://localhost:8080/newshop/static/Image/defaultProduct.png">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;margin: 0;">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn"  lay-submit  lay-filter="onProductsSave">保存商品</button>
+                </div>
+            </div>
+    </form>
+    
+    
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="UnitList" lay-filter="UnitList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+
+    var url=window.location.href;
+    var isUnit= "isUnit";
+
+    var layui_element;
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_upload;
+    var layui_$;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+    var urlArr;             //截取URL中的ID ProductsId
+    var ProductsId;
+    var maxCategoryId;
+    
+    urlArr = url.split("?id=");
+    ProductsId = urlArr[1];
+    console.log(urlArr[0]);
+    console.log(urlArr[1]);
+    /* 加载已有商品 */
+    
+    
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','upload'], function (args) {
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+
+        var param = {};
+        param.isUnit = isUnit;
+        loadUnitInfo(param);
+        //加载所有商品类别
+        param.isCategory = "isCategory";
+        loadCategoryInfo(param);
+
+        if(null!= ProductsId && ProductsId > 0){
+            layui_layer.msg("加载已有商品");
+            loadProducts(ProductsId);
+        }
+        /* 加载已有商品 */
+
+        layui_form.on("submit(onProductsSave)",function (obj) {
+            saveProducts(obj);
+            return false;//设置成功后 回调
+        });
+        
+        //普通图片上传
+        var uploadInst = layui_upload.render({
+            elem: '#uploadImg'
+            ,accept: 'file' 
+            ,url: 'http://localhost:8080/newshop/upload/uploadProductsImg' //改成您自己的上传接口
+            ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#mainImage').attr('src', result); //图片链接（base64）
+            });
+            }
+            ,done: function(data){
+                //如果上传失败
+                console.log(data);
+                if(data.success){
+                    layer.msg('上传成功');
+                    if(null!=data.src){
+                        $('#mainImage').attr('value', data.src); //图片链接（base64）hiddeImg
+                        $('#hiddeImg').attr('value', data.src);
+                    }
+                }else{
+                    return layer.msg('上传失败');
+                }
+            //上传成功
+            }
+            ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+            }
+        });
+
+    });
+
+    function loadProducts(ProductsId){
+        var obj = {};
+        obj.ProductsId = ProductsId;
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/products/selectProductsById",
+            type:"POST",
+            async:true,
+            data:obj,
+            success: data=>{
+                    var selProducts = data.data[0];
+                    if(data.success === true){
+                        $("#ProductsName").val(selProducts.productName);    //商品名称
+                        //赋值商品类别
+                        
+                        //$("#ProductsCategory option[value='"+selProducts.categoryId+"']").attr("selected","selected");
+                        $("#ProductsDesc").val(selProducts.productDesc);     //赋值商品描述
+                        //赋值商品单位
+                        $("#ProductsUnit").find("option[value='"+selProducts.unitId+"']").attr("selected",true);
+                        $("#ProductsCategory").find("option[value='"+selProducts.categoryId+"']").attr("selected",true);
+                        //赋值商品质量
+                        if(""!=selProducts.quantity &&null!=selProducts.quantity){
+                            $("#quantity").val(selProducts.quantity);
+                        }
+                        //赋值商品颜色
+                        if(""!=selProducts.color &&null!=selProducts.color){
+                            $("#color").val(selProducts.color);
+                        }
+                        //赋值商品大小
+                        if(""!=selProducts.size &&null!=selProducts.size){
+                            $("#size").val(selProducts.size);
+                        }
+                        //赋值商品原价
+                        $("#price").val(selProducts.price);
+                        $("#salesPrice").val(selProducts.salesPrice);//赋值商品售价
+                        if(""!=selProducts.size &&null!=selProducts.size){
+                            $("#agentPrice").val(selProducts.agentPrice);
+                        }
+                        $("#memo").val(selProducts.memo);//赋值商品备注
+                        if(""!=selProducts.mainPic &&null!=selProducts.mainPic){
+                            $("#mainImage").attr('src',"http://localhost:8080/newshop/"+selProducts.mainPic);
+                            $("#hiddeImg").val(selProducts.mainPic);
+                        }
+                        layui_form.render('select','selectFrom');
+                    }else{
+                        layer.alert("编辑原有商品失败, 请稍后重试", {
+                            icon: 5,
+                            title: "提示"
+                            });
+                    }
+                    console.log("编辑原有商品失败, 请稍后重试");
+                }
+            });
+    }
+
+
+    
+    /* 插入实体 */
+    function saveProducts(obj){
+        console.log("保存商品实体"+obj);
+        if(null!= ProductsId && ProductsId > 0){
+             layui_layer.open({
+                    type:1,
+                    content:"确认所有商品信息填写完整"
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        saveProductToBack(obj);
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.closeAll();      
+                    }});
+        }else{
+            obj.field.isProductsInsert="isProductsInsert";
+            layui_layer.msg("新增商品");
+            $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/products/insertProducts",
+            type:"POST",
+            async:true,
+            data:obj.field,
+            success: data=>{
+                    if(data.success === true){
+                            layui_layer.open({
+                            type:1,
+                            content:"保存商品成功,确认即返回商品主页面"
+                            , btn: ['确认', '取消']
+                            , yes: function (index, layero) {
+                                backToProducts()  
+                            }
+                            , btn2: function (index, layero) {
+                                layui_layer.closeAll();      
+                            }});
+                    }else{
+                        layer.alert("新增商品失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                    console.log("新增商品失败, 请稍后重试");
+                }
+            });
+        }     
+    }
+
+    /* 加载所有商品分类 */
+    function loadCategoryInfo(param){
+        var resultData;
+        var htmls = '<option value="-1">请选择</option>'; //全局变量
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/category/loadCategory",
+            type:"POST",
+            async:true,
+            data:param,
+            success: data=>{
+                if(data.success === true){
+                    resultData = data.data;//categoryId  categoryName
+                    for(var x in resultData){
+                        htmls += '<option value = "' + resultData[x].categoryId + '">' + resultData[x].categoryName + '</option>'
+                    } 
+                    $("#ProductsCategory").html(htmls);  
+                    //form.render('select');//需要渲染一下
+                    layui_form.render('select','selectFrom');
+                }else{
+                    layui_layer.msg('加载商品分类列表失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载商品分类列表成功");
+            }
+        });
+    }
+
+    function loadUnitInfo(param){
+        var resultData;
+        var htmls = '<option value="-1">请选择</option>'; //全局变量
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/productsUnit/loadUnit",
+            type:"POST",
+            async:true,
+            data:param,
+            success: data=>{
+                if(data.success === true){
+                    resultData = data.data;//categoryId  categoryName
+                    for(var x in resultData){
+                        htmls += '<option value = "' + resultData[x].unitId + '">' + resultData[x].symbol + '</option>'
+                    } 
+                    $("#ProductsUnit").html(htmls);  
+                    //form.render('select');//需要渲染一下
+                    layui_form.render('select','selectFrom');
+                }else{
+                    layui_layer.msg('加载商品单位列表失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载商品单位列表成功");
+            }
+        });
+    }
+    
+    //返回商品主页
+    function backToProducts(){
+            layui_layer.closeAll();
+            window.location.href = "http://localhost:8080/newshop/products/Index";
+        }
+
+    function  saveProductToBack(obj){
+        var objData = obj.field;
+        var updateProducts = {};
+            updateProducts.id =ProductsId;
+            updateProducts.productName =objData.ProductsName;
+            updateProducts.productDesc =objData.ProductsDesc;
+            updateProducts.categoryId =objData.ProductsCategory;
+            updateProducts.unitId =objData.ProductsUnit;
+            updateProducts.quantity =objData.quantity;
+            updateProducts.color =objData.color;
+            updateProducts.size =objData.size;
+            updateProducts.price =objData.price;
+            updateProducts.salesPrice =objData.salesPrice;
+            updateProducts.agentPrice =objData.agentPrice;
+            updateProducts.mainPic =objData.mainImg;
+            updateProducts.memo =objData.memo;
+      
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/products/updateProducts",
+            type:"POST",
+            async:true,
+            data:updateProducts,
+            success: data=>{
+                    if(data.success === true){
+                            layui_layer.open({
+                            type:1,
+                            content:"保存商品成功,确认即返回商品主页面"
+                            , btn: ['确认', '取消']
+                            , yes: function (index, layero) {
+                                backToProducts()  
+                            }
+                            , btn2: function (index, layero) {
+                                layui_layer.closeAll();      
+                            }});
+                    }else{
+                        layer.alert("保存商品失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                    console.log("保存商品分类列表成功");
+                }
+            });
+    }    
+</script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>配送单管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="UpdateArea" style="padding: 20px;display: none"> 
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">配送员名称:</label>
+          <div class="layui-input-block">
+            <input id="updateName" type="text" name="freightCompany" placeholder="配送员名称" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">联系电话:</label>
+            <div class="layui-input-block">
+              <input id="updateNumber" type="text" name="freightNumber" placeholder="联系电话" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">订单地址:</label>
+            <div class="layui-input-block">
+              <input id="updateAddress" type="text" name="freightAddress" placeholder="街道地址信息" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <!-- <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">订单状态:</label>
+            <div class="layui-input-block">
+              <input id="updateAddress" type="text" name="freightAddress" placeholder="街道地址信息" autocomplete="off" class="layui-input">
+            </div>
+          </div> -->
+          <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">订单状态:</label>
+            <div class="layui-input-block">
+              <select id="updateState" name="orderState" lay-filter="orderState">
+                <option value="0" selected>未配送</option>
+                <option value="1">配送中</option>
+                <option value="2">配送成功</option>
+                <option value="3">配送失败</option>
+                <option value="4">取消配送</option>
+              </select>
+            </div>
+          </div>
+      </form>
+</div>
+<body>
+    <div class="layui-form-item" style="padding: 20px;margin: 0;">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="onSalesFreightCompany()">添加配送单</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="FreightList" lay-filter="FreightList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isFreight= "isFreight";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var FreightListTable;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table', 'layedit'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+        layui_layedit = layui.layedit;
+        //创建一个编辑器
+        var editIndex = layui_layedit.build('LAY_demo_editor'); /**/
+        //自定义验证规则
+        layui_form.verify({
+            title: function(value) {
+                if(value.length < 5) {
+                    return '至少输入5个字符';
+                }
+            },
+            password: [
+                /^(\w){6,20}$/, '只能输入6-20个字母、数字、下划线'
+            ],
+            emails: [
+                /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, '请输入正确的邮箱格式：<br>如：xxx@qq.com<br>xxx@163.com等格式'
+            ],
+            phones: [
+                /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/, '您的输入有误，请重新输入(中国11位手机号)'
+            ],
+            truename: [
+                /^[\u4e00-\u9fa5]{2,4}$/, '您的输入有误，请输入2-4位中文'
+            ],
+            cardId: [
+                /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, '请输入正确的身份证号'
+            ],
+            content: function(value) {
+                layedit.sync(editIndex);
+            }
+        });
+
+        FreightListTable = layui_table.render({
+            elem: '#FreightList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'salesFreightId', title: '配送单ID', minWidth: 100, fixed: 'left', }
+                , { field: 'salesOrderCode', title: '配送单号', minWidth: 170 }
+                , { field: 'freightName', title: '配送人员', minWidth: 100 }
+                , { field: 'freightNumber', title: '配送人员电话', minWidth: 110 }
+                , { field: 'orderAddress', title: '配送地址', minWidth: 130 }
+                , { field: 'freightStateEx', title: '配送状态', minWidth: 90 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar', minWidth: 200 }
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(FreightList)', function (obj) {
+            var layEvent = obj.event;
+            var salesFreightId = obj.data.salesFreightId;
+            var freightName = obj.data.freightName;
+            var salesOrderCode = obj.data.salesOrderCode;
+            var freightNumber = obj.data.freightNumber;
+            var orderAddress = obj.data.orderAddress;
+                $("#updateName").val(freightName);
+                $("#updateNumber").val(freightNumber);
+                $("#updateAddress").val(orderAddress);
+            if (layEvent === 'edit') {
+                //显示弹出层
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var updateFlag ;
+                        updateFlag = updateFreightInfo(obj);
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+salesOrderCode+"'该配送单吗？";
+                if ( null !=  salesFreightId) {
+                        title = "该配送单已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (null != salesFreightId ) {
+                        //删除用户
+                        var deleteFlag;
+                        deleteFlag =  onDeleteCompany(salesFreightId);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                    } else {
+                        alert('删除配送员失败 数据出错');
+                        //deleteOrder(salesOrderId);
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                });
+            }
+        });
+        var param = {};
+        param.isFreight = isFreight;
+        loadFreightInfo(param);
+
+    });
+
+    /* 加载所有数据 */
+    //userId userName description phone address sex userTypeId
+    function loadFreightInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"/newshop/salesFreight/loadFreight",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data);
+                if(data.success === true){
+                    FreightListTable.reload({
+                        data:data.data,
+                        limit:data.length,
+                    });
+                }else{
+                    layui_layer.msg('加载配送单列表失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载配送单列表成功");
+            }
+        });
+    }
+
+    /* 更新数据 */
+    function updateFreightInfo(salesFreight) {
+        let data = salesFreight.data;
+        var updateFlag = 0;
+        var salesFreight = {};
+        salesFreight.salesFreightId = data.salesFreightId;
+        salesFreight.freightName = $("#updateName").val();
+        salesFreight.freightNumber = $("#updateNumber").val();  
+        salesFreight.orderAddress = $("#updateAddress").val();  
+        salesFreight.freightState = $("#updateState").find("option:selected").val();
+        salesFreight.accountSetId = 1; 
+
+            $.ajax({
+                url: "http://localhost:8080/newshop/salesFreight/updateFreight",
+                data: salesFreight,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        updateFlag = 1;
+                        layui_layer.msg('更新配送单成功: '+data.data.salesOrderCode+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isFreight = isFreight;
+                            loadFreightInfo(param);
+                    } else{
+                        layui_layer.msg('更新配送单失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+            return updateFlag;
+    }
+    /* 删除数据*/
+    function onDeleteCompany(freightId){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.freightId= freightId;
+        param.isDeleteFreight = "isDeleteFreight";
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesFreight/deleteFreight",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            layui_layer.msg('删除配送单成功: ',{
+                                icon:6,
+                            });
+                            var loadFreight = {};
+                            loadFreight.isFreight = isFreight;
+                            loadFreightInfo(loadFreight);
+                    } else{
+                        layui_layer.msg('更新配送员失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                    
+                }
+            })
+        return deleteFlag;
+    };
+    
+    /* 插入实体 */
+    function onSalesFreightCompany(){
+        layui_layer.open({
+                    type:1,
+                    content:$('#UpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var insertFlag ;
+                        insertFlag = insertObj();
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+    }
+    
+    //updateName updateNumber updateAddress updateState
+    function insertObj(){
+        var insertFlag;
+        var obj = {};
+        obj.isFreightInsert= "isFreightInsert";
+        obj.freightName = $("#updateName").val();   
+        obj.freightNumber = $("#updateNumber").val();  
+        obj.freightAddress = $("#updateAddress").val();  
+        obj.orderState = $("#updateState").find("option:selected").val();
+        obj.partnerId = 1;  
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesFreightCompany/insertCompany",
+                data: obj,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('新增配送单成功: '+obj.Company+'成功',{
+                            icon:6,
+                        });
+                    }else{
+                        layui_layer.msg('新增配送员失败,请稍后重试',{
+                            icon:3,
+                        });
+                    }
+                    var param = {};
+                    param.isFreight = isFreight;
+                    loadFreightInfo(param);
+                }
+            })
+            return insertFlag;
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户订单详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+
+    </style>
+<script id="OrderData" type="text/html" th:inline="none">
+    {{#  if(d.salesOrderList.length <= 0){ }}
+    <div id= "noneBasket" style="height:200px;text-align:center;line-height:200px;font-size:16px;">还没有订单呢,请下单~</div>
+    {{#  } }} 
+    
+	{{#  layui.each(d.salesOrderList, function(index, item){ }}
+	<div class="flex" style="flex-direction: column;padding: 0.8rem;
+			background-color: white;margin-top: 10px;margin-bottom: 10px;" >
+			<input id="processStates-{{item.invoiceCode}}" type="hidden" value="{{item.processStatus}}">
+			<div class="flex" style ="justify-content: space-between;">
+					<span>时间: <span id="createdDate-{{item.invoiceCode}}" style="font-size: 1.2rem;">{{item.createdDate}}</span></span>
+					<span id="processStates-{{item.invoiceCode}}" >{{item.processStatusName}}</span>
+			</div><!-- 渲染商品 -->
+			{{#  layui.each(item.salesOrderDetailList, function(index, detail){ }}
+			<div class="flex" style="padding-left: 1rem;">
+				<img  class="am-fl" src="http://localhost:8080/newshop/{{detail.mainPic}}" alt=""
+				style="padding-top: 1.5rem;padding-bottom: 1rem;width: 30%;">
+				<div class="goods-item-right">
+					<div class="flex" style="padding-right: 1rem;justify-content: space-around;align-items: center;">
+						<div class="no-wrap" style="font-size:1.4rem;padding-left:1rem">{{ detail.productName }}</div>
+					</div>
+					<b style="font-size:1.6rem;color: #ff2c54;margin-left:5px;">￥
+						<span id = "price-{{item.customersBasketId}}" class="prodPrice">{{ detail.salesPrice }}</span>
+					</b>
+					<span class="no-wrap" style="font-size:1.4rem;">【数量】{{ detail.quantity }} {{ detail.symbol }}</span><br>
+					<span class="no-wrap" style="font-size:1.4rem;">详细: {{ detail.productDesc }}</span><br>
+				</div>
+			</div>
+			{{#  }); }}
+			<div class="flex" style="flex-direction: column;">
+				<span>地址: {{item.address}}</span>
+				<span>收货人: {{item.userName}}</span>
+				<span>联系电话: {{item.phone}}</span>
+			</div>
+			<div  class="flex" style="justify-content: flex-end;">
+				<button type="button" class="layui-btn layui-btn-xs layui-btn-primary layui-btn-radius" 
+				onclick="OrderStatesConfirm('{{item.invoiceCode}}')">
+				确认订单
+				</button>
+			</div>
+	</div>
+    {{#  }); }}
+    </script>
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">订单详情</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" th:src="@{../static/icon/home_white32.png}"/>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 购物车数据 -->
+    <div style="margin-bottom:100px; margin-top: 0px;padding-bottom: 5rem; margin: 10px 0;display: block;">
+        <div id="orderList" class="layui-form catbox"><!-- cartTable -->
+        </div>
+    </div>
+
+
+<script th:inline="none"> //防止内联语法出错
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+
+
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','upload','table','laytpl'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+        layui_laytpl = layui.laytpl;
+
+        //loadBasketInfo();
+        loadUserOrderInfo();
+        /* 若有用户登录 加载用户数据到httprequest */
+
+
+        layui_form.render();
+    });
+    //统计所有商品  数量 价格
+    
+	/* 获取用户订单数据 */
+	function loadUserOrderInfo(){
+		var param = {};
+        param.isUserOrderLoad = "isUserOrderLoad";
+        var htmls = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/loadUserOrderDetail",
+                data: param,
+                type: "post",
+                success: data=>{
+					if(data.success == true){
+						console.log(data);
+                    	var getTpl = document.getElementById('OrderData').innerHTML
+                        ,view = document.getElementById('orderList');
+                        layui_laytpl(getTpl).render(data, function(html){
+							view.innerHTML = html;
+							layui.use(['element'], function (args) {
+								var element = layui.element;
+								element.init();
+							});
+							layui_form.render();
+                   		}); 
+					}else {
+						layui_layer.msg('获取数据失败,请重新登录');
+					}
+                    
+            } 
+        });
+	}
+    
+	/* 确认订单情况 */
+    function OrderStatesConfirm(invoiceCode){
+		let processStates = $('#processStates-'+invoiceCode).val();
+        if(processStates == 1 ){
+			let param ={};
+			param.invoiceCode=invoiceCode;
+			param.processStatus = 2;
+			$.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/updateSalesOrder",
+                data: param,
+                type: "post",
+                success: data=>{
+					if(data.success == true){
+						console.log(data);
+						layui_layer.msg('订单确认成功',{icon:1,time:3000,shade:0.4},function() {
+                                window.location.href = "http://localhost:8080/newshop/userIndex";
+                        });      
+					}else {
+						layui_layer.msg('确认订单收货完成失败');
+					}
+            } 
+        });
+		} else if(processStates == 0 ){
+			layui_layer.msg('该订单未支付, 请完成支付再确认');
+		} else if(processStates == 2 ){
+			layui_layer.msg('该订单已完成, 请检查订单收货情况');
+		}
+		return false;
+	}
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+
+
+
+</script>
+
+
+</body>
+</html>

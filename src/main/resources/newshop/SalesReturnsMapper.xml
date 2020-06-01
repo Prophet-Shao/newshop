@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.SalesReturnsMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.SalesReturns" >
+    <id column="sales_returns_id" property="salesReturnsId" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="returns_type_id" property="returnsTypeId" jdbcType="BIGINT" />
+    <result column="guest_code" property="guestCode" jdbcType="BIGINT" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="BIGINT" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+    <result column="modified_by" property="modifiedBy" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="BIGINT" />
+    <result column="tax_rate" property="taxRate" jdbcType="BIGINT" />
+    <result column="process_status" property="processStatus" jdbcType="VARCHAR" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+    <result column="cost_total" property="costTotal" jdbcType="DECIMAL" />
+    <result column="total_paid" property="totalPaid" jdbcType="DECIMAL" />
+    <result column="is_full_stock_in" property="isFullStockIn" jdbcType="INTEGER" />
+    <result column="is_full_paid" property="isFullPaid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sales_returns_id, invoice_code, returns_type_id, guest_code, created_date, created_by, 
+    modified_date, modified_by, stockhouse_code, pay_code, tax_rate, process_status, 
+    total_money, total_qty, cost_total, total_paid, is_full_stock_in, is_full_paid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sales_returns
+    where sales_returns_id = #{salesReturnsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sales_returns
+    where sales_returns_id = #{salesReturnsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.SalesReturns" >
+    insert into sales_returns (sales_returns_id, invoice_code, returns_type_id, 
+      guest_code, created_date, created_by, 
+      modified_date, modified_by, stockhouse_code, 
+      pay_code, tax_rate, process_status, 
+      total_money, total_qty, cost_total, 
+      total_paid, is_full_stock_in, is_full_paid
+      )
+    values (#{salesReturnsId,jdbcType=BIGINT}, #{invoiceCode,jdbcType=VARCHAR}, #{returnsTypeId,jdbcType=BIGINT}, 
+      #{guestCode,jdbcType=BIGINT}, #{createdDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}, 
+      #{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, 
+      #{payCode,jdbcType=BIGINT}, #{taxRate,jdbcType=BIGINT}, #{processStatus,jdbcType=VARCHAR}, 
+      #{totalMoney,jdbcType=DECIMAL}, #{totalQty,jdbcType=DECIMAL}, #{costTotal,jdbcType=DECIMAL}, 
+      #{totalPaid,jdbcType=DECIMAL}, #{isFullStockIn,jdbcType=INTEGER}, #{isFullPaid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.SalesReturns" >
+    insert into sales_returns
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="salesReturnsId != null" >
+        sales_returns_id,
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code,
+      </if>
+      <if test="returnsTypeId != null" >
+        returns_type_id,
+      </if>
+      <if test="guestCode != null" >
+        guest_code,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
+      </if>
+      <if test="modifiedBy != null" >
+        modified_by,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="taxRate != null" >
+        tax_rate,
+      </if>
+      <if test="processStatus != null" >
+        process_status,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="totalQty != null" >
+        total_qty,
+      </if>
+      <if test="costTotal != null" >
+        cost_total,
+      </if>
+      <if test="totalPaid != null" >
+        total_paid,
+      </if>
+      <if test="isFullStockIn != null" >
+        is_full_stock_in,
+      </if>
+      <if test="isFullPaid != null" >
+        is_full_paid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="salesReturnsId != null" >
+        #{salesReturnsId,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnsTypeId != null" >
+        #{returnsTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="guestCode != null" >
+        #{guestCode,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null" >
+        #{modifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate,jdbcType=BIGINT},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="costTotal != null" >
+        #{costTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPaid != null" >
+        #{totalPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="isFullStockIn != null" >
+        #{isFullStockIn,jdbcType=INTEGER},
+      </if>
+      <if test="isFullPaid != null" >
+        #{isFullPaid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.SalesReturns" >
+    update sales_returns
+    <set >
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnsTypeId != null" >
+        returns_type_id = #{returnsTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="guestCode != null" >
+        guest_code = #{guestCode,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null" >
+        modified_by = #{modifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="taxRate != null" >
+        tax_rate = #{taxRate,jdbcType=BIGINT},
+      </if>
+      <if test="processStatus != null" >
+        process_status = #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        total_qty = #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="costTotal != null" >
+        cost_total = #{costTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPaid != null" >
+        total_paid = #{totalPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="isFullStockIn != null" >
+        is_full_stock_in = #{isFullStockIn,jdbcType=INTEGER},
+      </if>
+      <if test="isFullPaid != null" >
+        is_full_paid = #{isFullPaid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where sales_returns_id = #{salesReturnsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.SalesReturns" >
+    update sales_returns
+    set invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      returns_type_id = #{returnsTypeId,jdbcType=BIGINT},
+      guest_code = #{guestCode,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      modified_by = #{modifiedBy,jdbcType=BIGINT},
+      stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      pay_code = #{payCode,jdbcType=BIGINT},
+      tax_rate = #{taxRate,jdbcType=BIGINT},
+      process_status = #{processStatus,jdbcType=VARCHAR},
+      total_money = #{totalMoney,jdbcType=DECIMAL},
+      total_qty = #{totalQty,jdbcType=DECIMAL},
+      cost_total = #{costTotal,jdbcType=DECIMAL},
+      total_paid = #{totalPaid,jdbcType=DECIMAL},
+      is_full_stock_in = #{isFullStockIn,jdbcType=INTEGER},
+      is_full_paid = #{isFullPaid,jdbcType=INTEGER}
+    where sales_returns_id = #{salesReturnsId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新零售登录页面</title>
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+
+    <script th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+
+    </head>
+    <style>
+        .flex{
+            display: flex;
+            display: -webkit-flex;/*Safari*/
+        }
+    
+    </style>
+<body>
+<div  style="width: 100%; position: relative; left:35%;height:100%;justify-content: center;align-items: center; overflow: hidden">
+    <div class="flex" style="align-items: center;position: relative; left:7%;">
+        <header class="layui-elip" style="width: 82%">新零售登录页</header>
+        <p></p>
+    </div>
+    
+<!--用户注册--><!--th:action="@{/doRegister}"-->
+
+<form class="layui-form layui-form-pane"   >
+    <div class="flex" style="align-items: center;flex-direction: column;position: relative; left:-40%;">
+        <img class="img-circle" th:src="@{static/icon/Basket_Empty.png}" alt=""
+                width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" th:text="#{login.username}">Username</label>
+        <div class="layui-input-inline">
+            <input type="text" id="userName" name="username" required
+            lay-verify="required" placeholder="用户名是必填项" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" th:text="#{login.password}">Password</label>
+        <div class="layui-input-inline">
+            <input type="password" id="password" name="password" required  
+            lay-verify="password" placeholder="密码是必填项" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <input type="checkbox" name="" lay-skin="primary" checked>[[#{login.remember}]]
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label" style="width: 290px">新零售平台©2019-2020</label>
+    </div>
+    <div class="layui-form-item flex" style="align-items: center;flex-direction: column;position: relative; left:-38%;">
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-radius layui-btn-primary" style="width: 150px;"
+                    type="submit" th:text="#{login.btn}" onclick="doLogin()"> Sign in
+        </button>
+        </div>
+    </div>
+    <!-- <div class="layui-form-item" style="padding:4rem;" >
+        <div class="layui-input-inline">
+            <button class="layui-btn" lay-submit lay-filter="doRegister">立即注册</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div> -->
+</form>
+<div class="flex" style="flex-direction: column; padding-top: 2rem;justify-content: center;align-items: center;position: relative; left:-40%;">
+    <button class="layui-btn layui-btn-radius layui-btn-primary" style="width: 150px;"
+            th:text="#{login.signUp}" onclick="gotoRegister()"> 注册
+    </button>
+    <div style="flex-direction: row">
+        <a class="btn btn-sm" th:href="@{/login(l='zh_CN')}">中文</a>
+        <a class="btn btn-sm" th:href="@{/login(l='en_US')}">English</a>
+    </div>
+
+</div>
+
+</div>
+<script >
+    var layui_layer;
+    var layui_form;
+    var layui_element;
+    var layui_layedit;
+    var $;
+    layui.use(['layer', 'element', 'form', 'layedit'], function() {
+         layui_layer = layui.layer;
+         layui_form = layui.form;
+         layui_element = layui.element;
+         layui_layedit = layui.layedit;
+         $ = layui.jquery;
+    });
+
+
+    /* 注册跳转 */
+    function gotoRegister(){
+        window.location.href = "http://localhost:8080/newshop/register";
+    }
+
+    
+    /* 加载所有入库单分类 */
+    function doLogin(){
+        if(null == $('#userName').val() || null == $('#password').val() || "" == $('#userName').val() || "" == $('#password').val()){
+            layui_layer.msg("请完整输入用户名和密码信息");
+        }else{
+            let param ={};
+            param.userName = $('#userName').val();
+            param.password = $('#password').val();
+            $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/doLogin",
+            type:"POST",
+            async:true,
+            data:param,
+            success: data=>{
+                if(data.success === true){
+                    console.log(data);
+                    console.log(data.data);
+                    window.location.href = "http://localhost:8080/newshop/"+data.url;
+                }else{
+                    layui_layer.msg('登录失败');
+                }
+            }
+        });
+        }
+       
+    }
+   
+</script>
+</body>
+</html>

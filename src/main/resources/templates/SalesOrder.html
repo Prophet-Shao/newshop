@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .flex{
+            display: flex;
+            display: inline-flex;
+            display: -webkit-flex; /* Safari */
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="UpdateArea" style="padding: 20px;display: none"> 
+    <form class="layui-form" >
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">订单号:</label>
+          <div class="layui-input-block">
+            <input id="updateInvoiceCode" type="text"  name="invoiceCode" placeholder="订单号" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">支付方式:</label>
+            <div class="layui-input-block">
+              <input id="payCode" type="text"  name="payCode" placeholder="支付方式" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">下单时间:</label>
+            <div class="layui-input-block">
+                <input  id="createdDate" type="text" name="createdDate" required  lay-verify="required" placeholder="下单时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">购买用户:</label>
+            <div class="layui-input-block">
+                <input id="createdBy" type="text" name="createdBy" required  lay-verify="required" placeholder="购买用户" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">下单店铺:</label>
+            <div class="layui-input-block">
+                <input id="shopCode" type="text" name="shopCode" required  lay-verify="required" placeholder="下单店铺" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class="layui-form-label" style="padding-left:0px;padding-right:0px">是否完成支付:</label>
+            <div class="layui-input-block">
+                <input id="isFullPaidName" type="text" name="isFullPaidName" required  lay-verify="required" placeholder="是否完成支付" autocomplete="off" class="layui-input">
+            </div>            
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">备注:</label>
+            <div class="layui-input-block">
+              <input id="memo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+      </form>
+</div>
+<body>  
+    <!-- 搜索栏 -->
+        <form class="layui-form flex" lay-filter="selectFrom" style="flex-direction: column;">
+            <div class="flex">
+                <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                    <label class="layui-form-label" style="width: 140px">订单号:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="invoiceCode" name="invoiceCode" required  lay-verify="required" placeholder="订单号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="padding: 10px;margin: 0;">
+                    <label class="layui-form-label" style="width: 140px">订单类别:</label>
+                    <div class="layui-input-inline">
+                        <select id="processStatus" name="processStatus" lay-verify="processStatus">
+                            <option value="0">未支付</option>
+                            <option value="1">已支付</option>
+                            <option value="2">已完成</option>
+                            <option value="3">支付失败</option>
+                            <option value="4">支付取消</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item flex" style="padding: 10px;margin-left: 65px;">
+                <div class="layui-form-mid">选择日期:</div>
+                <div class="layui-input-inline">
+                  <input onfocus="this.blur();" id="start" type="text" class="layui-input"
+                    style="margin-bottom: 0;margin-top: 0;">
+                </div>
+                <div class="layui-form-mid">————</div>
+                <div class="layui-input-inline">
+                  <input onfocus="this.blur();" id="end" type="text" class="layui-input"
+                    style="margin-bottom: 0;margin-top: 0;">
+                </div>
+                <div class="layui-form-item" style="padding: 0px;margin-top: 0px;">
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" onclick="selectProducts()">搜索</button>
+                    </div>
+                </div>
+              </div>
+        </form>
+
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="SalesOrderList" lay-filter="SalesOrderList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isSalesOrder= "isSalesOrder";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var SalesOrderListTable;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+
+    var date = new Date();
+    var _year = date.getFullYear();
+    var _month = date.getMonth() + 1;
+    if (_month < 10) { _month = "0" + _month; }
+    var _day = date.getDate();
+    if (_day < 10) { _day = "0" + _day; }
+    var month_first_day = _year + "-" + _month + "-01"; //当月首月日期
+    var today = _year + "-" + _month + "-" + _day;      //当前日期
+    var start = month_first_day;
+    var end = today;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+        
+        layui_laydate.render({
+          elem: '#start'
+          , value: month_first_day
+          , lang: 'cn'
+          , done: function (value, date, endDate) {
+            start = value;
+          }
+          , btns: ['now', 'confirm']
+          , theme: '#009688'
+        });
+        layui_laydate.render({
+          elem: '#end'
+          , value: today
+          , lang: 'cn'
+          , theme: '#009688'
+          , done: function (value, date, endDate) {
+            end = value;
+          }
+          , btns: ['now', 'confirm']
+        });
+
+        SalesOrderListTable = layui_table.render({
+            elem: '#SalesOrderList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页            limit:data.length,
+            cellMinWidth: 70,
+            cols: [[
+                { field: 'salesOrderId', title: '订单ID', minWidth: 90, fixed: 'left', }
+                , { field: 'invoiceCode', title: '订单编号', minWidth: 170 }
+                , { field: 'payCodeName', title: '支付方式', minWidth: 90 }
+                , { field: 'processStatusName', title: '支付进度', minWidth: 110 }
+                , { field: 'createdDate', title: '创建时间', minWidth: 130 }
+                , { field: 'totalMoney', title: '总金额', minWidth: 90 }
+                , { field: 'totalQty', title: '商品数量', minWidth: 90 }  
+                , { field: 'shopCode', title: '下单门店', minWidth: 110 }
+                , { field: 'userName', title: '下单人', minWidth: 110 }
+                , { field: 'isFullPaidName', title: '是否完结', minWidth: 110 }
+                , { field: 'memo', title: '备注', minWidth: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar',minWidth: 200}
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(SalesOrderList)', function (obj) {
+            var layEvent = obj.event;
+            var salesOrderId = obj.data.salesOrderId;
+            var invoiceCode = obj.data.invoiceCode;
+            var payCode = obj.data.payCode;
+            var payCodeName = obj.data.payCodeName;
+            var createdDate = obj.data.createdDate;
+            var createdBy = obj.data.createdBy;
+            var userName = obj.data.userName;
+            var shopCode = obj.data.shopCode;
+            var isFullPaidName = obj.data.isFullPaidName;
+            var memo = obj.data.memo;
+            
+                $("#updateInvoiceCode").val(invoiceCode); 
+                $("#payCode").val(payCodeName);
+                $("#createdDate").val(createdDate);
+                $("#createdBy").val(userName);
+                $("#shopCode").val(shopCode);
+                $("#isFullPaidName").val(isFullPaidName);
+                $("#memo").val(memo);
+            if (layEvent === 'edit') {
+                //显示弹出层
+                window.location.href = "http://localhost:8080/newshop/salesOrder/save?invoiceCode="+invoiceCode;
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+invoiceCode+"'该订单吗？";
+                if ( null !=  invoiceCode) {
+                        title = "该订单已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (null != invoiceCode ) {
+                        var deleteFlag;
+                            deleteFlag =  onDeleteSalesOrder(invoiceCode);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                    } else {
+                        alert('删除订单失败 数据出错');
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                });
+            }
+        });
+        var param = {};
+        param.isSalesOrder = isSalesOrder;
+        loadSalesOrderInfo(param);
+
+    });
+
+    /* 加载所有数据 */
+    function loadSalesOrderInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/salesOrder/loadSalesOrder",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data);
+                if(data.success === true){
+                    SalesOrderListTable.reload({
+                        data:data.data,
+                        limit:data.length,
+                    });
+                }else{
+                    layui_layer.msg('加载订单列表失败,请稍后重试',{icon:6,});
+                }
+                console.log("加载订单列表成功");
+            }
+        });
+    }
+
+    /* 更新数据 */
+    function updateUnitInfo(obj) {
+        let data = obj.data;
+        var updateFlag = 0;
+        var unit = {}; 
+        unit.id = data.id;
+        unit.processStatus = $("#updateName").val();
+        unit.memo = $("#updateMemo").val();  
+        unit.description =  $("#updateDescription").val();  
+        unit.accountSetId = 1;  
+            $.ajax({
+                url: "http://localhost:8080/newshop/productsUnit/updateUnit",
+                data: unit,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        updateFlag = 1;
+                        layui_layer.msg('更新订单成功: '+data.data.productName+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isSalesOrder = isSalesOrder;
+                            loadSalesOrderInfo(param);
+                    } else{
+                        layui_layer.msg('更新订单失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+            return updateFlag;
+    }
+    /* 删除数据*/
+    function onDeleteSalesOrder(invoiceCode){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.invoiceCode= invoiceCode;
+        param.isDeleteSalesOrder = "isDeleteSalesOrder";
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/deleteSalesOrder",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            layui_layer.msg('删除订单成功: ',{
+                                icon:1,
+                            });
+                            var loadSalesOrder = {};
+                            loadSalesOrder.isSalesOrder = isSalesOrder;
+                            loadSalesOrderInfo(loadSalesOrder);
+                    } else{
+                        layui_layer.msg('删除订单失败,请稍后重试',{icon:6,});
+                    }
+                    
+                }
+            })
+        return deleteFlag;
+    };
+    
+
+    function selectProducts() {
+        var selectFlag;
+        var obj = {}; 
+        obj.invoiceCode= $("#invoiceCode").val();
+        obj.processStatus = $("#processStatus").find("option:selected").val();
+        obj.createdDate= $("#start").val() + ' 00:00:00';
+        obj.modifiedDate= $("#end").val() + ' 23:59:59';
+            $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/selectSalesOrderBack",
+                data: obj,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('查找订单成功',{
+                            icon:6,
+                        });
+                        SalesOrderListTable.reload({
+                            data:data.data,
+                            limit:data.length,
+                        });
+                    }else{
+                        layui_layer.msg('查找订单失败,请稍后重试',{
+                            icon:3,
+                        });
+                        var param = {};
+                        param.isSalesOrder = isSalesOrder;
+                        loadProductsInfo(param);
+                    }
+                }
+            })
+    }
+</script>
+</body>
+</html>

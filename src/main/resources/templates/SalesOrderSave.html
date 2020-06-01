@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+
+</head>
+
+<!-- 选择入库商品-->
+<div id="UpdateArea" class="flex" style="padding: 20px;display: none;flex-direction: column;"> 
+    <form class="layui-form" lay-filter="selectFrom" >
+        <div class="layui-form-item" style="padding: 10px;margin: 0;">
+            <label class="layui-form-label" style="width: 140px">配送员:</label>
+            <div class="layui-input-inline">
+                <select id="SalesFreightCompany" name="SalesFreightCompany" lay-filter="SalesFreightCompany">
+                <!--  <option value=""></option> -->
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+          <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;" onclick="backToSalesOrder()" />
+        </div>
+        <div class="flex header-center">
+          <span class="no-wrap">订单详情界面</span>
+        </div>
+    </div>
+    <!-- 头部区域结束 -->
+    <form class="layui-form flex layui-form-pane" style="flex-wrap: wrap; padding-top: 55px; padding-left: 55px;margin: 0;"lay-filter="insertFrom" >
+            <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <label class=" layui-form-label" style="width: 140px">订单号:</label>
+                <div class="layui-input-inline">
+                  <input id="invoiceCode" type="text"  name="invoiceCode" placeholder="订单号" autocomplete="off" class="layui-input" readonly="readonly">
+                </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">下单时间:</label>
+                  <div class="layui-input-inline">
+                    <input id="createdDate" type="text"  name="createdDate" placeholder="下单时间" autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">购买用户:</label>
+                  <div class="layui-input-inline">
+                      <input  id="createdBy" type="text" name="createdBy" required  lay-verify="required" placeholder="购买用户" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">下单店铺:</label>
+                  <div class="layui-input-inline">
+                      <input id="shopCode" type="text" name="shopCode" required  lay-verify="required" placeholder="下单店铺" autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">是否完成支付:</label>
+                  <div class="layui-input-inline">
+                      <!-- <input id="isFullPaid" type="text" name="isFullPaidName" required  lay-verify="required" placeholder="是否完成支付" autocomplete="off" class="layui-input"> -->
+                      <select id="isFullPaid" name="isFullPaid" lay-verify="isFullPaid">
+                        <option value="0">未完结订单</option>
+                        <option value="1">已完结订单</option>
+                        </select>
+                    </div> 
+                    </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">订单状态:</label>
+                  <div class="layui-input-inline">
+                      <!-- <input id="processStatus" type="text" name="processStatus" required  lay-verify="required" placeholder="入库状态" autocomplete="off" class="layui-input" readonly="readonly"> -->
+                      <select id="processStatus" name="processStatus" lay-verify="processStatus">
+                        <option value="0">未支付</option>
+                        <option value="1">已支付</option>
+                        <option value="2">已完成</option>
+                        <option value="3">订单取消</option>
+                        <option value="4">已支付</option>
+                        </select>
+                    </div>            
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class="layui-form-label" style="width: 140px">总数量:</label>
+                  <div class="layui-input-inline">
+                      <input id="totalQty" type="text" name="totalQty" required  lay-verify="required" placeholder="总数量" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">总价格:</label>
+                  <div class="layui-input-inline">
+                      <input id="totalMoney" type="text" name="totalMoney" required  lay-verify="required" placeholder="总价格" autocomplete="off" class="layui-input" readonly="readonly">
+                  </div>
+              </div>
+              <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                  <label class=" layui-form-label" style="width: 140px">备注:</label>
+                  <div class="layui-input-inline">
+                    <input id="memo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+            <div class="layui-form-item" style="padding: 5px;margin: 0;">
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn"  lay-submit  lay-filter="onSalesOrderSave">保存订单</button>
+                </div>
+            </div>
+    </form>
+    <div class="layui-form-item" style="padding-top: 0px; padding-left: 55px; margin: 0;">
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn"  onclick="selectSalesFreightCompany()">选择配送员</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding-left: 55px;">
+        <table id="SalesOrderDetailList" lay-filter="SalesOrderDetailList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var url=window.location.href;
+
+    var layui_element;
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_$;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+    var urlArr;             //截取URL中的 invoiceCode
+    var invoiceCode;
+    
+    urlArr = url.split("invoiceCode=");
+    invoiceCode = urlArr[1];
+    console.log(urlArr[1]);
+    /* 加载已有订单 */
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_$ = layui.jquery;
+
+        var param = {};
+        //保存订单和子单
+        param.isCompany = "isCompany";
+        loadSalesFreightCompany(param)
+
+        layui_form.on("submit(onSalesOrderSave)",function (obj) {
+            saveSalesOrder(obj);
+            return false;//设置成功后 回调
+        });
+        
+        /* 若有订单号传入 加载已有订单 */
+        if(null!= invoiceCode && invoiceCode != ""){
+            layui_layer.msg("加载已有订单");
+            loadSalesOrder(invoiceCode);
+        }
+    });
+
+ 
+
+    /* 选择商品  弹出框 选择对应商品后 */
+    function selectSalesFreightCompany(){
+        //监听选择的配送员
+        var chooseFreightInsert ={};
+        layui_form.on('select(SalesFreightCompany)',function (data) {
+            chooseFreightInsert.freightId = data.value;
+            //return false;//设置成功后 回调    选择完配送员  发送请求 添加配送单  配送单校验  是否重复有 invoiceCode 
+            //是否已支付 未配送  成功添加后 修改为已支付已配送
+        });
+        layui_layer.open({
+                type:1,
+                area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                content:$('#UpdateArea')    
+                , btn: ['确认', '取消']
+                , yes: function (index, layero) {
+                    FreightInsert(chooseFreightInsert);     //    
+                }
+                , btn2: function (index, layero) {
+                    layui_layer.closeAll();      
+                }        
+        });
+    }
+   
+   //新增配送单确认
+    function FreightInsert(param){
+        layui_layer.closeAll();      
+        layui_layer.open({
+            type: 1
+            , title: "选择配送"
+            , content: '<div style="padding: 10px;"><span style="font-size: 1.8rem;">是否选择该配送员进行配送</span></div>'
+            , btn: ['确认', '取消']
+            , yes: function (index, layero) {
+                layui_layer.msg('开始配送');
+                onFreightInsertInfo(invoiceCode);
+            }
+            , btn2: function (index, layero) {
+                layui_layer.closeAll();      
+            }
+        });
+    }
+
+    function onFreightInsertInfo(invoiceCode){
+        if(null!= invoiceCode && "" != invoiceCode){
+            var param = {};
+            param.isFreightInsert= "isFreightInsert";
+            param.invoiceCode= invoiceCode;
+            param.freightName =  $("#SalesFreightCompany option:selected").text(); 
+            $.ajax({
+                headers: { Accept: "application/json; charset=utf-8"},
+                url:"http://localhost:8080/newshop/salesFreight/insertFreight",
+                type:"POST",
+                async:true,
+                data:param,
+                success: data=>{
+                    if(data.success === true){
+                       layui_layer.msg('新增配送单成功, 请在配送管理查看',{icon:1,});
+                        layui_layer.closeAll();   
+                    }else{ 
+                        layui_layer.closeAll();  
+                        layui_layer.alert('新增配送单失败: '+ data.error,{icon:6,title:"提示"});
+                    }
+                }
+            });
+        }else{
+            layui_layer.msg('订单加载失败 , 请检查订单数据是否正常: ',{icon:6,});
+            layui_layer.closeAll();
+        }
+    }
+
+     /* 加载所有的配送员 */
+     function loadSalesFreightCompany(param){
+        var resultData;
+        var htmls = '<option value="-1">请选择</option>'; //全局变量
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/salesFreightCompany/loadCompany",
+            type:"POST",
+            async:true,
+            data:param,
+            success: data=>{
+                if(data.success === true){
+                    resultData = data.data;
+                    for(var x in resultData){
+                        htmls += '<option value = "' + resultData[x].freightId + '">' + resultData[x].freightCompany + '</option>'
+                    } 
+                    $("#SalesFreightCompany").html(htmls);  
+                    layui_form.render('select','selectFrom');
+                }else{
+                    layui_layer.msg('加载配送员列表失败,请稍后重试',{icon:6,}); 
+                }
+            }
+        });
+    }
+    
+    /* 加载URL传输的订单 */
+    function loadSalesOrder(invoiceCode){
+        var obj = {};
+        obj.invoiceCode = invoiceCode;
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"http://localhost:8080/newshop/salesOrder/selectSalesOrder",
+            type:"POST",
+            async:true,
+            data:obj,
+            success: data=>{
+                    var salesOrder = data.data[0];
+                    if(data.success === true){
+                        $("#invoiceCode").val(salesOrder.invoiceCode);    //订单名称
+                        //赋值订单类别
+                        //$("#ProductsCategory").find("option[value='"+selProducts.categoryId+"']").attr("selected",true);
+                        //$("#ProductsCategory option[value='"+selProducts.categoryId+"']").attr("selected","selected");
+                        $("#createdDate").val(salesOrder.createdDate);     //赋值订单描述
+                        $("#createdBy").val(salesOrder.userName);
+                        $("#shopCode").val(salesOrder.shopCode);
+
+                        $("#isFullPaid").find("option[value='"+salesOrder.isFullPaid+"']").attr("selected",true);
+                        //$("#isFullPaid").val(salesOrder.isFullPaidName);
+                        $("#processStatus").find("option[value='"+salesOrder.processStatus+"']").attr("selected",true);
+                        //$("#processStatus").val(salesOrder.processStatusName);
+                        $("#totalQty").val(salesOrder.totalQty);
+                        $("#totalMoney").val(salesOrder.totalMoney);
+                        $("#memo").val(salesOrder.memo);//赋值订单备注
+                        layui_form.render();
+                        //若存在子单 则放入表格中
+                            if (null != data.salesOrderDetailData){
+                                layui_table.render({
+                                    totalRow: true
+                                    , elem: '#SalesOrderDetailList'
+                                    , even: true
+                                    , data: data.salesOrderDetailData//数据接口 初始化空表格数据
+                                    , page: true //开启分页            limit:data.length,
+                                    , cellMinWidth: 70
+                                    , cols: [[
+                                    { field: 'salesOrderDetail', title: '子订单ID', width: 100 , totalRowText: '合计'}
+                                    , { field: 'productName', title: '商品名称', width: 130 }
+                                    , { field: 'categoryName', title: '分类', width: 130 }
+                                    , { field: 'symbol', title: '单位', width: 100 }
+                                   /*  , { field: 'price', title: '原价(元)', width: 110 } */
+                                    , { field: 'salesPrice', title: '销售价格(元)', width: 110 }
+                                    , { field: 'quantity', title: '数量', width: 110, totalRow: true }
+                                    ]]
+                                });
+                            }
+                    }else{
+                        layer.alert("编辑原有订单失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                }
+            });
+    }
+
+    //返回订单主页
+    function backToSalesOrder(){
+        layui_layer.closeAll();
+        window.location.href = "http://localhost:8080/newshop/salesOrder/Index";
+    }
+
+    /* 插入实体 */
+    function saveSalesOrder(obj){
+        if(null == invoiceCode || "" == invoiceCode){
+            layui_layer.msg("传入订单信息出错 ,请重新加载此页面");
+        }else{
+            var data = {};
+            data.invoiceCode =  $("#invoiceCode").val();
+            data.totalMoney =  $("#totalMoney").val();
+            data.totalQty = $("#totalQty").val();
+            data.memo =  $("#memo").val();
+            data.processStatus = $("#processStatus").val();
+            data.isFullPaid = $("#isFullPaid").val();
+
+            $.ajax({
+                    headers: { Accept: "application/json; charset=utf-8"},
+                    url:"http://localhost:8080/newshop/salesOrder/updateSalesOrder",
+                    type:"POST",
+                    async:true,
+                    data:data,
+                    success: data=>{
+                    if(data.success === true){
+                        layui_layer.open({
+                            type: 1
+                            , title: "保存成功"
+                            , content: '<div style="padding: 10px;"><span style="font-size: 1.8rem;">保存成功,即将返回订单首页</span></div>'
+                            , btn: ['确认', '取消']
+                            , yes: function (index, layero) {
+                                backToSalesOrder();
+                            }
+                            , btn2: function (index, layero) {
+                                layui_layer.closeAll();      
+                            }
+                        });
+                    }else{
+                        layer.alert("编辑原有订单失败, 请稍后重试", {icon: 5,title: "提示"});
+                    }
+                }
+            }); 
+        }
+    }   
+</script>
+</body>
+</html>

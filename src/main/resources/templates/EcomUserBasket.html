@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <!-- <link rel="stylesheet" th:href="@{/static/css/mui.min.css}"> -->
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+
+    </style>
+<script id="basketData" type="text/html" th:inline="none">
+    {{#  if(d.data.length <= 0){ }}
+    <tbody>
+    <div id= "noneBasket" style="height:200px;text-align:center;line-height:200px;font-size:16px;">购物车里没有商品,请添加一点</div>
+    </tbody>
+    {{#  } }} 
+    
+    {{#  layui.each(d.data, function(index, item){ }}
+    <tbody id="basket-{{item.customersBasketId}}">
+        <tr>
+            <td style="width: 10%;">
+                <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 5px;"onclick="onChooseProducts('{{item.customersBasketId}}')">
+                    <input id="che-{{item.customersBasketId}}" type="checkbox" name="switch" class="switch"
+                           lay-skin="primary"  value="{{item.customersBasketId}}" lay-filter="chooseProduct">
+                </div>
+            </td>
+            <td class="flex">
+                <input id="code-{{item.customersBasketId}}" type="hidden" value="{{item.productsCode}}">
+                <input id="unit-{{item.customersBasketId}}" type="hidden" value="{{item.productsModel}}">
+                <input id="category-{{item.customersBasketId}}" type="hidden" value="{{item.ext1}}">
+                <img  class="am-fl" src="http://localhost:8080/newshop/{{item.mainPic}}" alt=""
+                style="padding-top: 1.5rem;padding-bottom: 1rem;width: 30%;">
+
+                <div class="goods-item-right">
+                    <div class="flex" style="padding-right: 1rem;justify-content: space-around;align-items: center;">
+                        <div class="no-wrap" style="font-size:1.4rem;padding-left:1rem">{{ item.productName }}</div>
+                        <div onclick="ondeleteProducts('{{item.customersBasketId}}')" ><!-- 跳转商品详情 -->
+                            <!-- 删除图标 -->
+                            <img style="width:35px; height:35px;float:right;margin-left: 100px;" src="http://localhost:8080/newshop/static/icon/delete48.png" alt="">
+                        </div>
+                    </div>
+                    <span class="no-wrap" style="font-size:1.4rem;">【数量】1{{ item.symbol }}</span><br>
+                    <span class="no-wrap" style="font-size:1.4rem;">{{ item.productDesc }}</span><br>
+                    <div class="flex" style="justify-content: space-between;" >
+                        <b style="font-size:1.6rem;color: #ff2c54;margin-left:5px;">￥
+                            <span id = "price-{{item.customersBasketId}}" class="prodPrice">{{ item.salesPrice }}</span>
+                        </b>
+                        <span style="float:right;margin-right:0px;">
+                        <div class="layui-btn-group" style="padding-right: 1rem;">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick = "downQty('qty-{{item.customersBasketId}}')">
+                                <i class="layui-icon">&#xe67e;</i>
+                            </button>
+                            <button  type="button" class="layui-btn layui-btn-sm layui-btn-primary">
+                                <span id="qty-{{item.customersBasketId}}">{{ item.basketQuantity }}</span>
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick = "uPQty('qty-{{item.customersBasketId}}')">
+                                <i class="layui-icon">&#xe654;</i>
+                            </button>
+                        </div>
+                        </span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+    {{#  }); }}
+    </script>
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">购物车</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" th:src="@{../static/icon/home_white32.png}"/>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 购物车数据 -->
+    <div style="margin-bottom:100px; margin-top: 0px;padding-bottom: 5rem;">
+        <section class="mtn">
+            <div class="layui-form catbox">
+                <table class="am-table goods-cart-con" id="cartTable" lay-filter="cartTable">
+                </table>
+        </div>
+        </section>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="product-footer  " id="foot"><!-- Grid -->
+        <div class="layui-form flex" style="background-color: white;">
+            <div class="flex" style="flex-direction: column;width: 65%">
+                <div class="layui-form-item" style="margin-bottom: 0px;margin-left: -50px;">
+                    <input id="chooseAll" type="checkbox" name="switch" lay-skin="primary" lay-filter="chooseAll" >
+                    <label class="layui-form-label">全选</label>
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 0px;margin-left: -22px;">
+                    <label class="layui-form-label" style="font-size:1.4rem;">
+                        <span class="am-navbar-label" style="font-size:1.4rem;">配送费用</span>
+                    </label>
+                </div>
+                <div class="layui-form-item flex" style="align-items: baseline;margin-bottom: 0px;margin-left: -32px;">
+                    <label class="layui-form-label">合计:￥</label>
+                    <span id="finalPrice" style="font-size:1.4rem;">0.00</span>
+                </div>
+            </div>
+            <a href="javascript:goto_order(this);" class="pay-btn" style="font-size:1.4rem;width:35%;padding:41px 0px;">
+                现在结账(
+                <span id="selectProd">
+                    0
+                </span>
+                )
+            </a>
+        </div>  
+    </div>  
+
+<script th:inline="none"> //防止内联语法出错
+
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_laydate;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+    var finalPrice = 0;
+    var finalNum = 0;
+    var BasketIdList = [] , choosedList = [];
+    var basketLength;
+
+    
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','upload','table','laytpl'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_upload = layui.upload;
+        layui_$ = layui.jquery;
+        layui_laytpl = layui.laytpl;
+
+        loadBasketInfo();
+        /* 若有用户登录 加载用户数据到httprequest */
+
+
+        layui_form.render();
+        layui_form.on('checkbox(chooseAll)', function (data) { //监听全选
+            if (data.elem.checked) {            //全选
+                $(".switch").prop("checked", true);
+                checkAllProducts();
+            } else {                            //全不选
+                $(".switch").prop("checked", false);
+                finalPrice = 0;
+                choosedList = [];
+                $("#finalPrice").text("0.00");//设置总金额为0 
+                $("#selectProd").text("0");//设置总金额为0 
+            }
+            layui_form.render();
+        });
+        //有一个未选中全选取消选中
+        layui_form.on('checkbox(chooseProduct)', function (data) {
+            var item = $(".switch");
+            for (var i = 0; i < item.length; i++) {
+                if (item[i].checked == false) {
+                    $("#chooseAll").prop("checked", false);
+                    //减去该商品数量和总价
+                    layui_form.render('checkbox');
+                    break;
+                }
+            }
+            //如果都勾选了  勾上全选
+            var  all=item.length;
+            for (var i = 0; i < item.length; i++) {
+                if (item[i].checked == true) {
+                    all--;
+                }
+            }
+            if(all==0){
+                $("#chooseAll").prop("checked", true);
+                //二次校验总价和数量
+                //checkAllProducts();
+                layui_form.render('checkbox');}
+        });
+    });
+    //统计所有商品  数量 价格
+    function checkAllProducts(){
+        var totalNumber = 0 , totalMoney = 0;
+        choosedList= [];
+        if(0< BasketIdList.length){
+            for(var x in BasketIdList){
+                totalNumber += Math.abs($('#qty-'+BasketIdList[x]+'').text());
+                totalMoney += Math.abs($('#price-'+BasketIdList[x]+'').text())*Math.abs($('#qty-'+BasketIdList[x]+'').text());
+                choosedList.push(BasketIdList[x]);
+            }
+        }
+        finalPrice= totalMoney;
+        finalNum = totalNumber;
+        $("#selectProd").text(totalNumber);    //出库总数量
+        $("#finalPrice").text(totalMoney);    //出库总价
+    }
+    
+    //
+    function onChooseProducts(customersBasketId){
+        //单选取消 $(this).prop('checked')
+        var flag = true;
+        if($('#che-'+customersBasketId+'').prop('checked') == false){
+            if(finalPrice >0){ 
+                finalNum -= Math.abs($('#qty-'+customersBasketId+'').text());
+                finalPrice -= Math.abs($('#price-'+customersBasketId+'').text())*Math.abs($('#qty-'+customersBasketId+'').text());
+                //从列表中剔除这个ID
+                console.log(choosedList);
+                    for(var x in choosedList){
+                        if (customersBasketId == choosedList[x]){
+                            choosedList.splice(x,1);
+                        }
+                    }
+                console.log(choosedList);
+            }
+        }else{//单选确认
+            finalNum += Math.abs($('#qty-'+customersBasketId+'').text());
+            finalPrice += Math.abs($('#price-'+customersBasketId+'').text())*Math.abs($('#qty-'+customersBasketId+'').text());
+            //从列表中加入这个ID
+            console.log(choosedList);
+            //判断是否存在
+            for(var x in choosedList){
+                if (customersBasketId == choosedList[x]){ flag = false; }
+            }
+            if (flag){ choosedList.push(customersBasketId); }
+
+            console.log(choosedList);
+        }
+        $("#selectProd").text(finalNum);    //出库总数量
+        $("#finalPrice").text(finalPrice);    //出库总价
+    }
+    
+    function ondeleteProducts(customersBasketId){
+        if(null!= customersBasketId){
+            layui_layer.open({
+                type:1,
+                area: [(windowWidth * 0.6) + 'px', (windowHeight * 0.25) + 'px'],
+                content:'确认删除该商品?'
+                , btn: ['确认', '取消']
+                , yes: function (index, layero) {
+                    layui_layer.closeAll();
+                    deleteProduts(customersBasketId);
+                }
+                , btn2: function (index, layero) {
+                    layui_layer.closeAll();      
+                }        
+            });
+        }else{
+            layui_layer.msg('删除购物车商品数据出错',{icon:3,});
+        }
+    }
+
+    function  deleteProduts(customersBasketId) {
+        var param = {};
+        param.isDeleteBasket= "isDeleteBasket";
+        param.BasketMsg=customersBasketId+",";
+        $.ajax({
+            url: "http://localhost:8080/newshop/ecomUserBasket/deleteBasket",
+            data: param,
+            type: "post",
+            success: data=>{
+                console.log(data);
+                if(data.success === true ){
+                    $('#basket-'+customersBasketId+'').remove();
+                    layui_layer.msg('删除购物车商品成功');
+                    console.log(BasketIdList);
+                    for(var x in BasketIdList){
+                        if (customersBasketId == BasketIdList[x]){
+                            BasketIdList.splice(x,1);
+                        } 
+                    }
+                    //BasketIdList.splice(BasketIdList.findIndex(item => item === customersBasketId), 1);
+                    console.log(BasketIdList);
+                }else{
+                    layui_layer.msg('删除购物车商品失败');
+                }
+            }
+        });
+    }
+
+    function loadBasketInfo(){
+        var param = {};
+        param.isBasketLoad = "isBasketLoad";
+        var htmls = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/ecomUserBasket/getUserBasket",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    var getTpl = document.getElementById('basketData').innerHTML
+                        ,view = document.getElementById('cartTable');
+                        layui_laytpl(getTpl).render(data, function(html){
+                        view.innerHTML = html;
+                        layui.use(['element'], function (args) {
+                            var element = layui.element;
+                            element.init();
+                        });
+                        layui_form.render();
+                    }); 
+                    if(data.success === true && data.data.length > 0 ){                        
+                        resultData = data.data;
+                        for (var i in resultData){
+                            BasketIdList[i] = resultData[i].customersBasketId;
+                        }
+                        console.log('BasketIdList'+BasketIdList);
+                        basketLength =data.data.length;
+                    }else{
+                        basketLength = 0;
+
+                }
+            }
+        });
+    }
+
+    function openCooperation(){
+        layui_layer.msg('联系方式:15521226924');
+    }
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    //按钮 减商品
+    function downQty(param){
+        var productNum = $('#'+param+'').text();
+        if(1 >= productNum){
+            layui_layer.msg('至少选择1件商品!');
+        }else{
+            productNum = Math.abs(productNum) - 1;
+            $('#'+param+'').text(productNum);
+
+        }
+    }
+
+    function uPQty(param){
+        var productNum = $('#'+param+'').text();
+            productNum = Math.abs(productNum) +1;
+            $('#'+param+'').text(productNum);
+    }
+    
+    
+    function checkFinalPrice(finalPrice) {
+        if ( 0 < finalPrice){
+            $('#finalPrice').text(finalPrice);
+        }
+    }
+
+    function checkFinalQty(finalQty) {
+        if ( 0 < finalQty){
+            $('#selectProd').text(finalQty);
+        }
+    }
+    
+    function goto_order(){
+        if(choosedList.length <= 0 && finalNum <= 0){
+            layui_layer.msg('至少选择1件商品!');
+        }else{
+            go_to_Pay();
+        }
+    }
+    
+    function go_to_Pay() {
+        var param = {};
+        var gotoPayMsg ="";
+        param.isSalesOrderInsert = "isSalesOrderInsert";
+        param.totalMoney = $('#finalPrice').text(); 
+        param.totalNumber = $('#selectProd').text();
+        for(var x in choosedList){//code-unit-category-qty-price-
+            if(x>0){gotoPayMsg += ";"}
+            gotoPayMsg += choosedList[x];
+            gotoPayMsg += ",";
+            gotoPayMsg += $('#code-'+choosedList[x]+'').val();
+            gotoPayMsg += ",";
+            gotoPayMsg += $('#unit-'+choosedList[x]+'').val();
+            gotoPayMsg += ",";
+            gotoPayMsg += $('#category-'+choosedList[x]+'').val();
+            gotoPayMsg += ",";
+            gotoPayMsg += $('#price-'+choosedList[x]+'').text();
+            gotoPayMsg += ",";
+            gotoPayMsg += $('#qty-'+choosedList[x]+'').text();
+        }
+        param.gotoPayMsg = gotoPayMsg;
+        $.ajax({
+            url: "http://localhost:8080/newshop/salesOrder/insertSalesOrder",
+            data: param,
+            type: "post",
+            success: data=>{
+                console.log(data);
+                if(data.success === true ){
+                    layui_layer.msg('下单成功, 请确认地址和订单');
+                    gotoUrl('salesOrder/SalesOrderConfirm?invoiceCode='+data.invoiceCode);
+                }else{
+                    layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockStockLogMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockStockLog" >
+    <id column="stock_log_id" property="stockLogId" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="init_quantity" property="initQuantity" jdbcType="DECIMAL" />
+    <result column="change_in" property="changeIn" jdbcType="DECIMAL" />
+    <result column="change_out" property="changeOut" jdbcType="DECIMAL" />
+    <result column="change_time" property="changeTime" jdbcType="TIMESTAMP" />
+    <result column="change_type" property="changeType" jdbcType="VARCHAR" />
+    <result column="change_org_code" property="changeOrgCode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    stock_log_id, stockhouse_code, products_code, init_quantity, change_in, change_out, 
+    change_time, change_type, change_org_code, description, account_set_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_stock_log
+    where stock_log_id = #{stockLogId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_stock_log
+    where stock_log_id = #{stockLogId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockStockLog" >
+    insert into stock_stock_log (stock_log_id, stockhouse_code, products_code, 
+      init_quantity, change_in, change_out, 
+      change_time, change_type, change_org_code, 
+      description, account_set_id)
+    values (#{stockLogId,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, #{productsCode,jdbcType=VARCHAR}, 
+      #{initQuantity,jdbcType=DECIMAL}, #{changeIn,jdbcType=DECIMAL}, #{changeOut,jdbcType=DECIMAL}, 
+      #{changeTime,jdbcType=TIMESTAMP}, #{changeType,jdbcType=VARCHAR}, #{changeOrgCode,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockStockLog" >
+    insert into stock_stock_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockLogId != null" >
+        stock_log_id,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="productsCode != null" >
+        products_code,
+      </if>
+      <if test="initQuantity != null" >
+        init_quantity,
+      </if>
+      <if test="changeIn != null" >
+        change_in,
+      </if>
+      <if test="changeOut != null" >
+        change_out,
+      </if>
+      <if test="changeTime != null" >
+        change_time,
+      </if>
+      <if test="changeType != null" >
+        change_type,
+      </if>
+      <if test="changeOrgCode != null" >
+        change_org_code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockLogId != null" >
+        #{stockLogId,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="initQuantity != null" >
+        #{initQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="changeIn != null" >
+        #{changeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="changeOut != null" >
+        #{changeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="changeTime != null" >
+        #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null" >
+        #{changeType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeOrgCode != null" >
+        #{changeOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockStockLog" >
+    update stock_stock_log
+    <set >
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        products_code = #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="initQuantity != null" >
+        init_quantity = #{initQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="changeIn != null" >
+        change_in = #{changeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="changeOut != null" >
+        change_out = #{changeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="changeTime != null" >
+        change_time = #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null" >
+        change_type = #{changeType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeOrgCode != null" >
+        change_org_code = #{changeOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where stock_log_id = #{stockLogId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockStockLog" >
+    update stock_stock_log
+    set stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      products_code = #{productsCode,jdbcType=VARCHAR},
+      init_quantity = #{initQuantity,jdbcType=DECIMAL},
+      change_in = #{changeIn,jdbcType=DECIMAL},
+      change_out = #{changeOut,jdbcType=DECIMAL},
+      change_time = #{changeTime,jdbcType=TIMESTAMP},
+      change_type = #{changeType,jdbcType=VARCHAR},
+      change_org_code = #{changeOrgCode,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where stock_log_id = #{stockLogId,jdbcType=BIGINT}
+  </update>
+</mapper>

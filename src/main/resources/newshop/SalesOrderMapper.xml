@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.SalesOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.SalesOrder" >
+    <id column="sales_order_id" property="salesOrderId" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="sales_type_id" property="salesTypeId" jdbcType="BIGINT" />
+    <result column="pay_code" property="payCode" jdbcType="BIGINT" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="BIGINT" />
+    <result column="modiified_by" property="modiifiedBy" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="process_status" property="processStatus" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="discount_total" property="discountTotal" jdbcType="DECIMAL" />
+    <result column="total_paid" property="totalPaid" jdbcType="DECIMAL" />
+    <result column="margin_total" property="marginTotal" jdbcType="DECIMAL" />
+    <result column="total_cost" property="totalCost" jdbcType="DECIMAL" />
+    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+    <result column="total_finished_qty" property="totalFinishedQty" jdbcType="DECIMAL" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="receivable_money" property="receivableMoney" jdbcType="DECIMAL" />
+    <result column="full_pay_time" property="fullPayTime" jdbcType="TIMESTAMP" />
+    <result column="is_full_paid" property="isFullPaid" jdbcType="INTEGER" />
+    <result column="is_full_deliver" property="isFullDeliver" jdbcType="INTEGER" />
+    <result column="is_invoice_done" property="isInvoiceDone" jdbcType="INTEGER" />
+    <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+    <result column="freight_id" property="freightId" jdbcType="BIGINT" />
+    <result column="return_money" property="returnMoney" jdbcType="DECIMAL" />
+    <result column="return_point" property="returnPoint" jdbcType="DECIMAL" />
+    <result column="order_type" property="orderType" jdbcType="INTEGER" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <resultMap id="QueryResultMap" type="com.ss.springbootNewshop.bean.SalesOrder" >
+    <id column="sales_order_id" property="salesOrderId" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="sales_type_id" property="salesTypeId" jdbcType="BIGINT" />
+    <result column="pay_code" property="payCode" jdbcType="BIGINT" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="BIGINT" />
+    <result column="modiified_by" property="modiifiedBy" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="process_status" property="processStatus" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="discount_total" property="discountTotal" jdbcType="DECIMAL" />
+    <result column="total_paid" property="totalPaid" jdbcType="DECIMAL" />
+    <result column="margin_total" property="marginTotal" jdbcType="DECIMAL" />
+    <result column="total_cost" property="totalCost" jdbcType="DECIMAL" />
+    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+    <result column="total_finished_qty" property="totalFinishedQty" jdbcType="DECIMAL" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="receivable_money" property="receivableMoney" jdbcType="DECIMAL" />
+    <result column="full_pay_time" property="fullPayTime" jdbcType="TIMESTAMP" />
+    <result column="is_full_paid" property="isFullPaid" jdbcType="INTEGER" />
+    <result column="is_full_deliver" property="isFullDeliver" jdbcType="INTEGER" />
+    <result column="is_invoice_done" property="isInvoiceDone" jdbcType="INTEGER" />
+    <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+    <result column="freight_id" property="freightId" jdbcType="BIGINT" />
+    <result column="return_money" property="returnMoney" jdbcType="DECIMAL" />
+    <result column="return_point" property="returnPoint" jdbcType="DECIMAL" />
+    <result column="order_type" property="orderType" jdbcType="INTEGER" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="user_point" property="userPoint" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="userOrderInfoMap" type="com.ss.springbootNewshop.bean.UserOrderInfo" >
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="init" property="init" jdbcType="VARCHAR" />
+    <result column="paid" property="paid" jdbcType="VARCHAR" />
+    <result column="down" property="down" jdbcType="VARCHAR" />
+    <result column="failed" property="failed" jdbcType="VARCHAR" />
+    <result column="cancle" property="cancle" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+    <result column="deliverid" property="deliverid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--基础字段-->
+  <sql id="Base_Column_List" >
+    sales_order_id, invoice_code, sales_type_id, pay_code, created_date, modified_date, 
+    created_by, modiified_by, stockhouse_code, process_status, memo, account_set_id, 
+    total_money, discount_total, total_paid, margin_total, total_cost, total_qty, total_finished_qty, 
+    freight, receivable_money, full_pay_time, is_full_paid, is_full_deliver, is_invoice_done, 
+    shop_code, freight_id, return_money, return_point, order_type, finish_time
+  </sql>
+
+  <!--扩展字段-->
+  <sql id="Query_Column_List" >
+    sales_order_id, invoice_code, sales_type_id, pay_code, sales_order.created_date, sales_order.modified_date,
+    sales_order.created_by, sales_order.modiified_by, sales_order.stockhouse_code, process_status, memo, account_set_id,
+    total_money, discount_total, total_paid, margin_total, total_cost, total_qty, total_finished_qty,
+    freight, receivable_money, full_pay_time, is_full_paid, is_full_deliver, is_invoice_done,
+    shop_code, freight_id, return_money, return_point, order_type, finish_time,
+
+    crm_user.user_name, crm_user.company,crm_user.phone, crm_user.address,crm_user.user_point
+  </sql>
+
+  <!--用户订单查询-->
+  <sql id="Select_Column_List" >
+    init,paid,down,failed,cancle,deleted
+  </sql>
+
+  <!-- 查询所有订单-->
+  <select id="selectUserOrderInfo" resultMap="userOrderInfoMap" parameterType="java.lang.Long">
+    SELECT DISTINCT
+    SUM(CASE WHEN process_status ='0' THEN process_status ELSE 0 END) as 'init' ,
+    SUM(CASE WHEN process_status ='1' THEN process_status ELSE 0 END) as 'paid' ,
+    SUM(CASE WHEN process_status ='2' THEN process_status ELSE 0 END) as 'down' ,
+    SUM(CASE WHEN process_status ='3' THEN process_status ELSE 0 END) as 'failed' ,
+    SUM(CASE WHEN process_status ='4' THEN process_status ELSE 0 END) as 'cancle' ,
+    SUM(CASE WHEN process_status ='5' THEN process_status ELSE 0 END) as 'deleted' ,
+    SUM(CASE WHEN process_status ='6' THEN process_status ELSE 0 END) as 'deliverid' ,
+    created_by as 'userId'
+    FROM sales_order
+    WHERE
+    process_status in ('0','1','2','3','4','5')
+    <if test="userId != null" >
+      AND  created_by = #{userId}
+    </if>
+  </select>
+
+  <!-- 查询所有订单-->
+  <select id="querySalesOrder" resultMap="QueryResultMap">
+    select
+    <include refid="Query_Column_List" />
+    from sales_order,crm_user
+    where process_status != '5'
+    AND created_by = crm_user.user_id;
+  </select>
+
+  <!-- 根据订单查询所有订单-->
+  <select id="selectByInvoiceCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sales_order
+    where invoice_code = #{invoiceCode,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectBySalesOrder" resultMap="QueryResultMap" parameterType="com.ss.springbootNewshop.bean.SalesOrder">
+    SELECT distinct
+    <include refid="Query_Column_List" />
+    FROM sales_order,crm_user
+    <where>
+      process_status != '5'
+      <if test="invoiceCode != null" >
+        and invoice_code = #{invoiceCode}
+      </if>
+      <if test="processStatus != null" >
+        and process_status = #{processStatus}
+      </if>
+      <if test="createdDate != null" >
+        and sales_order.created_date <![CDATA[ >= ]]> #{createdDate}
+      </if>
+      <if test="modifiedDate != null" >
+        and sales_order.modified_date <![CDATA[ <= ]]> #{modifiedDate}
+      </if>
+      <if test="createdBy != null" >
+        and sales_order.created_by = #{createdBy}
+        and sales_order.created_by = crm_user.user_id
+      </if>
+    </where>
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectBySalesOrderBack" resultMap="QueryResultMap" parameterType="com.ss.springbootNewshop.bean.SalesOrder">
+    SELECT distinct
+    <include refid="Base_Column_List" />
+    FROM sales_order
+    <where>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode}
+      </if>
+      <if test="processStatus != null" >
+        and process_status = #{processStatus}
+      </if>
+      <if test="createdDate != null" >
+        and sales_order.created_date <![CDATA[ >= ]]> #{createdDate}
+      </if>
+      <if test="modifiedDate != null" >
+        and sales_order.modified_date <![CDATA[ <= ]]> #{modifiedDate}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sales_order
+    where sales_order_id = #{salesOrderId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sales_order
+    where sales_order_id = #{salesOrderId,jdbcType=BIGINT}
+  </delete>
+
+  <!-- 真删除订单-->
+  <delete id="deleteByInvoiceCode" parameterType="java.lang.String" >
+    delete from sales_order
+    where invoice_code = #{invoiceCode}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.SalesOrder" >
+    insert into sales_order (sales_order_id, invoice_code, sales_type_id, 
+      pay_code, created_date, modified_date, 
+      created_by, modiified_by, stockhouse_code, 
+      process_status, memo, account_set_id, 
+      total_money, discount_total, total_paid, 
+      margin_total, total_cost, total_qty, 
+      total_finished_qty, freight, receivable_money, 
+      full_pay_time, is_full_paid, is_full_deliver, 
+      is_invoice_done, shop_code, freight_id, 
+      return_money, return_point, order_type, 
+      finish_time)
+    values (#{salesOrderId,jdbcType=BIGINT}, #{invoiceCode,jdbcType=VARCHAR}, #{salesTypeId,jdbcType=BIGINT}, 
+      #{payCode,jdbcType=BIGINT}, #{createdDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=BIGINT}, #{modiifiedBy,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, 
+      #{processStatus,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}, 
+      #{totalMoney,jdbcType=DECIMAL}, #{discountTotal,jdbcType=DECIMAL}, #{totalPaid,jdbcType=DECIMAL}, 
+      #{marginTotal,jdbcType=DECIMAL}, #{totalCost,jdbcType=DECIMAL}, #{totalQty,jdbcType=DECIMAL}, 
+      #{totalFinishedQty,jdbcType=DECIMAL}, #{freight,jdbcType=DECIMAL}, #{receivableMoney,jdbcType=DECIMAL}, 
+      #{fullPayTime,jdbcType=TIMESTAMP}, #{isFullPaid,jdbcType=INTEGER}, #{isFullDeliver,jdbcType=INTEGER}, 
+      #{isInvoiceDone,jdbcType=INTEGER}, #{shopCode,jdbcType=VARCHAR}, #{freightId,jdbcType=BIGINT}, 
+      #{returnMoney,jdbcType=DECIMAL}, #{returnPoint,jdbcType=DECIMAL}, #{orderType,jdbcType=INTEGER}, 
+      #{finishTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.SalesOrder" >
+    insert into sales_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="salesOrderId != null" >
+        sales_order_id,
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code,
+      </if>
+      <if test="salesTypeId != null" >
+        sales_type_id,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="modiifiedBy != null" >
+        modiified_by,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="processStatus != null" >
+        process_status,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="discountTotal != null" >
+        discount_total,
+      </if>
+      <if test="totalPaid != null" >
+        total_paid,
+      </if>
+      <if test="marginTotal != null" >
+        margin_total,
+      </if>
+      <if test="totalCost != null" >
+        total_cost,
+      </if>
+      <if test="totalQty != null" >
+        total_qty,
+      </if>
+      <if test="totalFinishedQty != null" >
+        total_finished_qty,
+      </if>
+      <if test="freight != null" >
+        freight,
+      </if>
+      <if test="receivableMoney != null" >
+        receivable_money,
+      </if>
+      <if test="fullPayTime != null" >
+        full_pay_time,
+      </if>
+      <if test="isFullPaid != null" >
+        is_full_paid,
+      </if>
+      <if test="isFullDeliver != null" >
+        is_full_deliver,
+      </if>
+      <if test="isInvoiceDone != null" >
+        is_invoice_done,
+      </if>
+      <if test="shopCode != null" >
+        shop_code,
+      </if>
+      <if test="freightId != null" >
+        freight_id,
+      </if>
+      <if test="returnMoney != null" >
+        return_money,
+      </if>
+      <if test="returnPoint != null" >
+        return_point,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="finishTime != null" >
+        finish_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="salesOrderId != null" >
+        #{salesOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="salesTypeId != null" >
+        #{salesTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modiifiedBy != null" >
+        #{modiifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="discountTotal != null" >
+        #{discountTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPaid != null" >
+        #{totalPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="marginTotal != null" >
+        #{marginTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCost != null" >
+        #{totalCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="totalFinishedQty != null" >
+        #{totalFinishedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="freight != null" >
+        #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableMoney != null" >
+        #{receivableMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="fullPayTime != null" >
+        #{fullPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFullPaid != null" >
+        #{isFullPaid,jdbcType=INTEGER},
+      </if>
+      <if test="isFullDeliver != null" >
+        #{isFullDeliver,jdbcType=INTEGER},
+      </if>
+      <if test="isInvoiceDone != null" >
+        #{isInvoiceDone,jdbcType=INTEGER},
+      </if>
+      <if test="shopCode != null" >
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="freightId != null" >
+        #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="returnMoney != null" >
+        #{returnMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="returnPoint != null" >
+        #{returnPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="finishTime != null" >
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.SalesOrder" >
+    update sales_order
+    <set >
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="salesTypeId != null" >
+        sales_type_id = #{salesTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modiifiedBy != null" >
+        modiified_by = #{modiifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null" >
+        process_status = #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="discountTotal != null" >
+        discount_total = #{discountTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPaid != null" >
+        total_paid = #{totalPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="marginTotal != null" >
+        margin_total = #{marginTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCost != null" >
+        total_cost = #{totalCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        total_qty = #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="totalFinishedQty != null" >
+        total_finished_qty = #{totalFinishedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="freight != null" >
+        freight = #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableMoney != null" >
+        receivable_money = #{receivableMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="fullPayTime != null" >
+        full_pay_time = #{fullPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFullPaid != null" >
+        is_full_paid = #{isFullPaid,jdbcType=INTEGER},
+      </if>
+      <if test="isFullDeliver != null" >
+        is_full_deliver = #{isFullDeliver,jdbcType=INTEGER},
+      </if>
+      <if test="isInvoiceDone != null" >
+        is_invoice_done = #{isInvoiceDone,jdbcType=INTEGER},
+      </if>
+      <if test="shopCode != null" >
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="freightId != null" >
+        freight_id = #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="returnMoney != null" >
+        return_money = #{returnMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="returnPoint != null" >
+        return_point = #{returnPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="finishTime != null" >
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sales_order_id = #{salesOrderId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByInvoiceCode" parameterType="com.ss.springbootNewshop.bean.SalesOrder" >
+    update sales_order
+    <set >
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="salesTypeId != null" >
+        sales_type_id = #{salesTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modiifiedBy != null" >
+        modiified_by = #{modiifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null" >
+        process_status = #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="discountTotal != null" >
+        discount_total = #{discountTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPaid != null" >
+        total_paid = #{totalPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="marginTotal != null" >
+        margin_total = #{marginTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCost != null" >
+        total_cost = #{totalCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        total_qty = #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="totalFinishedQty != null" >
+        total_finished_qty = #{totalFinishedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="freight != null" >
+        freight = #{freight,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableMoney != null" >
+        receivable_money = #{receivableMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="fullPayTime != null" >
+        full_pay_time = #{fullPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFullPaid != null" >
+        is_full_paid = #{isFullPaid,jdbcType=INTEGER},
+      </if>
+      <if test="isFullDeliver != null" >
+        is_full_deliver = #{isFullDeliver,jdbcType=INTEGER},
+      </if>
+      <if test="isInvoiceDone != null" >
+        is_invoice_done = #{isInvoiceDone,jdbcType=INTEGER},
+      </if>
+      <if test="shopCode != null" >
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="freightId != null" >
+        freight_id = #{freightId,jdbcType=BIGINT},
+      </if>
+      <if test="returnMoney != null" >
+        return_money = #{returnMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="returnPoint != null" >
+        return_point = #{returnPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="finishTime != null" >
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where invoice_code = #{invoiceCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.SalesOrder" >
+    update sales_order
+    set invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      sales_type_id = #{salesTypeId,jdbcType=BIGINT},
+      pay_code = #{payCode,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      modiified_by = #{modiifiedBy,jdbcType=BIGINT},
+      stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      process_status = #{processStatus,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT},
+      total_money = #{totalMoney,jdbcType=DECIMAL},
+      discount_total = #{discountTotal,jdbcType=DECIMAL},
+      total_paid = #{totalPaid,jdbcType=DECIMAL},
+      margin_total = #{marginTotal,jdbcType=DECIMAL},
+      total_cost = #{totalCost,jdbcType=DECIMAL},
+      total_qty = #{totalQty,jdbcType=DECIMAL},
+      total_finished_qty = #{totalFinishedQty,jdbcType=DECIMAL},
+      freight = #{freight,jdbcType=DECIMAL},
+      receivable_money = #{receivableMoney,jdbcType=DECIMAL},
+      full_pay_time = #{fullPayTime,jdbcType=TIMESTAMP},
+      is_full_paid = #{isFullPaid,jdbcType=INTEGER},
+      is_full_deliver = #{isFullDeliver,jdbcType=INTEGER},
+      is_invoice_done = #{isInvoiceDone,jdbcType=INTEGER},
+      shop_code = #{shopCode,jdbcType=VARCHAR},
+      freight_id = #{freightId,jdbcType=BIGINT},
+      return_money = #{returnMoney,jdbcType=DECIMAL},
+      return_point = #{returnPoint,jdbcType=DECIMAL},
+      order_type = #{orderType,jdbcType=INTEGER},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP}
+    where sales_order_id = #{salesOrderId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ss.springbootNewshop.mapper.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.Category">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="partner_id" jdbcType="BIGINT" property="partnerId" />
+    <result column="sort_sum" jdbcType="BIGINT" property="sortSum" />
+    <result column="ext1" jdbcType="VARCHAR" property="ext1" />
+    <result column="ext2" jdbcType="VARCHAR" property="ext2" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="account_set_id" jdbcType="BIGINT" property="accountSetId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, category_id, category_name, partner_id, sort_sum, ext1, ext2, memo, account_set_id
+  </sql>
+
+  <!-- 查询所有支付类型-->
+  <select id="queryCategoryInfo" resultMap="BaseResultMap">
+    select * from  category
+  </select>
+
+  <!-- 按支付名称查询-->
+  <select id="selectByCategoryName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from crm_pay_type
+    where category_name = #{categoryName}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.Category">
+    insert into category (id, category_id, category_name,
+      partner_id, sort_sum, ext1,
+      ext2, memo, account_set_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR},
+      #{partnerId,jdbcType=BIGINT}, #{sortSum,jdbcType=BIGINT}, #{ext1,jdbcType=VARCHAR},
+      #{ext2,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.Category">
+    insert into category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="categoryName != null">
+        category_name,
+      </if>
+      <if test="partnerId != null">
+        partner_id,
+      </if>
+      <if test="sortSum != null">
+        sort_sum,
+      </if>
+      <if test="ext1 != null">
+        ext1,
+      </if>
+      <if test="ext2 != null">
+        ext2,
+      </if>
+      <if test="memo != null">
+        memo,
+      </if>
+      <if test="accountSetId != null">
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryName != null">
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerId != null">
+        #{partnerId,jdbcType=BIGINT},
+      </if>
+      <if test="sortSum != null">
+        #{sortSum,jdbcType=BIGINT},
+      </if>
+      <if test="ext1 != null">
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null">
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null">
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.Category">
+    update category
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryName != null">
+        category_name = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerId != null">
+        partner_id = #{partnerId,jdbcType=BIGINT},
+      </if>
+      <if test="sortSum != null">
+        sort_sum = #{sortSum,jdbcType=BIGINT},
+      </if>
+      <if test="ext1 != null">
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null">
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null">
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.Category">
+    update category
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      category_name = #{categoryName,jdbcType=VARCHAR},
+      partner_id = #{partnerId,jdbcType=BIGINT},
+      sort_sum = #{sortSum,jdbcType=BIGINT},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

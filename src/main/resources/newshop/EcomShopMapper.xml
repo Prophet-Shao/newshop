@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.EcomShopMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.EcomShop" >
+    <id column="shop_id" property="shopId" jdbcType="BIGINT" />
+    <result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="contact_company" property="contactCompany" jdbcType="VARCHAR" />
+    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="post_code" property="postCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="shop_logo" property="shopLogo" jdbcType="VARCHAR" />
+    <result column="gps_x" property="gpsX" jdbcType="VARCHAR" />
+    <result column="gps_y" property="gpsY" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    <result column="emp_id" property="empId" jdbcType="BIGINT" />
+    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="return_rule_id" property="returnRuleId" jdbcType="BIGINT" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="refrence" property="refrence" jdbcType="VARCHAR" />
+    <result column="refrence_img" property="refrenceImg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    shop_id, shop_code, shop_name, contact_company, contact_phone, post_code, province_code, 
+    city_code, shop_logo, gps_x, gps_y, account_set_id, dept_id, emp_id, warehouse_code, 
+    return_rule_id, memo, unit_price, refrence, refrence_img
+  </sql>
+
+  <select id="queryEcomShop" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecom_shop
+  </select>
+
+  <select id="selectByShopName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from
+    ecom_shop
+    where shop_name = #{shopName}
+  </select>
+
+  <!-- 主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ecom_shop
+    where shop_id = #{shopId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ecom_shop
+    where shop_id = #{shopId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.EcomShop" >
+    insert into ecom_shop (shop_id, shop_code, shop_name, 
+      contact_company, contact_phone, post_code, 
+      province_code, city_code, shop_logo, 
+      gps_x, gps_y, account_set_id, 
+      dept_id, emp_id, warehouse_code, 
+      return_rule_id, memo, unit_price,
+      refrence, refrence_img
+      )
+    values (#{shopId,jdbcType=BIGINT}, #{shopCode,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, 
+      #{contactCompany,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{postCode,jdbcType=VARCHAR}, 
+      #{provinceCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{shopLogo,jdbcType=VARCHAR}, 
+      #{gpsX,jdbcType=VARCHAR}, #{gpsY,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}, 
+      #{deptId,jdbcType=BIGINT}, #{empId,jdbcType=BIGINT}, #{warehouseCode,jdbcType=VARCHAR}, 
+      #{returnRuleId,jdbcType=BIGINT}, #{memo,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL},
+      #{refrence,jdbcType=VARCHAR}, #{refrenceImg,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.EcomShop" >
+    insert into ecom_shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="shopCode != null" >
+        shop_code,
+      </if>
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="contactCompany != null" >
+        contact_company,
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone,
+      </if>
+      <if test="postCode != null" >
+        post_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="shopLogo != null" >
+        shop_logo,
+      </if>
+      <if test="gpsX != null" >
+        gps_x,
+      </if>
+      <if test="gpsY != null" >
+        gps_y,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="warehouseCode != null" >
+        warehouse_code,
+      </if>
+      <if test="returnRuleId != null" >
+        return_rule_id,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="unitPrice != null" >
+        unit_price,
+      </if>
+      <if test="refrence != null" >
+        refrence,
+      </if>
+      <if test="refrenceImg != null" >
+        refrence_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="shopCode != null" >
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactCompany != null" >
+        #{contactCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null" >
+        #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsX != null" >
+        #{gpsX,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsY != null" >
+        #{gpsY,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=BIGINT},
+      </if>
+      <if test="warehouseCode != null" >
+        #{warehouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnRuleId != null" >
+        #{returnRuleId,jdbcType=BIGINT},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="refrence != null" >
+        #{refrence,jdbcType=VARCHAR},
+      </if>
+      <if test="refrenceImg != null" >
+        #{refrenceImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.EcomShop" >
+    update ecom_shop
+    <set >
+      <if test="shopCode != null" >
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactCompany != null" >
+        contact_company = #{contactCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        post_code = #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null" >
+        shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsX != null" >
+        gps_x = #{gpsX,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsY != null" >
+        gps_y = #{gpsY,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=BIGINT},
+      </if>
+      <if test="warehouseCode != null" >
+        warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="returnRuleId != null" >
+        return_rule_id = #{returnRuleId,jdbcType=BIGINT},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null" >
+        unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="refrence != null" >
+        refrence = #{refrence,jdbcType=VARCHAR},
+      </if>
+      <if test="refrenceImg != null" >
+        refrence_img = #{refrenceImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where shop_id = #{shopId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.EcomShop" >
+    update ecom_shop
+    set shop_code = #{shopCode,jdbcType=VARCHAR},
+      shop_name = #{shopName,jdbcType=VARCHAR},
+      contact_company = #{contactCompany,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      post_code = #{postCode,jdbcType=VARCHAR},
+      province_code = #{provinceCode,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      gps_x = #{gpsX,jdbcType=VARCHAR},
+      gps_y = #{gpsY,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT},
+      dept_id = #{deptId,jdbcType=BIGINT},
+      emp_id = #{empId,jdbcType=BIGINT},
+      warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+      return_rule_id = #{returnRuleId,jdbcType=BIGINT},
+      memo = #{memo,jdbcType=VARCHAR},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      refrence = #{refrence,jdbcType=VARCHAR},
+      refrence_img = #{refrenceImg,jdbcType=VARCHAR}
+    where shop_id = #{shopId,jdbcType=BIGINT}
+  </update>
+</mapper>

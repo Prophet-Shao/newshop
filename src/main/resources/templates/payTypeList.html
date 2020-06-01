@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>支付方式管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="payTypeUpdateArea" style="padding: 20px;display: none">
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">支付类型:</label>
+          <div class="layui-input-block">
+            <input id="updatePayName" type="text" name="userName" placeholder="支付类型" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+      </form>
+</div>
+<body>
+    <div class="layui-form-item" style="padding: 20px;margin: 0;">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="onInsertPayType()">添加支付类型</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="PayTypeList" lay-filter="PayTypeList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isPayType= "isPayType";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var PayTypeListTable;
+    var offset = 0;
+    var limit = 10;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+
+        PayTypeListTable = layui_table.render({
+            elem: '#PayTypeList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: false, //开启分页
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'payCode', title: '支付ID', width: 130, fixed: 'left', }
+                , { field: 'payName', title: '支付名称', width: 120 }
+                , { field: 'crmPartnerId', title: '设置人ID', width: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar' }
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(PayTypeList)', function (obj) {
+            var layEvent = obj.event;
+            var payCode = obj.data.payCode;
+            var payName = obj.data.payName;
+            var crmPartnerId = obj.data.crmPartnerId;
+                $("#updatePayName").val(payName);
+            if (layEvent === 'edit') {
+                //显示弹出层
+                layui_layer.open({
+                    type:1,
+                    content:$('#payTypeUpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var updateFlag ;
+                        updateFlag = updatePayTypeInfo(obj);
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+payName+"'该支付类型吗？";
+                if (payCode != null ) {
+                        title = "该支付类型已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (payCode != null ) {
+                        //删除用户
+                        var deleteFlag;
+                        deleteFlag =  onDeletePayType(payCode);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                    } else {
+                        alert('删除支付类型失败 数据出错');
+                        //deleteOrder(salesOrderId);
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                layui_layer.open({
+                    type:1,
+                    content:$('#payTypeUpdateArea')
+                });
+            }
+        });
+        var param = {};
+        param.isPayType = isPayType;
+        loadPayTypeInfo(param);
+
+    });
+
+    /* 加载所有数据 */
+    //userId userName description phone address sex userTypeId
+    function loadPayTypeInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"/newshop/payType/loadPayType",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data);
+                if(data.success === true){
+                    PayTypeListTable.reload({
+                        data:data.data,
+                    });
+                }else{
+                    layui_layer.msg('加载支付类型失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载支付类型成功");
+            }
+        });
+    }
+
+    /* 更新数据 */
+    function updatePayTypeInfo(PayType) {
+        let data = PayType.data;
+        var updateFlag = 0;
+        var crmPayType = {};
+        crmPayType.payCode = data.payCode;
+        crmPayType.payName = $("#updatePayName").val();
+            $.ajax({
+                url: "http://localhost:8080/newshop/payType/updatePayType",
+                data: crmPayType,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        updateFlag = 1;
+                        layui_layer.msg('更新支付类型成功: '+data.data.payName+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isPayType = isPayType;
+                            loadPayTypeInfo(param);
+                    } else{
+                        layui_layer.msg('更新支付类型失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+            return updateFlag;
+    }
+    /* 删除数据*/
+    function onDeletePayType(payCode){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.payCode= payCode;
+        param.isDeletePayType = "isDeletePayType";
+        $.ajax({
+                url: "http://localhost:8080/newshop/payType/deletePayType",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            layui_layer.msg('删除支付类型成功: ',{
+                                icon:6,
+                            });
+                            var loadUser = {};
+                            loadUser.isPayType = isPayType;
+                            loadPayTypeInfo(loadUser);
+                    } else{
+                        layui_layer.msg('删除支付类型失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                    
+                }
+            })
+        return deleteFlag;
+    };
+
+    function onInsertPayType(){
+        layui_layer.open({
+                    type:1,
+                    content:$('#payTypeUpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var insertFlag ;
+                        insertFlag = insertObj();
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+    }
+
+    function insertObj(){
+        var insertFlag;
+        var obj = {};
+        obj.isPayTypeInsert= "isPayTypeInsert";
+        obj.data = $("#updatePayName").val();   
+        obj.partnerId = 1;  
+        $.ajax({
+                url: "http://localhost:8080/newshop/payType/insertPayType",
+                data: obj,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('插入支付类型成功: '+obj.data+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isPayType = isPayType;
+                            loadPayTypeInfo(param);
+                    } else{
+                        layui_layer.msg('插入支付类型失败,请稍后重试',{
+                            icon:5,
+                        });
+                    }
+                }
+            })
+            return insertFlag;
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockInMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockIn" >
+    <id column="stock_inout_id" property="stockInoutId" jdbcType="BIGINT" />
+    <result column="invoice_code" property="invoiceCode" jdbcType="VARCHAR" />
+    <result column="Refrence" property="refrence" jdbcType="VARCHAR" />
+    <result column="move_type_id" property="moveTypeId" jdbcType="BIGINT" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="BIGINT" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+    <result column="modified_by" property="modifiedBy" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="process_status" property="processStatus" jdbcType="VARCHAR" />
+    <result column="total_cost" property="totalCost" jdbcType="DECIMAL" />
+    <result column="total_qty" property="totalQty" jdbcType="DECIMAL" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="audit_by" property="auditBy" jdbcType="BIGINT" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    stock_inout_id, invoice_code, Refrence, move_type_id, created_date, created_by, modified_date, 
+    modified_by, stockhouse_code, process_status, total_cost, total_qty, ext1, ext2, 
+    ext3, memo, audit_by, audit_time
+  </sql>
+   <!-- 查询所有入库单-->
+   <select id="queryStockInList"  resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM stock_in
+    where process_status != '5'
+   </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByStockIn" resultMap="BaseResultMap" parameterType="com.ss.springbootNewshop.bean.StockIn">
+    SELECT distinct
+    <include refid="Base_Column_List" />
+    FROM stock_in
+    <where>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode}
+      </if>
+      <if test="processStatus != null" >
+        and process_status = #{processStatus}
+      </if>
+      <if test="createdDate != null" >
+        and created_date <![CDATA[ >= ]]> #{createdDate}
+      </if>
+      <if test="modifiedDate != null" >
+        and modified_date <![CDATA[ <= ]]> #{modifiedDate}
+      </if>
+    </where>
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByInvoiceCode" resultMap="BaseResultMap" parameterType="com.ss.springbootNewshop.bean.StockIn">
+    SELECT distinct
+    <include refid="Base_Column_List" />
+    FROM stock_in
+    <where>
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_in
+    where stock_inout_id = #{stockInoutId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_in
+    where stock_inout_id = #{stockInoutId,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteByInvoiceCode" parameterType="java.lang.String" >
+    delete from stock_in
+    where invoice_code = #{invoiceCode}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockIn" >
+    insert into stock_in (stock_inout_id, invoice_code, Refrence, 
+      move_type_id, created_date, created_by, 
+      modified_date, modified_by, stockhouse_code, 
+      process_status, total_cost, total_qty, 
+      ext1, ext2, ext3, memo, 
+      audit_by, audit_time)
+    values (#{stockInoutId,jdbcType=BIGINT}, #{invoiceCode,jdbcType=VARCHAR}, #{refrence,jdbcType=VARCHAR}, 
+      #{moveTypeId,jdbcType=BIGINT}, #{createdDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=BIGINT}, 
+      #{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, 
+      #{processStatus,jdbcType=VARCHAR}, #{totalCost,jdbcType=DECIMAL}, #{totalQty,jdbcType=DECIMAL}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{auditBy,jdbcType=BIGINT}, #{auditTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockIn" >
+    insert into stock_in
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockInoutId != null" >
+        stock_inout_id,
+      </if>
+      <if test="invoiceCode != null" >
+        invoice_code,
+      </if>
+      <if test="refrence != null" >
+        Refrence,
+      </if>
+      <if test="moveTypeId != null" >
+        move_type_id,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
+      </if>
+      <if test="modifiedBy != null" >
+        modified_by,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="processStatus != null" >
+        process_status,
+      </if>
+      <if test="totalCost != null" >
+        total_cost,
+      </if>
+      <if test="totalQty != null" >
+        total_qty,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="auditBy != null" >
+        audit_by,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockInoutId != null" >
+        #{stockInoutId,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceCode != null" >
+        #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refrence != null" >
+        #{refrence,jdbcType=VARCHAR},
+      </if>
+      <if test="moveTypeId != null" >
+        #{moveTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null" >
+        #{modifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="totalCost != null" >
+        #{totalCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null" >
+        #{auditBy,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockIn" >
+    update stock_in
+    <set >
+      <if test="invoiceCode != null" >
+        invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refrence != null" >
+        Refrence = #{refrence,jdbcType=VARCHAR},
+      </if>
+      <if test="moveTypeId != null" >
+        move_type_id = #{moveTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null" >
+        modified_by = #{modifiedBy,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null" >
+        process_status = #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="totalCost != null" >
+        total_cost = #{totalCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalQty != null" >
+        total_qty = #{totalQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null" >
+        audit_by = #{auditBy,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where stock_inout_id = #{stockInoutId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockIn" >
+    update stock_in
+    set invoice_code = #{invoiceCode,jdbcType=VARCHAR},
+      Refrence = #{refrence,jdbcType=VARCHAR},
+      move_type_id = #{moveTypeId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      modified_by = #{modifiedBy,jdbcType=BIGINT},
+      stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      process_status = #{processStatus,jdbcType=VARCHAR},
+      total_cost = #{totalCost,jdbcType=DECIMAL},
+      total_qty = #{totalQty,jdbcType=DECIMAL},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      audit_by = #{auditBy,jdbcType=BIGINT},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP}
+    where stock_inout_id = #{stockInoutId,jdbcType=BIGINT}
+  </update>
+</mapper>

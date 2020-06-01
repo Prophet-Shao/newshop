@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+
+    </style>
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/left_white48.png" style="height: 2.4rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">个人信息详情</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/ecomUserBasket/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/cart_empty.png"/>
+            </a>
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/home_white32.png"/>
+			</a>
+        </div>
+    </div>
+    
+    <!-- 订单数据 -->
+	<div class="flex" style="flex-direction: column;padding-top: 1rem;width: 100%;">
+        <!-- 个人信息 -->
+        <form class="layui-form flex" style="width: 100%;height: 4rem;flex-direction: column;margin-top: 1.5rem;
+                    margin-bottom: 10px;padding-bottom: 5rem;background-color: white;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <input id="headHidden" type="hidden" name="userName" lay-verify="required" autocomplete="off"  class="layui-input">
+                    <img id="head" alt="??" src="http://localhost:8080/newshop/static/Image/证件照白衬衫PS图.jpg" style="width: 80px; height: 80px;"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                    <input id="userName" type="text" name="userName" lay-verify="required" autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <select id="sex" name="sex" lay-verify="sex">
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">等级</label>
+                <div class="layui-input-inline">
+                    <input id="jobTitleName" type="text" name="title" lay-verify="required" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input id="Email" type="text" name="title" lay-verify="emails" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input id="Email" type="text" name="title" lay-verify="title" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input id="Email" type="text" name="title" lay-verify="phoness" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">配送收货人</label>
+                <div class="layui-input-inline">
+                    <input id="Email" type="text" name="title" lay-verify="title" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">配送收货人</label>
+                <div class="layui-input-inline">
+                    <input id="Email" type="text" name="title" lay-verify="title" autocomplete="off"  class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </form>
+    </div>
+ 
+
+<script th:inline="none"> //防止内联语法出错
+    var url=window.location.href;
+
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+    var userName;
+
+    urlArr = url.split("userName=");
+    userName = urlArr[1];
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','table','laytpl', 'layedit'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_$ = layui.jquery;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_layedit = layui.layedit;
+        layui_laytpl = layui.laytpl;
+
+        //创建一个编辑器
+        var editIndex = layui_layedit.build('LAY_demo_editor'); /**/
+        //自定义验证规则
+        layui_form.verify({
+            title: function(value) {
+                if(value.length < 5) {
+                    return '至少输入5个字符';
+                }
+            },
+            password: [
+                /^(\w){6,20}$/, '只能输入6-20个字母、数字、下划线'
+            ],
+            emails: [
+                /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, '请输入正确的邮箱格式：<br>如：xxx@qq.com<br>xxx@163.com等格式'
+            ],
+            phones: [
+                /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/, '您的输入有误，请重新输入(中国11位手机号)'
+            ],
+            truename: [
+                /^[\u4e00-\u9fa5]{2,4}$/, '您的输入有误，请输入2-4位中文'
+            ],
+            cardId: [
+                /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, '请输入正确的身份证号'
+            ],
+            content: function(value) {
+                layedit.sync(editIndex);
+            }
+        });
+    });
+
+    function changeAddressInfo(){
+        layui_layer.open({
+            type:1,
+            content:$('#UserAddress')
+            , title:"请填写配送信息"
+            , btn: ['确认', '取消']
+            , yes: function (index, layero) {               
+                if($('#updateAddress').val() != "" && $('#phone').val() != "" && $('#company').val()!= "" 
+                && null != $('#updateAddress').val() && null != $('#phone').val() && null != $('#company').val()){
+                    var obj ={}; 
+                obj.address = $('#updateAddress').val();
+                obj.phone = $('#phone').val();
+                obj.company = $('#company').val();
+                changeAddressBack(obj);
+                }else{
+                    /* 警告填写完整所有信息 */
+                    layui_layer.msg('请填写完整配送信息');
+                }
+            }
+            , btn2: function (index, layero) {
+                layui_layer.closeAll();      
+            }});
+            return false;
+    }
+
+    function changeAddressBack(obj){
+        obj.isChangeAddress= "isChangeAddress";
+        obj.invoiceCode = invoiceCode;
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/changeUserAddress",
+                data: obj,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        layui_layer.msg('更新用户配送单数据成功',{icon:1,});
+                        /* 渲染购物车商品 */
+                        /* addressLocation customerName contactPhone */
+                        $('#addressLocation').text(data.crmUser.address);
+                        $('#customerName').text(data.crmUser.company);
+                        $('#contactPhone').text(data.crmUser.phone);
+                  
+                        $('#company').val(data.crmUser.company);
+                        $('#updateAddress').val(data.crmUser.address);
+                        $('#phone').val(data.crmUser.phone);
+                        
+                        layui_layer.closeAll();      
+                    }else{
+                        layui_layer.msg(data.error,{icon:3,});
+                        layui_layer.closeAll();      
+                }
+            }
+        });
+    }
+
+
+    function loadSalesOrder(invoiceCode){
+        if(null != invoiceCode && "" != invoiceCode){
+            loadSalesOrderInfo(invoiceCode);
+        }else{
+            layui_layer.msg('用户订单查找失败, 请确认是否成功下单');
+        }
+    }
+
+    /* 查询订单和子订单 */
+    function loadSalesOrderInfo(invoiceCode){
+        var param = {};
+        param.invoiceCode = invoiceCode;
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/selectSalesOrder",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true && data.data.length > 0 ){
+                        /*layui_layer.msg('查找购物车数据成功: 成功',{icon:6,});*/
+                        /* 渲染购物车商品 */
+                        var getTpl = document.getElementById('DetailData').innerHTML
+                        ,view = document.getElementById('orderDetailTable');
+                        layui_laytpl(getTpl).render(data, function(html){
+                        view.innerHTML = html;
+                        }); 
+                        layui.use(['element'], function (args) {
+                            var element = layui.element;
+                            element.init();
+                        });
+                        layui_form.render();
+                        $('#totalMoney').text(data.data[0].totalMoney);
+                        $('#totalNum').text(data.data[0].totalQty);
+
+                        $('#addressLocation').text(data.crmUser.address);
+                        $('#customerName').text(data.crmUser.company);
+                        $('#contactPhone').text(data.crmUser.phone);
+
+                        $('#company').val(data.crmUser.company);
+                        $('#updateAddress').val(data.crmUser.address);
+                        $('#phone').val(data.crmUser.phone);
+                        processState = data.data[0].processStatus;
+                        isFullPaid = data.data[0].isFullPaid;
+
+                    }else{
+                        layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+    
+    function goto_order(){
+        if(processState == 0 && isFullPaid == 0){
+            go_to_Pay();
+        }else if(isFullPaid == 1){
+            layui_layer.msg('该订单已完成支付,请查看个人订单详情');
+        }else{
+            layui_layer.msg('该订单异常,请重新下单');
+        }
+    }
+    
+
+    function go_to_Pay() {
+        if(invoiceCode != "" && null != invoiceCode){
+            gotoUrl('salesOrder/SalesOrderPay?invoiceCode='+invoiceCode);//跳转到支付页面
+        }else{
+            layui_layer.msg('该订单异常,请重新下单');
+        }
+        
+    }
+
+
+</script>
+
+
+</body>
+</html>

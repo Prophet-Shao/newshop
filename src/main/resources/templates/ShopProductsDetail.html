@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+    .productsDetailInfo{
+        width: 100%;
+        height: 0.2rem;
+        flex-direction: row;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        background-color: white;
+    }
+
+    </style>
+    <!-- 修改弹出层-->
+<div id="UserAddress" style="padding: 20px;display: none"> 
+    <form class="layui-form" >
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">收货人:</label>
+          <div class="layui-input-block">
+            <input id="company" type="text"  name="company" placeholder="收货人" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">收获地址:</label>
+            <div class="layui-input-block">
+              <input id="updateAddress" type="text"  name="address" placeholder="收获地址" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">联系电话:</label>
+            <div class="layui-input-block">
+              <input id="phone" type="text"  name="phone" placeholder="联系电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        
+      </form>
+</div>
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/left_white48.png" style="height: 2.4rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">商品详细</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/ecomUserBasket/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/cart_empty.png"/>
+            </a>
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" src="http://localhost:8080/newshop/static/icon/home_white32.png"/>
+			</a>
+        </div>
+    </div>
+    
+    <!-- 商品数据 -->
+    <div class="flex" style="flex-direction: column;padding-top: 1rem;width: 100%;">
+        <div><img id = "mainImage" src="http://localhost:8080/newshop/static/Image/defaultProducts.png" alt="图片加载失败！" style="width: 100%;height: 30rem;"/></div> 
+        <div class="flex productsDetailInfo" >
+            <span style="font-size: 1.5rem; color: #515151;">价格: <span id="salesPrice" style="color: red;">0</span>元</span>
+        </div>
+        <div class="flex productsDetailInfo" >
+            <span style="font-size: 1.5rem; color: #515151;">商品名称: <span id="productName">商品名称</span></span>
+        </div>
+        <div class="flex productsDetailInfo">
+            <span style="font-size: 1.5rem; color: #515151;">描述: <span id="productDesc">商品描述</span></span>
+        </div>
+        <div class="flex productsDetailInfo" >
+            <span style="font-size: 1.5rem; color: #515151;">颜色: <span id="color">白色</span></span>
+        </div>
+        
+
+    </div>
+    <div class="footer flex" style="height: 5rem;">
+        <div id="homeImg" class="flex" onclick="fravorite()">
+            <div class="flex">
+                <i class="layui-icon layui-icon-heart-fill" style="font-size: 30px; color:red;"></i>  
+                <i class="layui-icon layui-icon-heart" style="font-size: 30px; color:white; display: none;"></i>  
+            </div>
+        </div>
+        <div class="flex" style="width: 50%;">
+            <div  class="flex" onclick="insertBasket()" 
+                            style="background-color: orange;height: 5rem;justify-content: center;align-items: center;width: 50%;"> 
+                <span class="no-wrap" style="color: white;">加入购物车</span>
+            </div>
+            <div class="flex" onclick="go_to_Pay()"
+                        style="background-color: red;height: 5rem;justify-content: center;align-items: center;width: 50%;">
+                <span class="no-wrap" style="color: white;">立即购买</span>
+            </div>
+        </div>
+        
+    </div>  
+
+<script th:inline="none"> //防止内联语法出错
+    var isUserLoad= "isUserLoad";
+    var url=window.location.href;
+
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+    var finalPrice = 0;
+    var finalNum = 0;
+    var processState = 0;             //判断订单是否未支付, 未支付 则可继续流程
+    var isFullPaid = 0;
+    var ProductsCode;
+    var ProductsId,productsCode,productsUnit,categoryId ,finalPrice;
+
+    urlArr = url.split("ProductsCode=");
+    ProductsCode = urlArr[1];
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','table','laytpl'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_$ = layui.jquery;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_$ = layui.jquery;
+        layui_laytpl = layui.laytpl;
+
+
+        if(null != ProductsCode && "" != ProductsCode){
+            loadProductsInfo(ProductsCode);
+        }else{
+            layui_layer.open({
+            type:1,
+            content:'错误加载页面, 请重新登录'
+            , btn: ['确认']
+            , yes: function (index, layero) {               
+               gotoUrl('shop/Index');
+            }
+           });
+        }
+
+      
+        //loadUserInfo();
+
+        //加载商品  没有显示默认图片
+        //loadSalesOrder(invoiceCode);
+    });
+
+
+    function loadProductsInfo(ProductsCode){
+        var obj = {};
+        obj.memo2 = ProductsCode;
+        $.ajax({
+                url: "http://localhost:8080/newshop/products/selectByProductsCode",
+                data: obj,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        layui_layer.msg('加载商品数据成功',{icon:1,});
+                        if(""!=data.data.mainPic &&null!=data.data.mainPic){
+                            $("#mainImage").attr('src',"http://localhost:8080/newshop/"+data.data.mainPic);
+                            //$("#hiddeImg").val(selProducts.mainPic);
+                        }   
+                        $('#salesPrice').text(data.data.salesPrice);
+                        $('#productName').text(data.data.productName);
+                        $('#productDesc').text(data.data.productDesc);
+                        $('#color').text(data.data.color);
+
+                        ProductsId = data.data.productId;
+                        productsCode = data.data.memo2;
+                        productsUnit = data.data.unitId;
+                        categoryId = data.data.categoryId;
+                        finalPrice = data.data.salesPrice;
+                    }else{
+                        layui_layer.closeAll();  
+                        layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+
+    function loadUserInfo(){
+        var obj = {};
+        obj.userName = '';
+        $.ajax({
+                url: "http://localhost:8080/newshop/userInfo/loadUserIndexInfo",
+                data: obj,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        //layui_layer.msg('加载用户数据成功',{icon:1,});
+                        /* 渲染购物车商品 */
+                        /* addressLocation customerName contactPhone */
+                        $('#userName').text(data.data.userName);
+                        $('#level').text(data.data.jobTitleName);
+                        layui_layer.closeAll();      
+                    }else{
+                        layui_layer.closeAll();  
+                        layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    function fravorite(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    function insertBasket(){
+        if(null != ProductsId && ProductsId>0){
+            addBasket(ProductsId);
+        }else{
+            layui_layer.msg('商品加载出错,请退出重新登录');
+        }
+    }
+
+    function addBasket(productId){
+        var param = {};
+        param.isBasketInsert = "isBasketInsert";
+        param.userName = '邵帅'; 
+        param.userId = '36';
+        param.productsCode = productsCode;
+        param.productsUnit =productsUnit;
+        param.categoryId = categoryId;
+        param.basketQuantity = '1';
+        param.finalPrice = finalPrice;
+        $.ajax({
+                url: "http://localhost:8080/newshop/ecomUserBasket/insertBasket",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true ){
+                        layui_layer.msg('已添加购物车');     
+                    }else{
+                        layui_layer.msg('加入购物车失败,请重试',{icon:3,});
+                    }
+                }
+            });
+    }
+
+    function go_to_Pay() {
+        var param = {};
+        var gotoPayMsg ="";
+        param.isSalesOrderInsert = "isSalesOrderInsert";
+        param.totalMoney = finalPrice; 
+        param.totalNumber = '1';
+        gotoPayMsg += -1;
+        gotoPayMsg += ",";
+        gotoPayMsg += productsCode;
+        gotoPayMsg += ",";
+        gotoPayMsg += productsUnit;
+        gotoPayMsg += ",";
+        gotoPayMsg +=categoryId;
+        gotoPayMsg += ",";
+        gotoPayMsg += finalPrice;
+        gotoPayMsg += ",";
+        gotoPayMsg += '1';
+        gotoPayMsg += ';';
+
+        param.gotoPayMsg = gotoPayMsg;
+        $.ajax({
+            url: "http://localhost:8080/newshop/salesOrder/insertSalesOrder",
+            data: param,
+            type: "post",
+            success: data=>{
+                console.log(data);
+                if(data.success === true ){
+                    layui_layer.msg('下单成功, 请确认地址和订单');
+                    gotoUrl('salesOrder/SalesOrderConfirm?invoiceCode='+data.invoiceCode);
+                }else{
+                    layui_layer.msg('即可下单失败,请重新登录');
+                }
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

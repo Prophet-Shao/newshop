@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.ProductsMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.Products" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_desc" property="productDesc" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="BIGINT" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL" />
+    <result column="main_pic" property="mainPic" jdbcType="VARCHAR" />
+    <result column="left_pic" property="leftPic" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="memo2" property="memo2" jdbcType="VARCHAR" />
+    <result column="memo3" property="memo3" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <resultMap id="QueryResultMap" type="com.ss.springbootNewshop.bean.Products" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_desc" property="productDesc" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="BIGINT" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="sales_price" property="salesPrice" jdbcType="DECIMAL" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL" />
+    <result column="main_pic" property="mainPic" jdbcType="VARCHAR" />
+    <result column="left_pic" property="leftPic" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="memo2" property="memo2" jdbcType="VARCHAR" />
+    <result column="memo3" property="memo3" jdbcType="VARCHAR" />
+
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, product_id, product_name, product_desc, category_id, created_time, unit_id, quantity, 
+    color, size, cost, price, sales_price, agent_price, main_pic, left_pic, memo, memo2, 
+    memo3
+  </sql>
+
+  <sql id="Query_Column_List" >
+    products.id, product_id, product_name, product_desc,
+    products.category_id, category.category_name,created_time, products.unit_id,
+    symbol,quantity, color, size, cost, price,
+    sales_price, agent_price, main_pic, left_pic, products.memo, memo2,
+    memo3
+  </sql>
+
+  <!-- 查询所有商品单位-->
+  <select id="queryProductsList"  resultMap="QueryResultMap" >
+    SELECT
+      <include refid="Query_Column_List" />
+    FROM products,category,products_unit
+      where products.category_id = category.category_id
+        AND
+      products.unit_id = products_unit.unit_id;
+  </select>
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByProductsCode" resultMap="QueryResultMap" parameterType="java.lang.String">
+    SELECT distinct
+    <include refid="Query_Column_List" />
+    FROM products,category,products_unit
+    <where>
+      <if test="memo2 != null" >
+        memo2 = #{memo2}
+      </if>
+        and products.category_id = category.category_id
+        and products.unit_id = products_unit.unit_id
+    </where>
+  </select>
+
+
+  <!-- 按搜索条件查询-->
+  <select id="selectByProducts" resultMap="QueryResultMap" parameterType="com.ss.springbootNewshop.bean.Products">
+       SELECT distinct
+       <include refid="Query_Column_List" />
+        FROM products,category,products_unit
+       <where>
+          <if test="productName != null" >
+            product_name = #{productName}
+          </if>
+         <if test="categoryId != null" >
+         and products.category_id = #{categoryId}
+         and products.category_id = category.category_id
+         and products.unit_id = products_unit.unit_id
+       </if>
+       </where>
+  </select>
+
+  <!-- 按单位名称查询-->
+  <select id="selectByProductsName" resultMap="QueryResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Query_Column_List" />
+    from products
+    where product_name = #{productName}
+  </select>
+
+  <!-- 按分类名称查询-->
+  <select id="selectByCategory" resultMap="QueryResultMap" parameterType="java.lang.String" >
+    SELECT distinct
+    <include refid="Query_Column_List" />
+    FROM products,category,products_unit
+    <where>
+      <if test="categoryId != null" >
+        and products.category_id = #{categoryId}
+        and products.category_id = category.category_id
+        and products.unit_id = products_unit.unit_id
+      </if>
+    </where>
+  </select>
+
+  <!-- 按主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Query_Column_List" />
+    FROM products,category,products_unit
+    where products.id = #{id,jdbcType=INTEGER}
+    and products.category_id = category.category_id
+    and products.unit_id = products_unit.unit_id
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from products
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.Products" >
+    insert into products (id, product_id, product_name, 
+      product_desc, category_id, created_time, 
+      unit_id, quantity, color, 
+      size, cost, price, sales_price, 
+      agent_price, main_pic, left_pic, 
+      memo, memo2, memo3)
+    values (#{id,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, 
+      #{productDesc,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{unitId,jdbcType=BIGINT}, #{quantity,jdbcType=DECIMAL}, #{color,jdbcType=VARCHAR}, 
+      #{size,jdbcType=BIGINT}, #{cost,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{salesPrice,jdbcType=DECIMAL}, 
+      #{agentPrice,jdbcType=DECIMAL}, #{mainPic,jdbcType=VARCHAR}, #{leftPic,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR}, #{memo2,jdbcType=VARCHAR}, #{memo3,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.Products" >
+    insert into products
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productDesc != null" >
+        product_desc,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="salesPrice != null" >
+        sales_price,
+      </if>
+      <if test="agentPrice != null" >
+        agent_price,
+      </if>
+      <if test="mainPic != null" >
+        main_pic,
+      </if>
+      <if test="leftPic != null" >
+        left_pic,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="memo2 != null" >
+        memo2,
+      </if>
+      <if test="memo3 != null" >
+        memo3,
+      </if>
+    </trim>
+
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null" >
+        #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=BIGINT},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="salesPrice != null" >
+        #{salesPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="agentPrice != null" >
+        #{agentPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="mainPic != null" >
+        #{mainPic,jdbcType=VARCHAR},
+      </if>
+      <if test="leftPic != null" >
+        #{leftPic,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo2 != null" >
+        #{memo2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo3 != null" >
+        #{memo3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.Products" >
+    update products
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null" >
+        product_desc = #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=BIGINT},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="salesPrice != null" >
+        sales_price = #{salesPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="agentPrice != null" >
+        agent_price = #{agentPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="mainPic != null" >
+        main_pic = #{mainPic,jdbcType=VARCHAR},
+      </if>
+      <if test="leftPic != null" >
+        left_pic = #{leftPic,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo2 != null" >
+        memo2 = #{memo2,jdbcType=VARCHAR},
+      </if>
+      <if test="memo3 != null" >
+        memo3 = #{memo3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.Products" >
+    update products
+    set product_id = #{productId,jdbcType=INTEGER},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_desc = #{productDesc,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      color = #{color,jdbcType=VARCHAR},
+      size = #{size,jdbcType=BIGINT},
+      cost = #{cost,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      sales_price = #{salesPrice,jdbcType=DECIMAL},
+      agent_price = #{agentPrice,jdbcType=DECIMAL},
+      main_pic = #{mainPic,jdbcType=VARCHAR},
+      left_pic = #{leftPic,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      memo2 = #{memo2,jdbcType=VARCHAR},
+      memo3 = #{memo3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

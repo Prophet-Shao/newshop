@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>确认支付</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <style type="text/css">
+    /* 撑开顶部和底部的内边距 */
+    body {
+      margin: 0;
+      padding: 4rem 0 6rem;
+      background-color: #f4f4f4;
+    }
+    
+    p {
+      margin: 0;
+    }
+
+    </style>
+
+</head>
+
+<div id="payImage" class="flex" style="padding: 20px;display: none;justify-content: center; align-items: baseline;"> 
+    <img alt="??" src="http://localhost:8080/newshop/static/Image/PayImage/AliPay.jpg"style="width:80%; height:80%;" />
+</div>
+
+<body>
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="flex header-left">
+            <a href="javascript:history.go(-1);" > 
+                <img alt="??" th:src="@{../static/icon/angle-left-FFFFFF.png}" style="height: 1.8rem;"/>
+            </a>
+        </div>
+        <div class="flex header-center">
+            <div class="flex" style="margin-top: 0px;border-radius:10px;height: 30px;" >
+                <span class="no-wrap">确认付款</span>
+            </div>
+        </div>
+        <div class="flex header-right">
+            <a href="http://localhost:8080/newshop/shop/Index"> 
+                <img alt="??" th:src="@{../static/icon/home_white32.png}"/>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 订单数据 -->
+    <div class="flex" style="flex-direction: column;padding-top: 1rem;width: 100%;">
+        <!-- 进度提示 -->
+        <div class="flex" style="flex-direction: column;margin-bottom: 10px;padding-top: 2rem;
+                                padding-bottom: 1rem; padding-left: 2rem;
+                                padding-right: 2rem;background-color: white;"> 
+            <div class="flex" style="justify-content: space-between;padding-bottom: 2rem;">
+                 <span>订购:</span>
+                 <span>确认付款:</span>
+                 <span>等待收货:</span>
+            </div>
+            <div class="layui-progress" lay-showpercent="true">
+                <div class="layui-progress-bar" lay-percent="2 / 3"></div>
+              </div>
+        </div>
+
+        <section class="mtn">
+            <div class="layui-form catbox">
+                <table class="am-table goods-cart-con" id="orderDetailTable" lay-filter="orderDetailTable">
+                </table>
+                <table  class="am-table goods-cart-con" id="totalData">
+                    <tbody>
+                        <td class="flex" style="padding-left: 1rem;flex-direction: column;padding-right: 1rem;">
+                            <div class="flex" style="justify-content: flex-start;">
+                                <span>订单编号:<span id ="invoiceCode">0</span></span>
+                            </div>
+                            <div class="flex" style="justify-content: flex-start;">
+                                <span>下单时间:<span id ="createTime">0</span></span>
+                            </div>
+                            <div class="flex" style="justify-content: flex-start;">
+                                <span>订单总价:<span id ="totalMoney">0.00</span>元</span>
+                            </div>
+                            <div class="flex" style="justify-content: flex-start;">
+                                <span>商品数量:<span id ="totalNum">0</span></span>
+                            </div>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="layui-form flex" style="flex-direction: column;margin-bottom: 10px;padding-top: 2rem;
+                                padding-bottom: 1rem; padding-left: 2rem;
+                                padding-right: 2rem;background-color: white;"> 
+            <div class="flex" style="justify-content: flex-start; padding-bottom: 2rem;">
+                <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 5px;" onclick="choosePayWay('2')">
+                    <input id="AliPay" type="checkbox" name="AliPay" class="switch"
+                           lay-skin="primary"  value="2"  checked="checked">
+                </div>
+                <span style="font-size:1.6rem">支付宝支付</span>
+            </div>
+            <div class="flex" style="justify-content: flex-start;padding-bottom: 2rem;">
+                <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 5px;"  onclick="choosePayWay('4')">
+                    <input id="CashPay" type="checkbox" name="CashPay" class="switch"
+                           lay-skin="primary"  value="4" >
+                </div>
+                <span style="font-size:1.6rem">余额支付</span>
+            </div>
+        </div>  
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="footer" id="foot" style="height: 7.1rem;"><!-- Grid -->
+        <div class="flex" style="align-items: center;padding: 1rem;">
+            <button type="button" class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius layui-btn-fluid"
+             onclick="goto_order()">确认付款</button>
+        </div>  
+    </div>  
+
+<script th:inline="none"> //防止内联语法出错
+    var isUserLoad= "isUserLoad";
+    var url=window.location.href;
+
+    var param = {};
+    var layui_element;   //渲染元素到指定位置
+    var layui_layer;
+    var layui_form;
+    var layui_upload;
+    var layui_$;
+    var windowWidth = document.documentElement.clientWidth; //页面宽度
+    var windowHeight = document.documentElement.clientHeight; //页面高度
+    var processState = 0;             //判断订单是否未支付, 未支付 则可继续流程
+    var isFullPaid = 0;
+    var salesOrderId ;
+    var invoiceCode;
+    var PayCode =2 ; //默认支付宝支付
+    var userPoint = 0;
+
+    urlArr = url.split("invoiceCode=");
+    invoiceCode = urlArr[1];
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','table','laytpl'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_$ = layui.jquery;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_$ = layui.jquery;
+        layui_laytpl = layui.laytpl;
+
+        loadSalesOrder(invoiceCode);
+        /* 若有用户登录 加载用户数据到httprequest */
+
+        layui_form.render();
+    });
+
+    function loadSalesOrder(invoiceCode){
+        if(null != invoiceCode && "" != invoiceCode){
+            loadSalesOrderInfo(invoiceCode);
+        }else{
+            layui_layer.msg('用户订单查找失败, 请确认是否成功下单');
+        }
+    }
+
+    /* 查询订单和子订单 */
+    function loadSalesOrderInfo(invoiceCode){
+        var param = {};
+        param.invoiceCode = invoiceCode;
+        $.ajax({
+                url: "http://localhost:8080/newshop/salesOrder/selectSalesOrder",
+                data: param,
+                type: "post",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true && data.data.length > 0 ){
+                        /*layui_layer.msg('查找购物车数据成功: 成功',{icon:6,});*/
+                        /* 渲染购物车商品 */
+                        layui.use(['element'], function (args) {
+                            var element = layui.element;
+                            element.init();
+                        });
+                        layui_form.render();
+                        $('#totalMoney').text(data.data[0].totalMoney);
+                        $('#totalNum').text(data.data[0].totalQty);
+
+                        $('#invoiceCode').text(data.data[0].invoiceCode);
+                        $('#createTime').text(data.data[0].createdDate);
+                        processState = data.data[0].processStatus;
+                        isFullPaid = data.data[0].isFullPaid;
+                        salesOrderId=data.data[0].salesOrderId;
+                        userPoint = Number(data.crmUser.userPoint)/100;
+                    }else{
+                        layui_layer.msg(data.error,{icon:3,});
+                }
+            }
+        });
+    }
+
+    function gotoUrl(url){
+        window.location.href = "http://localhost:8080/newshop/"+url;
+        return false;
+    }
+
+    function choosePayWay(payCodeNum){
+        if(payCodeNum == 2){//选中支付宝支付
+            PayCode = 2;
+            $("#AliPay").attr("checked",true);
+            $("#CashPay").attr("checked",false);
+            layui_form.render();
+        } else if(payCodeNum ==4){
+            PayCode = 4;
+            $("#AliPay").attr("checked",false);
+            $("#CashPay").attr("checked",true);
+            layui_form.render();
+        }
+    }
+    
+    function goto_order(){
+        if($("#AliPay").is(':checked') == false && $("#CashPay").is(':checked') == false){
+           layui_layer.msg('请选择支付方式');
+        }else{
+            if(processState == 0 && isFullPaid == 0){
+                if(PayCode == 2){
+                    go_to_AliPay();
+                }else if(PayCode == 4){
+                    go_to_CashPay();
+                }
+                
+            }else if(isFullPaid == 1){
+                layui_layer.msg('该订单已完成支付,请查看个人订单详情');
+            }else{
+                layui_layer.msg('该订单异常,请重新下单');
+            }
+        }
+    }
+
+    function go_to_CashPay() { 
+        if(userPoint > $('#totalMoney').text()){
+            var param = {};
+            var gotoPayMsg ="";
+            param.invoiceCode = invoiceCode;
+            param.isFullPaid = "1";     //已完全支付
+            param.processStatus = "1";   //已完成
+            param.salesOrderId=salesOrderId;
+            param.totalMoney=$('#totalMoney').text();
+            param.payCode=4;
+            layui_layer.open({
+                type:1,
+                content:'您的余额为:'+userPoint+'元'
+                , title:"使用余额支付"
+                ,area: [(windowWidth * 0.7) + 'px', (windowHeight * 0.5) + 'px']
+                , btn: ['确认', '取消']
+                , yes: function (index, layero) {               
+                    /* 警告填写完整所有信息 */
+                    $.ajax({
+                            url: "http://localhost:8080/newshop/salesOrder/updateSalesOrder",
+                            data: param,
+                            type: "post",
+                            success: data=>{
+                            console.log(data);
+                            if(data.success === true ){
+                                layui_layer.msg('支付完成,敬请等待好物.',{icon:1,time:3000,shade:0.4},function() {
+                                    layui_layer.closeAll();      
+                                    //跳转个人中心
+                                    window.location.href = "http://localhost:8080/newshop/userIndex";
+                                });
+                            }else{
+                                layui_layer.msg(data.error,{icon:3,});
+                                layui_layer.closeAll();      
+                            }
+                        }
+                    });
+                }
+                , btn2: function (index, layero) {
+                    layui_layer.closeAll();      
+                }});
+        }
+        else{
+            layui_layer.msg('当前余额不足,请充值',{icon:3,});
+        }
+        
+    }
+    
+    function go_to_AliPay() {
+        var param = {};
+        var gotoPayMsg ="";
+        param.invoiceCode = invoiceCode;
+        param.isFullPaid = "1";     //已完全支付
+        param.processStatus = "1";   //已完成
+        param.salesOrderId=salesOrderId;
+        param.totalMoney=$('#totalMoney').text();
+        param.payCode=2;
+        layui_layer.open({
+            type:1,
+            content:$('#payImage')
+            , title:"请扫描下方支付码付款"
+            ,area: [(windowWidth * 0.7) + 'px', (windowHeight * 0.5) + 'px']
+            , btn: ['确认', '取消']
+            , yes: function (index, layero) {               
+                /* 警告填写完整所有信息 */
+                $.ajax({
+                        url: "http://localhost:8080/newshop/salesOrder/updateSalesOrder",
+                        data: param,
+                        type: "post",
+                        success: data=>{
+                        console.log(data);
+                        if(data.success === true ){
+                            layui_layer.msg('支付完成,敬请等待好物.',{icon:1,time:3000,shade:0.4},function() {
+                                layui_layer.closeAll();      
+                                //跳转个人中心
+                                window.location.href = "http://localhost:8080/newshop/userIndex";
+                            });
+                        }else{
+                            layui_layer.msg(data.error,{icon:3,});
+                            layui_layer.closeAll();      
+                        }
+                    }
+                });
+            }
+            , btn2: function (index, layero) {
+                layui_layer.closeAll();      
+            }});
+    }
+
+
+</script>
+
+
+</body>
+</html>

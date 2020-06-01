@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<!-- 配置生成器 -->
+<generatorConfiguration>
+
+    <!-- !!!! Driver Class Path !!!! -->
+    <classPathEntry location="D:/Maven/.m2/repository/mysql/mysql-connector-java/8.0.18/mysql-connector-java-8.0.18.jar" />
+
+    <!--<properties resource="classpath"-->
+    <context id="DBTables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库连接地址账号密码 -->
+        <jdbcConnection
+                driverClass="com.mysql.cj.jdbc.Driver"
+                connectionURL="jdbc:mysql://localhost:3306/newsales?serverTimezone=UTC&amp;useUnicode=true;characterEncoding=UTF-8"
+                userId="root"
+                password="123456"/>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="com.ss.springbootNewshop.bean" targetProject="src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 设置是否在getter方法中，对String类型字段调用trim()方法 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--生成映射文件存放位置-->
+        <sqlMapGenerator targetPackage="newshop" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!--指定dao接口生成的位置,mapper接口-->
+        <javaClientGenerator targetPackage="com.ss.springbootNewshop.mapper" targetProject="src\main\java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!--配置表-->
+        <table tableName="attribute" domainObjectName="Attribute"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="category" domainObjectName="Category"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="product" domainObjectName="Product"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="product_attribute" domainObjectName="ProductAttribute"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="sku" domainObjectName="Sku"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="sku_value" domainObjectName="SkuValue"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="value" domainObjectName="Value"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+        <table tableName="crm_user" domainObjectName="crmUser"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByExample="false"
+               enableUpdateByExample="false" >
+        </table>
+
+    </context>
+</generatorConfiguration>

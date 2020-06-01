@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新零售注册页面</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+
+    <script th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/static/layui/layui.js}"></script>
+
+    </head>
+<body>
+<div class="flex" style="width: 100%; position: relative; left:35%;height:100%;justify-content: center;align-items: center; overflow: hidden">
+    <header class="layui-elip" style="width: 82%">新零售注册页</header>
+    <p></p>
+<!--用户注册--><!--th:action="@{/doRegister}"-->
+
+<form class="layui-form layui-form-pane" id="layui-form-edit" >
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="userName" required  lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" id="password1" required  lay-verify="password" placeholder="密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">确认密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" id="password2" required  lay-verify="password" placeholder="两次密码需填写一致" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">性别</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="sex" value="1" title="男" checked>
+            <input type="radio" name="sex" value="2" title="女">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">手机号</label>
+        <div class="layui-input-inline">
+            <input type="number" name="phone" required  lay-verify="phones" placeholder="手机号" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 140px">收货地址</label>
+        <div class="layui-input-inline">
+            <input type="text" name="address" required  lay-verify="required" placeholder="收货地址" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" style="padding:4rem;" >
+        <div class="layui-input-inline">
+            <button class="layui-btn" lay-submit lay-filter="doRegister">立即注册</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+</div>
+<script >
+    var layui_layer;
+    var layui_form;
+    var layui_element;
+    var layui_layedit;
+    var $;
+    layui.use(['layer', 'element', 'form', 'layedit'], function() {
+         layui_layer = layui.layer;
+         layui_form = layui.form;
+         layui_element = layui.element;
+         layui_layedit = layui.layedit;
+         $ = layui.jquery;
+        
+         /*layui_layer.msg('测试弹出层');*/
+        layui_form.on("submit(doRegister)",function (obj) {
+            doNewResiter(obj);
+            return false;//设置成功后 回调
+        });
+
+        $(function() {
+            //验证输入的密码是否相同；
+            $("#password2").blur(function() {
+                var password1 = $("#password1").val();
+                var password2 = $("#password2").val();
+                if(password1 != password2) {
+                    layer.msg("两次输入的密码不一致", {
+                        "icon": 2,
+                        "time": 2000
+                    });
+                    $("#password2").val("");
+                    return false;
+                }
+                return true;
+            });
+        });
+
+        //创建一个编辑器
+        var editIndex = layui_layedit.build('LAY_demo_editor'); /**/
+        //自定义验证规则
+        layui_form.verify({
+            title: function(value) {
+                if(value.length < 5) {
+                    return '至少输入5个字符';
+                }
+            },
+            password: [
+                /^(\w){6,20}$/, '只能输入6-20个字母、数字、下划线'
+            ],
+            emails: [
+                /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, '请输入正确的邮箱格式：<br>如：xxx@qq.com<br>xxx@163.com等格式'
+            ],
+            phones: [
+                /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/, '您的输入有误，请重新输入(中国11位手机号)'
+            ],
+            truename: [
+                /^[\u4e00-\u9fa5]{2,4}$/, '您的输入有误，请输入2-4位中文'
+            ],
+            cardId: [
+                /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, '请输入正确的身份证号'
+            ],
+            content: function(value) {
+                layedit.sync(editIndex);
+            }
+        });
+    });
+
+    function doNewResiter(obj){
+        let data = obj.field;
+            console.log(data);
+            $.ajax({
+                url: "http://localhost:8080/newshop/doRegister",
+                data: data,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    //alert("注册用户成功");
+                    layui_layer.msg('注册用户: '+data.data.userName+'成功, 即将进登录页面',function(){
+                        location.href = "http://localhost:8080/newshop/login";
+                    },{
+                        icon:6,
+                    });
+                }
+            })
+    }
+</script>
+</body>
+</html>

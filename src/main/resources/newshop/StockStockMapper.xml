@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ss.springbootNewshop.mapper.StockStockMapper" >
+  <resultMap id="BaseResultMap" type="com.ss.springbootNewshop.bean.StockStock" >
+    <id column="stock_id" property="stockId" jdbcType="BIGINT" />
+    <result column="stockhouse_code" property="stockhouseCode" jdbcType="VARCHAR" />
+    <result column="products_code" property="productsCode" jdbcType="VARCHAR" />
+    <result column="products_model" property="productsModel" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="unit_id" property="unitId" jdbcType="BIGINT" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="stock_price" property="stockPrice" jdbcType="DECIMAL" />
+    <result column="stock_cost" property="stockCost" jdbcType="DECIMAL" />
+    <result column="suguest_price" property="suguestPrice" jdbcType="DECIMAL" />
+    <result column="products_lower" property="productsLower" jdbcType="BIGINT" />
+    <result column="products_upper" property="productsUpper" jdbcType="BIGINT" />
+    <result column="storage_time" property="storageTime" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="account_set_id" property="accountSetId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    stock_id, stockhouse_code, products_code, products_model, color, size, unit_id, quantity, 
+    stock_price, stock_cost, suguest_price, products_lower, products_upper, storage_time, 
+    ext1, ext2, ext3, memo, account_set_id
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_stock
+    where stock_id = #{stockId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from stock_stock
+    where stock_id = #{stockId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ss.springbootNewshop.bean.StockStock" >
+    insert into stock_stock (stock_id, stockhouse_code, products_code, 
+      products_model, color, size, 
+      unit_id, quantity, stock_price, 
+      stock_cost, suguest_price, products_lower, 
+      products_upper, storage_time, ext1, 
+      ext2, ext3, memo, account_set_id
+      )
+    values (#{stockId,jdbcType=BIGINT}, #{stockhouseCode,jdbcType=VARCHAR}, #{productsCode,jdbcType=VARCHAR}, 
+      #{productsModel,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, 
+      #{unitId,jdbcType=BIGINT}, #{quantity,jdbcType=DECIMAL}, #{stockPrice,jdbcType=DECIMAL}, 
+      #{stockCost,jdbcType=DECIMAL}, #{suguestPrice,jdbcType=DECIMAL}, #{productsLower,jdbcType=BIGINT}, 
+      #{productsUpper,jdbcType=BIGINT}, #{storageTime,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, 
+      #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{accountSetId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ss.springbootNewshop.bean.StockStock" >
+    insert into stock_stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockId != null" >
+        stock_id,
+      </if>
+      <if test="stockhouseCode != null" >
+        stockhouse_code,
+      </if>
+      <if test="productsCode != null" >
+        products_code,
+      </if>
+      <if test="productsModel != null" >
+        products_model,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="stockPrice != null" >
+        stock_price,
+      </if>
+      <if test="stockCost != null" >
+        stock_cost,
+      </if>
+      <if test="suguestPrice != null" >
+        suguest_price,
+      </if>
+      <if test="productsLower != null" >
+        products_lower,
+      </if>
+      <if test="productsUpper != null" >
+        products_upper,
+      </if>
+      <if test="storageTime != null" >
+        storage_time,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockId != null" >
+        #{stockId,jdbcType=BIGINT},
+      </if>
+      <if test="stockhouseCode != null" >
+        #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="stockPrice != null" >
+        #{stockPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCost != null" >
+        #{stockCost,jdbcType=DECIMAL},
+      </if>
+      <if test="suguestPrice != null" >
+        #{suguestPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productsLower != null" >
+        #{productsLower,jdbcType=BIGINT},
+      </if>
+      <if test="productsUpper != null" >
+        #{productsUpper,jdbcType=BIGINT},
+      </if>
+      <if test="storageTime != null" >
+        #{storageTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ss.springbootNewshop.bean.StockStock" >
+    update stock_stock
+    <set >
+      <if test="stockhouseCode != null" >
+        stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsCode != null" >
+        products_code = #{productsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productsModel != null" >
+        products_model = #{productsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="stockPrice != null" >
+        stock_price = #{stockPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCost != null" >
+        stock_cost = #{stockCost,jdbcType=DECIMAL},
+      </if>
+      <if test="suguestPrice != null" >
+        suguest_price = #{suguestPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productsLower != null" >
+        products_lower = #{productsLower,jdbcType=BIGINT},
+      </if>
+      <if test="productsUpper != null" >
+        products_upper = #{productsUpper,jdbcType=BIGINT},
+      </if>
+      <if test="storageTime != null" >
+        storage_time = #{storageTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSetId != null" >
+        account_set_id = #{accountSetId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where stock_id = #{stockId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ss.springbootNewshop.bean.StockStock" >
+    update stock_stock
+    set stockhouse_code = #{stockhouseCode,jdbcType=VARCHAR},
+      products_code = #{productsCode,jdbcType=VARCHAR},
+      products_model = #{productsModel,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      stock_price = #{stockPrice,jdbcType=DECIMAL},
+      stock_cost = #{stockCost,jdbcType=DECIMAL},
+      suguest_price = #{suguestPrice,jdbcType=DECIMAL},
+      products_lower = #{productsLower,jdbcType=BIGINT},
+      products_upper = #{productsUpper,jdbcType=BIGINT},
+      storage_time = #{storageTime,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      account_set_id = #{accountSetId,jdbcType=BIGINT}
+    where stock_id = #{stockId,jdbcType=BIGINT}
+  </update>
+</mapper>

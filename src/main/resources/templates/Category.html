@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品属性管理</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-xs" style="color:white;" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" style="color:white;" lay-event="del">删除</a>
+    </script>
+    <style>
+        .layui-layer-btn0 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+        body .demo-class .layui-layer-btn0{
+            border-color: #009688;
+            background-color: #009688;
+            color: black;
+        }
+        body .demo-class .layui-layer-btn1{
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+    </style>
+</head>
+ 
+<!-- 修改弹出层-->
+<div id="UpdateArea" style="padding: 20px;display: none"> 
+    <form class="layui-form">
+        <div class="layui-form-item" style="margin: 0;">
+          <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">商品分类:</label>
+          <div class="layui-input-block">
+            <input id="updateName" type="text" name="categoryName" placeholder="商品分类" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">分类备注:</label>
+            <div class="layui-input-block">
+              <input id="updateMemo" type="text" name="memo" placeholder="备注信息" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+          <!-- <div class="layui-form-item" style="margin: 0;">
+            <label class=" layui-form-label" style="padding-left:0px;padding-right:0px">订单状态:</label>
+            <div class="layui-input-block">
+              <select id="updateState" name="orderState" lay-filter="orderState">
+                <option value="0" selected>未配送</option>
+                <option value="1">配送中</option>
+                <option value="2">配送成功</option>
+                <option value="3">配送失败</option>
+                <option value="4">取消配送</option>
+              </select>
+            </div>
+          </div> -->
+      </form>
+</div>
+<body>
+    <div class="layui-form-item" style="padding: 20px;margin: 0;">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="onCategoryInsert()">添加商品分类</button>
+        </div>
+    </div>
+    <!-- 数据表格展示层 -->
+    <div class="table-container" style="padding: 0 2rem;">
+        <table id="CategoryList" lay-filter="CategoryList"></table>
+        <div id="laypage"></div>
+    </div>
+
+<script th:inline="none"> //防止内联语法出错
+    var isCategory= "isCategory";
+
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var CategoryListTable;
+    var offset = 0;
+    var limit = 10;
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+
+    var maxCategoryId;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+
+        CategoryListTable = layui_table.render({
+            elem: '#CategoryList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+            page: true, //开启分页            limit:data.length,
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'id', title: '商品分类ID', width: 130, fixed: 'left', }
+                , { field: 'categoryName', title: '分类名称', width: 130 }
+                , { field: 'sortSum', title: '分类商品数量', width: 130 }
+                , { field: 'memo', title: '备注', width: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar' }
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(CategoryList)', function (obj) {
+            var layEvent = obj.event;
+            var id = obj.data.id;
+            var categoryName = obj.data.categoryName;
+            var sortSum = obj.data.sortSum;
+            var memo = obj.data.memo;
+                $("#updateName").val(categoryName);
+                $("#updateMemo").val(memo);
+            if (layEvent === 'edit') {
+                //显示弹出层
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var updateFlag ;
+                        updateFlag = updateCategoryInfo(obj);
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+            } else if (layEvent === 'del') {
+                var title = "确定要删除: '"+categoryName+"'该商品分类吗？";
+                if ( null !=  id) {
+                        title = "该商品分类已有数据，删除后数据无法恢复，是否确定删除";
+                }
+                layui_layer.confirm(title, function (index) {
+                    if (null != id ) {
+                        //删除用户
+                        var deleteFlag;
+                        deleteFlag =  onDeleteCategory(id);
+                       if(deleteFlag ===1){
+                         obj.del();
+                       }
+                    } else {
+                        alert('删除商品分类失败 数据出错');
+                        //deleteOrder(salesOrderId);
+                    }
+                    layui_layer.close(index);
+                });
+            } else if (layEvent === 'detail') {
+                layui_layer.open({
+                    type:1,
+                    area: [(windowWidth * 0.4) + 'px', (windowHeight * 0.7) + 'px'],
+                    content:$('#UpdateArea')
+                });
+            }
+        });
+        var param = {};
+        param.isCategory = isCategory;
+        loadCategoryInfo(param);
+
+    });
+
+    /* 加载所有数据 */
+    //userId userName description phone address sex userTypeId
+    function loadCategoryInfo(param){   
+        $.ajax({
+            headers: { Accept: "application/json; charset=utf-8"},
+            url:"/newshop/category/loadCategory",
+            type:"POST",
+            async:true,
+            data:param,
+            success:function (data) {
+                console.log(data.data.length);
+                maxCategoryId = data.data.length;
+                if(data.success === true){
+                    CategoryListTable.reload({
+                        data:data.data,
+                        limit:data.length,
+                    });
+                }else{
+                    layui_layer.msg('加载商品分类列表失败,请稍后重试',{
+                            icon:6,
+                        });
+                }
+                console.log("加载商品分类列表成功");
+            }
+        });
+    }
+
+    /* 更新数据 */
+    function updateCategoryInfo(obj) {
+        let data = obj.data;
+        var updateFlag = 0;
+        var Category = {};
+        Category.id = data.id;
+        Category.categoryName = $("#updateName").val();
+        Category.Memo = $("#updateMemo").val();  
+        Category.accountSetId = 1; 
+            $.ajax({
+                url: "http://localhost:8080/newshop/category/updateCategory",
+                data: Category,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        updateFlag = 1;
+                        layui_layer.msg('更新商品分类成功: '+data.data.categoryName+'成功',{
+                            icon:6,
+                        });
+                        var param = {};
+                            param.isCategory = isCategory;
+                            loadCategoryInfo(param);
+                    } else{
+                        layui_layer.msg('更新商品分类失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                }
+            })
+            return updateFlag;
+    }
+    /* 删除数据*/
+    function onDeleteCategory(categoryId){
+        var deleteFlag = 0 ;
+        var param = {};
+        param.categoryId= categoryId;
+        param.isDeleteCategory = "isDeleteCategory";
+        $.ajax({
+                url: "http://localhost:8080/newshop/category/deleteCategory",
+                data: param,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    deleteFlag = data.data;
+                    if(data.success === true && data.data===1){
+                            layui_layer.msg('删除商品分类成功: ',{
+                                icon:6,
+                            });
+                            var loadCategory = {};
+                            loadCategory.isCategory = isCategory;
+                            loadCategoryInfo(loadCategory);
+                    } else{
+                        layui_layer.msg('更新商品分类失败,请稍后重试',{
+                            icon:6,
+                        });
+                    }
+                    
+                }
+            })
+        return deleteFlag;
+    };
+    
+    /* 插入实体 */
+    function onCategoryInsert(){
+        layui_layer.open({
+                    type:1,
+                    content:$('#UpdateArea')
+                    , btn: ['确认', '取消']
+                    , yes: function (index, layero) {
+                        var insertFlag ;
+                        insertFlag = insertObj();
+                        layui_layer.close(index);  
+                    }
+                    , btn2: function (index, layero) {
+                        layui_layer.close(index);           
+                    }
+                });
+    }
+    
+    //updateName updateNumber updateAddress updateState
+    function insertObj(){
+        var insertFlag;
+        var obj = {};
+        obj.isCategoryInsert= "isCategoryInsert";
+        obj.categoryName = $("#updateName").val();   
+        obj.memo = $("#updateMemo").val();  
+        obj.categoryId = maxCategoryId+1;  
+        obj.partnerId = 1;  
+        obj.accountSetId = 1;  
+        $.ajax({
+                url: "http://localhost:8080/newshop/category/insertCategory",
+                data: obj,
+                type: "post",
+                //contentType: "application/json",
+                success: data=>{
+                    console.log(data);
+                    if(data.success === true){
+                        insertFlag = 1;
+                        layui_layer.msg('新增商品分类成功: '+obj.categoryName+'成功',{
+                            icon:6,
+                        });
+                    }else{
+                        layui_layer.msg('新增商品分类失败,请稍后重试',{
+                            icon:3,
+                        });
+                    }
+                    var param = {};
+                    param.isCategory = isCategory;
+                    loadCategoryInfo(param);
+                }
+            })
+            return insertFlag;
+    }
+
+
+</script>
+</body>
+</html>

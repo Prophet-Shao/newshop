@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息管理</title>
+    <title>newshop后台</title>
+
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+    <link type="text/css"  href="../static/css/bootstrap.css"   rel="stylesheet" >
+    <link type="text/css" href="../static/css/bootstrap-theme.min.css"  rel="stylesheet" >
+    <link type="text/css" href="../static/css/app_style.css"  rel="stylesheet" >
+
+    <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
+</head>
+
+<body>
+
+<div class="table-container" style="padding: 0 2rem;">
+    <table id="userList" lay-filter="userList"></table>
+    <div id="laypage"></div>
+</div>
+
+<script th:inline="none">
+    var layui_element;
+    var layui_layer;
+    var layui_table;
+    var layui_form;
+    var layui_laydate;
+    var layui_laypage;     //设置分页
+    var userListTable;
+    var offset = 0;
+    var limit = 10;
+
+    //开启layui
+    layui.use(['element', 'layer', 'jquery','form','laydate','laypage','table'], function (args) {
+        layui_table = layui.table;
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+        layui_laydate = layui.laydate;
+        layui_laypage = layui.laypage;
+
+        //
+        userListTable = layui_table.render({
+            elem: '#userList',
+            even: true,
+            data: [{}], //数据接口 初始化空表格数据
+
+            page: false, //开启分页
+
+            cellMinWidth: 70,
+            cols: [[
+                /* {field: 'salesOrderId', title: '序号',width:90, sort: true}, */
+                { field: 'userId', title: '用户编号', width: 130 }
+                , { field: 'userName', title: '用户名称', width: 170 }
+                , { field: 'description', title: '详细描述', width: 90 }
+                , { field: 'phone', title: '电话', width: 90 }
+                , { field: 'address', title: '地址', width: 130 }
+                , { field: 'orderStatus', title: '订单状态', width: 90 }
+                , { field: 'dealTypeName', title: '订单来源', width: 130 }
+                , { fixed: 'right', title: '操作', toolbar: '#bar' }
+            ]]
+        });
+
+        //监听工具条
+        layui_table.on('tool(userList)', function (obj) {
+            var layEvent = obj.event;
+            var data = obj.data;
+            var invoiceCode = data.invoiceCode;
+            var isInvoiceDone = data.isInvoiceDone;
+            var salesOrderId = data.salesOrderId;
+            var isPay = data.orderStatus;
+            var payCode = data.payCode_Name;
+            if (layEvent === 'edit') {
+                window.location.href = "orderDetail.html?invoiceCode="
+                    + invoiceCode + "&isInvoiceDone="
+                    + isInvoiceDone;
+            } else if (layEvent === 'del') {
+                var title = "确定要删除该订单吗？";
+                if (isPay != null && (isPay == "已支付" || isPay == "已完结")) {
+                    if (payCode.indexOf("微信") >= 0 || payCode.indexOf("支付宝") >= 0) {
+                        title = "该订单已支付，取消后支付款会原路退还给用户，是否确定取消";
+                    }
+                }
+                layui_layer.confirm(title, function (index) {
+                    obj.del();
+                    layui_layer.close(index);
+                    if (isPay != null && (isPay == "已支付" || isPay == "已完结") && (payCode.indexOf("微信") >= 0 || payCode.indexOf("支付宝") >= 0)) {
+                        onCancelOrder(salesOrderId);
+                    } else {
+                        deleteOrder(salesOrderId);
+                    }
+                });
+            } else if (layEvent === 'confirm') {
+                summitComp(salesOrderId, isPay);
+            }
+        });
+        //loadOrderList("-1", "-1");
+
+    });
+</script>
+</body>
+</html>

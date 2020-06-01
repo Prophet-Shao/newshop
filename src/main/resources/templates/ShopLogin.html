@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>商城登录</title>
+    <title>newshop后台</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="@{/static/js/html5.min.js}"  charset="utf-8"></script>
+    <script th:src="@{/static/js/xadmin.js}" src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js" charset="utf-8"></script>
+    <![endif]-->
+    <!-- <link type="text/css"  th:href="@{/static/css/bootstrap.css}"   rel="stylesheet" >
+    <link type="text/css" th:href="@{/static/css/bootstrap-theme.min.css}"  rel="stylesheet" > -->
+    <link rel="stylesheet" th:href="@{/static/css/mui.min.css}">
+    <link type="text/css"  th:href="@{/static/css/newshop.css}"   rel="stylesheet" >
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+    <style type="text/css"> 
+        /* 撑开顶部和底部的内边距 */
+        body {
+            margin: 0;
+            padding: 4rem 0 0;
+            background-color: #ffffff;
+        }
+        p {
+            margin: 0;
+        }
+
+        .login-box {
+            margin: 40px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<!-- 头部区域开始 -->
+<div class="header">
+    <div class="flex header-left" onclick="gotoUrl('')">
+      <!-- <img alt="返回" src="@{../static/Image/ShopIndex/ad002.jpg}" style="height: 1.8rem;" /> -->
+    </div>
+    <div class="flex header-center"><span style="font-size: 2.2rem;color: white;">新零售线上购物平台</span></div>
+    <div class="flex header-right"></div>
+  </div>
+  <!-- 头部区域结束 -->
+  <div>
+    <img th:src="@{../static/Image/ShopIndex/ad002.jpg}" width="100%" alt="图片加载失败！" />
+  </div>
+  <div class="login-box">
+    <h2 style="padding-bottom: 20px;color: RGB(87,141,125);">客户端登陆</h2>
+    <div>
+        <input id="userName" type="text" placeholder="请输入您的账户" />
+    </div>
+    <div class="mui-input-row mui-password">
+      <input id="password" type="password" class="mui-input-password" placeholder="请输入您的密码" />
+    </div>
+    <div class="mui-input-row">
+      <button class="mui-btn" style="width: 100%; color: #ffffff;background: RGB(5,136,109);font-size: 18px;" onclick="onNewshopLogin()">
+        立即登录
+      </button>
+    </div>
+    <div style="margin-top: 15px;">
+      <a href="gotoUrl('')" style="position: relative; float: right;">忘记密码?</a>
+    </div>
+  </div>
+  <script th:inline="none"> //防止内联语法出错
+    
+    var layui_element;
+    var layui_layer;
+    var layui_form;
+    
+
+    layui.use(['element', 'layer','form',], function (args) {
+        layui_element = layui.element;
+        layui_layer = layui.layer;
+        layui_form = layui.form;
+
+    });
+
+    function gotoUrl(url) {
+       window.location.href = url
+    }
+
+    function onNewshopLogin(){
+        var obj ={};
+        var userName =  $('#userName').val();
+        var password =  $('#password').val();
+
+        if(null!= userName && null!=password && userName != "" && password != ""){
+            obj.isUserLogin = "isUserLogin";       
+            obj.userName = userName;
+            obj.password = password;
+            $.ajax({
+                headers: { Accept: "application/json; charset=utf-8"},
+                url:"http://localhost:8080/newshop/shop/userLogin",
+                type:"POST",
+                async:true,
+                data:obj,
+                success: data=>{
+                        if(data.success === true){
+                                layui_layer.open({
+                                type:1,
+                                content:"登录成功,即将转到商城"
+                                , btn: ['确认', '取消']
+                                , yes: function (index, layero) {
+                                    window.location.href = "http://localhost:8080/newshop/shop/Index?userName="+data.data.userName;
+                                    //http://localhost:8080/newshop/shop/Index
+                                }
+                                , btn2: function (index, layero) {
+                                    layui_layer.closeAll();      
+                                }});
+                        }else{
+                            layer.alert("登录失败, 请稍后重试", {icon: 5,title: "提示"});
+                        }
+                    }
+        });
+        }else{
+            layui_layer.msg('请填写完整账号和密码',{icon:6,});
+        }
+
+    }
+  </script>
+</body>
+</html>
+  
